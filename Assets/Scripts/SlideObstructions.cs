@@ -30,6 +30,15 @@ public class SlideObstructions : MonoBehaviour
 
     private bool playerInside = false;
 
+    [Header("UI Settings")]
+    public locationUIController locationUIController;
+    public string locationText;
+
+
+    // track running coroutines per obstacle
+    private readonly Dictionary<Transform, Coroutine> runningCoroutines = new Dictionary<Transform, Coroutine>();
+
+
     [Header("Debug")]
     [SerializeField] private bool enableDebugLogs = false;
 
@@ -52,18 +61,33 @@ public class SlideObstructions : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //check if player tag
         if (!other.CompareTag("Player")) return;
-
+        //debug
         if (enableDebugLogs) Debug.Log($"OnTriggerEnter by {other.gameObject.name}", other.gameObject);
 
+        //bool to not trigger more than once
         if (playerInside) return;
         playerInside = true;
 
+        //Change Location Dropdown text
+        if (locationUIController != null)
+        {
+            locationUIController.OnEnterLocation(locationText);
+        }
+
+        //Start Coroutine for each obstructions
         foreach (var entry in obstructions)
         {
             if (entry.obstruction == null) continue;
 
+            if (runningCoroutines.TryGetValue(entry.obstruction, out var c) && c != null)
+            {
+               StopCoroutine(c);
+            }    
+
             var routine = StartCoroutine(MoveTo(entry.obstruction, entry.targetPosition, entry.duration));
+            runningCoroutines[entry.obstruction] = routine;
         }
     }
 
@@ -76,11 +100,19 @@ public class SlideObstructions : MonoBehaviour
         if (!playerInside) return;
         playerInside = false;
 
+
+
         foreach (var entry in obstructions)
         {
             if (entry.obstruction == null) continue;
 
+            if (runningCoroutines.TryGetValue(entry.obstruction, out var c) && c != null)
+            {
+                StopCoroutine(c);
+            }
+
             var routine = StartCoroutine(MoveTo(entry.obstruction, entry.originalPosition, entry.duration));
+            runningCoroutines[entry.obstruction] = routine;
         }
     }
 
@@ -89,11 +121,18 @@ public class SlideObstructions : MonoBehaviour
         Vector3 startPos = target.position;
         float elapsed = 0f;
 
+        if(time <= 0f)
+        {
+            target.position = endPos;
+            runningCoroutines.Remove(target);
+            yield break;
+        }
+
         while (elapsed < time)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / time);
-
+            //smoothstep eash
             float easedT = t * t * (3f - 2f * t);
 
             target.position = Vector3.Lerp(startPos, endPos, easedT);
@@ -101,5 +140,6 @@ public class SlideObstructions : MonoBehaviour
         }
 
         target.position = endPos;
+        runningCoroutines.Remove(target);
     }
 }

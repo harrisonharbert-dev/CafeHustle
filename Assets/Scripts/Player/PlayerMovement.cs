@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -79,6 +80,7 @@ public class PlayerMovement : MonoBehaviour
         if(spriteRenderer.flipX && moveInput.x < 0 )
         {
             spriteRenderer.flipX = false;
+
         } 
         else if (!spriteRenderer.flipX && moveInput.x > 0)
         {
