@@ -26,7 +26,6 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -53,20 +52,24 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void Move(InputAction.CallbackContext context)
+   public void Move(InputAction.CallbackContext context)
     {
-        //Move input taken from player input
-        moveInput = context.ReadValue<Vector2>();
+        
+            //Move input taken from player input
+            moveInput = context.ReadValue<Vector2>();
 
-        //Normalize so total magnitude of vector is 1
-        moveInput.Normalize();
+            //Normalize so total magnitude of vector is 1
+            moveInput.Normalize();
 
-        //Debug Log
-        if (enableDebugLogs)
-        {
-            Debug.Log(moveInput);
-        }
+            //Debug Log
+            if (enableDebugLogs)
+            {
+                Debug.Log(moveInput);
+            }
+        
+        
     }
+    
 
 
     // Update is called once per frame

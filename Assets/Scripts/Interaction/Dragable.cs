@@ -1,23 +1,26 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
-public class Dragable : MonoBehaviour
+public class Dragable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    Vector3 mousePositionOffset;
-
-    private Vector3 GetMouseWorldPosition()
+   Transform parentAfterDrag;
+public void OnBeginDrag(PointerEventData eventData)
     {
-        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        parentAfterDrag = transform.parent;
+        transform.SetParent(transform.root);
+        transform.SetAsLastSibling();
     }
 
-    private void OnMouseDown()
-    {
-        mousePositionOffset = gameObject.transform.position - GetMouseWorldPosition();
-    }
 
-    private void OnMouseDrag()
+    public void OnDrag(PointerEventData eventData)
     {
-           transform.position = GetMouseWorldPosition() + mousePositionOffset;
+        transform.position = Input.mousePosition;
+     
+    }
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        transform.SetParent(parentAfterDrag);
     }
 }
