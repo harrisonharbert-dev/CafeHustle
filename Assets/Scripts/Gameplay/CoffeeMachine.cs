@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CoffeeMachine : MonoBehaviour
 {
     public GameObject CoffeeMachineUI;
     public bool Usingmachine = false;
     public PlayerMovement PlayerMovement;
+    public UnityEvent interactAction;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -47,4 +49,5 @@ public class CoffeeMachine : MonoBehaviour
             CoffeeMachineUI.SetActive(false);
         }
     }
+
 }
