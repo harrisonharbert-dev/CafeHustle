@@ -20,19 +20,6 @@ public class Interactable : MonoBehaviour
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
     }
 
-    // Update is called once per frame
-    /* void Update()
-     {
-         if (isInRange)
-         {
-             if (Input.GetKeyUp(KeyCode.E))
-             {
-                 interactAction.Invoke(); //Makes unity event happen which is assigned in the inspector
-             }
-         }
-     }
-    */
-
     public void InvokeEvent() 
     {
         Debug.Log($"UnityEvent invoked on game object: {this}");

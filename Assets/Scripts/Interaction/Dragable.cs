@@ -22,7 +22,7 @@ public void OnBeginDrag(PointerEventData eventData)
         // Set as last sibling so it stays on top
         transform.SetAsLastSibling();
 
-        image.raycastTarget = false; // Disable raycast during drag
+        //image.raycastTarget = false; // Disable raycast during drag
     }
 
 
