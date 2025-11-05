@@ -25,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     private CapsuleCollider playerCollider;
 
 
+    //Interactable script reference
+    private Interactable currentInteractable;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -70,6 +72,24 @@ public class PlayerMovement : MonoBehaviour
         
     }
     
+    //Set current interactable function to call from other scripts
+    public void SetCurrentInteractable(Interactable interactable) => currentInteractable = interactable;
+
+    //Interactable function
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        
+        if (!currentInteractable) return;
+        if (context.performed && currentInteractable.isInRange)
+        {
+            //Invoke event on current interactable
+            currentInteractable.InvokeEvent();
+        }
+
+
+
+    }
 
 
     // Update is called once per frame

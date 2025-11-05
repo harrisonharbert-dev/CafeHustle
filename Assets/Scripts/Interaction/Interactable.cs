@@ -9,28 +9,51 @@ public class Interactable : MonoBehaviour
     public bool isInRange;
     public UnityEvent interactAction;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private PlayerMovement playerMovement; //Player movement reference
+
+
+
+
     void Start()
     {
-        
+        //Auto assign player movement by tag
+        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
-    void Update()
+    /* void Update()
+     {
+         if (isInRange)
+         {
+             if (Input.GetKeyUp(KeyCode.E))
+             {
+                 interactAction.Invoke(); //Makes unity event happen which is assigned in the inspector
+             }
+         }
+     }
+    */
+
+    public void InvokeEvent() 
     {
-        if (isInRange)
+        Debug.Log($"UnityEvent invoked on game object: {this}");
+
+
+        if (interactAction == null) 
         {
-            if (Input.GetKeyUp(KeyCode.E))
-            {
-                interactAction.Invoke(); //Makes unity event happen which is assigned in the inspector
-            }
+            Debug.LogWarning($"UnityEvent interactAction is not assigned on:{this}");
+            return;
         }
+        //
+        interactAction.Invoke(); //Makes unity event happen which is assigned in the inspector
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            playerMovement.SetCurrentInteractable(this); // Set current interactable script that player can interact with
+
             isInRange = true;
         }
     }
@@ -39,6 +62,9 @@ public class Interactable : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+
+            playerMovement.SetCurrentInteractable(null); // Reset current interactable script
+
             isInRange = false;
         }
     }
