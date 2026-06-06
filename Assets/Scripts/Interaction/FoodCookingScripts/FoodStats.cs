@@ -5,20 +5,24 @@ using UnityEngine;
 public class FoodStats : MonoBehaviour
 {
     public float cookingTime; // Time required to cook the food
-    public Material[] cookingMaterials; // Materials representing different cooking stages
+
+    /*public Material[] cookingMaterials; // Materials representing different cooking stages
     public Material burntMaterial; // Material for burnt food
-    private Renderer foodRenderer;
+    private Renderer foodRenderer;*/
+
     [SerializeField] private float cookingProgress;
     public bool isCooking;
     [SerializeField] private TextMeshProUGUI CookingStats;
     public bool IsHovering;
+
+    public cookingStatus cookingStatusScript; //Script ref for the shader script
 
     private float burnThreshold = 1.2f; // Time multiplier after which food gets burnt
     private bool IsBurnt;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        foodRenderer = GetComponent<Renderer>();
+        /*foodRenderer = GetComponent<Renderer>();*/
     }
 
     // Update is called once per frame
@@ -26,8 +30,8 @@ public class FoodStats : MonoBehaviour
     {
         if (isCooking)
         {
-            cookingProgress += Time.deltaTime;
-            UpdateCookingStage();
+            cookingProgress += Time.deltaTime;     
+            UpdateCookingStatus();
         }
         if (IsHovering)
         {
@@ -39,7 +43,12 @@ public class FoodStats : MonoBehaviour
         }
     }
 
-    private void UpdateCookingStage()
+    private void UpdateCookingStatus()
+    {
+        cookingStatusScript.targetValue = (cookingProgress/10);
+    }
+
+    /*private void UpdateCookingStage()
     {
         int stage = Mathf.FloorToInt((cookingProgress / cookingTime) * cookingMaterials.Length);
         stage = Mathf.Clamp(stage, 0, cookingMaterials.Length - 1);
@@ -53,7 +62,7 @@ public class FoodStats : MonoBehaviour
                     foodRenderer.material = burntMaterial;
                 }
         }
-    }
+    }*/
 
     public void StartCooking()
     {
