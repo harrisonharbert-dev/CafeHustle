@@ -239,27 +239,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.49619
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.49619
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.49619
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.0903697
+      value: -7.305
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.016719997
+      value: 0.017
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.0328202
+      value: -1.859
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -289,10 +289,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3cb42405dc6614543a87a5803f8e8325, type: 2}
+      objectReference: {fileID: 2100000, guid: 396ae39c65c3b3d40bf355687232b9d9, type: 2}
     - target: {fileID: -5754084199372789682, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -379,7 +383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::cookingStatus
   sliderPropertyName: _Cooking_Stage
-  targetValue: 0
+  progress: 0
 --- !u!114 &137159006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,13 +414,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad461bff23f99e4086f1611d3e96393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DraggingScript
-  cam: {fileID: 1776770909}
   carryDistance: 1
   moveSpeed: 15
+  rotationSpeed: 100
   dragging: 0
   isMeat: 1
   isFood: 1
-  rotationSpeed: 100
   foodStatsScript: {fileID: 0}
 --- !u!64 &137159011
 MeshCollider:
@@ -547,7 +550,7 @@ Transform:
   m_GameObject: {fileID: 176998846}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.17, y: 0.19, z: -9.1}
+  m_LocalPosition: {x: -0.71, y: 0.19, z: -8.3}
   m_LocalScale: {x: 1.8384744, y: 0.10115082, z: 1.947737}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -822,60 +825,64 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.49618983
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.49618995
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.49618995
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.094054
+      value: -6.608
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.14671999
+      value: 0.164
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.5328202
+      value: -1.8160002
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: -0.70710677
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.7071069
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7071068
+      value: 0.0000003633274
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.7071068
+      value: -0.0000003574859
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 90
+      value: 270
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -90
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 38e4faa5b1cda2c4cb509080315d0774, type: 2}
+      objectReference: {fileID: 2100000, guid: 396ae39c65c3b3d40bf355687232b9d9, type: 2}
     - target: {fileID: -5754084199372789682, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -962,7 +969,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::cookingStatus
   sliderPropertyName: _Cooking_Stage
-  targetValue: 0
+  progress: 0
 --- !u!114 &627470313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -993,13 +1000,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad461bff23f99e4086f1611d3e96393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DraggingScript
-  cam: {fileID: 1776770909}
   carryDistance: 1
   moveSpeed: 15
+  rotationSpeed: 100
   dragging: 0
   isMeat: 1
   isFood: 1
-  rotationSpeed: 100
   foodStatsScript: {fileID: 0}
 --- !u!64 &627470318
 MeshCollider:
@@ -1131,13 +1137,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad461bff23f99e4086f1611d3e96393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DraggingScript
-  cam: {fileID: 0}
   carryDistance: 1
   moveSpeed: 15
+  rotationSpeed: 0
   dragging: 0
   isMeat: 0
   isFood: 0
-  rotationSpeed: 0
   foodStatsScript: {fileID: 0}
 --- !u!54 &765288421
 Rigidbody:
@@ -1384,27 +1389,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.57574
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.57574
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.57574
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.23837
+      value: -5.5259995
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.16571999
+      value: 0.166
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.57381964
+      value: -1.8690002
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1434,10 +1439,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: a9530b774b89fce4b9889cab98e37dbf, type: 2}
+      objectReference: {fileID: 2100000, guid: 396ae39c65c3b3d40bf355687232b9d9, type: 2}
     - target: {fileID: 919132149155446097, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_Name
       value: HotDog
@@ -1728,7 +1737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::cookingStatus
   sliderPropertyName: _Cooking_Stage
-  targetValue: 0
+  progress: 0
 --- !u!114 &1631786633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1759,13 +1768,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad461bff23f99e4086f1611d3e96393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DraggingScript
-  cam: {fileID: 1776770909}
   carryDistance: 1
   moveSpeed: 15
+  rotationSpeed: 100
   dragging: 0
   isMeat: 1
   isFood: 1
-  rotationSpeed: 100
   foodStatsScript: {fileID: 0}
 --- !u!64 &1631786638
 MeshCollider:
@@ -1815,7 +1823,7 @@ Transform:
   m_GameObject: {fileID: 1703000583}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.135, z: -0.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1845,7 +1853,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 45
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -1880,7 +1888,7 @@ GameObject:
   - component: {fileID: 1776770910}
   m_Layer: 0
   m_Name: MainCamera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1894,7 +1902,7 @@ Transform:
   m_GameObject: {fileID: 1776770904}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: -2.20371, y: 1.29073, z: -0.5317097}
+  m_LocalPosition: {x: -2.20371, y: 1.9094483, z: -0.9595089}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2017,7 +2025,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 45
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -2061,27 +2069,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.49618983
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.49618995
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.49618995
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.4053698
+      value: -6.351
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.14671999
+      value: 0.147
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.9348197
+      value: -2.5370002
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2110,6 +2118,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -2201,7 +2213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::cookingStatus
   sliderPropertyName: _Cooking_Stage
-  targetValue: 0
+  progress: 0
 --- !u!114 &1801092739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2232,13 +2244,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad461bff23f99e4086f1611d3e96393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DraggingScript
-  cam: {fileID: 1776770909}
   carryDistance: 1
   moveSpeed: 15
+  rotationSpeed: 100
   dragging: 0
   isMeat: 1
   isFood: 1
-  rotationSpeed: 100
   foodStatsScript: {fileID: 0}
 --- !u!64 &1801092744
 MeshCollider:

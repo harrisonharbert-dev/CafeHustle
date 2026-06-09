@@ -4,11 +4,11 @@ public class cookingStatus : MonoBehaviour
 {
 
     [SerializeField] private string sliderPropertyName = "_Cooking_Stage";
-    [Range(0f, 1f)] public float targetValue;
+    [Range(0f, 1.5f)] public float progress;
 
     private Renderer objectRenderer;
     private MaterialPropertyBlock propBlock;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         objectRenderer = GetComponent<Renderer>();
@@ -16,10 +16,10 @@ public class cookingStatus : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void UpdateShaderStatus()
     {
         objectRenderer.GetPropertyBlock(propBlock);
-        propBlock.SetFloat(sliderPropertyName, targetValue);
+        propBlock.SetFloat(sliderPropertyName, progress);
         objectRenderer.SetPropertyBlock(propBlock);
     }
 }

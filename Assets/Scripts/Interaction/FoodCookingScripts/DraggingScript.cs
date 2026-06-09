@@ -6,26 +6,31 @@ using System.Diagnostics.SymbolStore;
 
 public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public Camera cam;
+    
+    private Camera cam;
+
     [Header("Carry Settings")]
     public float carryDistance = 2f;
     public float moveSpeed = 15f;
-    private Rigidbody rb;
-    public bool dragging;
-    public bool isMeat;
-    [SerializeField] private bool isFood;
     public float rotationSpeed;
-  public FoodStats foodStatsScript;
+    private Rigidbody rb;
+    [HideInInspector] public bool dragging;
+    [HideInInspector] public bool isMeat;
+    [SerializeField] private bool isFood;
+    
+
+    [HideInInspector] public FoodStats foodStatsScript;
     void Start()
     {
         foodStatsScript = GetComponent<FoodStats>();
         rb = GetComponent<Rigidbody>();
+        cam = Camera.main; 
     }
     public void Update()
     {
       if (Input.GetMouseButton(1) && isFood == true && dragging == true)
         {
-            this.gameObject.transform.Rotate(Vector3.right * Time.deltaTime * rotationSpeed);
+            this.gameObject.transform.Rotate(Vector3.up * Time.deltaTime * rotationSpeed, Space.World);
         }
         
     }
