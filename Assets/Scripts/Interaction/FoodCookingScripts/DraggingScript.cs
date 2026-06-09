@@ -1,35 +1,49 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
+using System.Diagnostics.SymbolStore;
 
 public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private Camera cam;
+    public Camera cam;
     [Header("Carry Settings")]
     public float carryDistance = 2f;
     public float moveSpeed = 15f;
     private Rigidbody rb;
     public bool dragging;
     public bool isMeat;
+    [SerializeField] private bool isFood;
+    public float rotationSpeed;
+  public FoodStats foodStatsScript;
     void Start()
     {
-        cam = Camera.main;
+        foodStatsScript = GetComponent<FoodStats>();
         rb = GetComponent<Rigidbody>();
     }
-
+    public void Update()
+    {
+      if (Input.GetMouseButton(1) && isFood == true && dragging == true)
+        {
+            this.gameObject.transform.Rotate(Vector3.right * Time.deltaTime * rotationSpeed);
+        }
+        
+    }
     public void OnBeginDrag(PointerEventData eventData)
     {
-        GetComponent<BoxCollider>().enabled = false; // Disable collider to prevent physics interference
+        Debug.Log("Started dragging: " + gameObject.name);
+   
+        // Disable collider to prevent physics interference
         dragging = true;
         rb.useGravity = false;
-        rb.constraints = RigidbodyConstraints.FreezeRotation; // Prevent rotation while dragging
-        rb.constraints |= RigidbodyConstraints.FreezeAll; // Freeze all movement while dragging
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        GetComponent<MeshCollider>().enabled = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         dragging = true;
-        GetComponent<BoxCollider>().enabled = false; // Disable collider to prevent physics interference
+       
         // Mouse position on screen
         Vector3 mousePos = eventData.position;
 
@@ -45,15 +59,16 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             targetPos,
             moveSpeed * Time.deltaTime
         );
-    }
-
+        
+    }              
+        
     public void OnEndDrag(PointerEventData eventData)
     {
+        GetComponent<MeshCollider>().enabled = true;
         dragging = false;
         rb.useGravity = true;
-        GetComponent<BoxCollider>().enabled = true; // Re-enable collider after dragging
-            rb.constraints = RigidbodyConstraints.None; // Unfreeze all constraints
-            rb.constraints = RigidbodyConstraints.FreezeRotation; // Keep rotation frozen after dropping
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        foodStatsScript.StopCooking();
     }
 
 

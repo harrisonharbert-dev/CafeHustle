@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public class Stove : MonoBehaviour
+
+public class Plate : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -14,8 +15,6 @@ public class Stove : MonoBehaviour
     {
         
     }
-
-
     private void OnCollisionEnter(UnityEngine.Collision collision)
     {
         if (collision.gameObject.tag == "Ingredient")
@@ -24,20 +23,11 @@ public class Stove : MonoBehaviour
             if (collision.gameObject.GetComponent<DraggingScript>() != null && collision.gameObject.GetComponent<DraggingScript>().isMeat == true)
             {
                 Debug.Log("Starting to cook: " + collision.gameObject.name);
-                collision.gameObject.GetComponent<FoodStats>().StartCooking();
+                collision.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+
             }
         }
     }
 
-    private void OnCollisionExit(UnityEngine.Collision collision)
-        {
-        Debug.Log("Stopping cooking: " + collision.gameObject.name);
-            if (collision.gameObject.tag == "Ingredient")
-            {
-            if (collision.gameObject.GetComponent<DraggingScript>() != null && collision.gameObject.GetComponent<DraggingScript>().isMeat == true)
-            {          
-                collision.gameObject.GetComponent<FoodStats>().StopCooking();
-            }
-            }   
-        }
+
 }
