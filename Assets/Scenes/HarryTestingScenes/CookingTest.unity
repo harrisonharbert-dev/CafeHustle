@@ -170,7 +170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &131781393
 Transform:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ Transform:
   m_GameObject: {fileID: 131781392}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 4.422, y: 1.502, z: 0.478}
+  m_LocalPosition: {x: 7.1, y: 3.16, z: -1.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -396,7 +396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88f395d7b407d44478174c7bfd7a9546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodStats
-  cookingTime: 10
+  cookingTime: 30
   cookingProgress: 0
   isCooking: 0
   CookingStats: {fileID: 1587214737}
@@ -414,7 +414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad461bff23f99e4086f1611d3e96393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DraggingScript
-  carryDistance: 1
+  carryDistance: 4.3
   moveSpeed: 15
   rotationSpeed: 100
   dragging: 0
@@ -551,7 +551,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.71, y: 0.19, z: -8.3}
-  m_LocalScale: {x: 1.8384744, y: 0.10115082, z: 1.947737}
+  m_LocalScale: {x: 4.398366, y: 0.10115082, z: 1.947737}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -982,7 +982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88f395d7b407d44478174c7bfd7a9546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodStats
-  cookingTime: 10
+  cookingTime: 30
   cookingProgress: 0
   isCooking: 0
   CookingStats: {fileID: 1587214737}
@@ -1000,7 +1000,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad461bff23f99e4086f1611d3e96393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DraggingScript
-  carryDistance: 1
+  carryDistance: 4.3
   moveSpeed: 15
   rotationSpeed: 100
   dragging: 0
@@ -1118,8 +1118,8 @@ Transform:
   m_GameObject: {fileID: 765288413}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.57, y: 0.17, z: -8.991}
-  m_LocalScale: {x: 2.026677, y: 0.12160061, z: 2.026677}
+  m_LocalPosition: {x: 6.38, y: 0.16184, z: -9.07}
+  m_LocalScale: {x: 3.1400356, y: 0.18840215, z: 3.1400356}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 323093578}
@@ -1325,7 +1325,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -9.42}
-  m_LocalScale: {x: 17.919678, y: 0.32255, z: 20.97995}
+  m_LocalScale: {x: 33.606564, y: 0.32255, z: 20.97995}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1750,7 +1750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88f395d7b407d44478174c7bfd7a9546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodStats
-  cookingTime: 10
+  cookingTime: 30
   cookingProgress: 0
   isCooking: 0
   CookingStats: {fileID: 1587214737}
@@ -1768,7 +1768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad461bff23f99e4086f1611d3e96393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DraggingScript
-  carryDistance: 1
+  carryDistance: 4.3
   moveSpeed: 15
   rotationSpeed: 100
   dragging: 0
@@ -1822,13 +1822,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1703000583}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.135, z: -0.74}
+  m_LocalRotation: {x: 0.38268346, y: -0, z: -0, w: 0.9238795}
+  m_LocalPosition: {x: 0, y: 3.16, z: -1.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 450284480}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!114 &1703000585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1901,8 +1901,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1776770904}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: -2.20371, y: 1.9094483, z: -0.9595089}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -2.20371, y: 4.3737154, z: 0.85421944}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2226,7 +2226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88f395d7b407d44478174c7bfd7a9546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodStats
-  cookingTime: 10
+  cookingTime: 30
   cookingProgress: 0
   isCooking: 0
   CookingStats: {fileID: 1587214737}
@@ -2244,7 +2244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad461bff23f99e4086f1611d3e96393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DraggingScript
-  carryDistance: 1
+  carryDistance: 4.3
   moveSpeed: 15
   rotationSpeed: 100
   dragging: 0
