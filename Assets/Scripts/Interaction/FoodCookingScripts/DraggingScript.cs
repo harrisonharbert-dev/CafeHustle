@@ -1,8 +1,9 @@
+using DG.Tweening;
+using System.Collections;
+using System.Diagnostics.SymbolStore;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections;
-using System.Diagnostics.SymbolStore;
 
 public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -17,7 +18,13 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     [HideInInspector] public bool dragging;
     [HideInInspector] public bool isMeat;
     [SerializeField] private bool isFood;
-    
+
+
+    [Header("Reactivity Settings")]
+    [SerializeField] private float jiggleDuration = 0.3f;
+    [SerializeField][Range(0f, 1f)] private float jiggleStrength = 0.3f;
+    [SerializeField] private int jiggleVibrato = 10;
+    [SerializeField][Range(0f, 180f)] private float jiggleRandomness = 90f;
 
     [HideInInspector] public FoodStats foodStatsScript;
     void Start()
@@ -37,8 +44,10 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("Started dragging: " + gameObject.name);
-   
+
         // Disable collider to prevent physics interference
+        transform.DOShakeScale(jiggleDuration, jiggleStrength, jiggleVibrato, jiggleRandomness, true, ShakeRandomnessMode.Harmonic);
+
         dragging = true;
         rb.useGravity = false;
         rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -70,6 +79,8 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public void OnEndDrag(PointerEventData eventData)
     {
         GetComponent<MeshCollider>().enabled = true;
+
+        transform.DOShakeScale(jiggleDuration, jiggleStrength, jiggleVibrato, jiggleRandomness, true, ShakeRandomnessMode.Harmonic);
         dragging = false;
         rb.useGravity = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;

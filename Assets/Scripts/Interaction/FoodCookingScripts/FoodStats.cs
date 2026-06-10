@@ -24,11 +24,15 @@ public class FoodStats : MonoBehaviour
     public Material BurntMaterial;
     private Tween cookingBarTween;
 
+    private Material baseMaterial;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         CookingUI.gameObject.SetActive(false);
         cookingStatusScript = GetComponent<cookingStatus>();
+
+        baseMaterial = GetComponent<Renderer>().material;
     }
 
     // Update is called once per frame
@@ -87,12 +91,17 @@ public class FoodStats : MonoBehaviour
     public void StartCooking()
     {
         isCooking = true;
+
+        //Wobble when cooking
+        baseMaterial.EnableKeyword("_ISCOOKING");
     }
     
     public void StopCooking()
     {
         isCooking = false;
-                      
+
+        //disable wobble
+        baseMaterial.DisableKeyword("_ISCOOKING");
     }
     public void OnMouseEnter()
     {

@@ -4,7 +4,7 @@ public class cookingStatus : MonoBehaviour
 {
 
     [SerializeField] private string sliderPropertyName = "_Cooking_Stage";
-    [Range(0f, 1.5f)] public float progress;
+    public float progress;
 
     private Renderer objectRenderer;
     private MaterialPropertyBlock propBlock;
