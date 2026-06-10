@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using TMPro;
 using UnityEditor;
@@ -21,6 +22,8 @@ public class FoodStats : MonoBehaviour
     public GameObject CookingUI;
     public Image CookingBar; // UI element to visually represent cooking progress
     public Material BurntMaterial;
+    private Tween cookingBarTween;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -44,7 +47,26 @@ public class FoodStats : MonoBehaviour
             //CookingStats.text = $"{((cookingProgress / cookingTime) * 100f).ToString("F0")}%" + " cooked";
             CookingBar.fillAmount = (cookingProgress / (cookingTime));
         }
-     
+        if (cookingProgress >= cookingTime)
+        {
+            if (cookingBarTween == null || !cookingBarTween.IsActive())
+            {
+                cookingBarTween = CookingBar.DOFade(0f, 0.5f)
+                                            .SetLoops(-1, LoopType.Yoyo);
+            }
+        }
+        else
+        {
+            if (cookingBarTween != null && cookingBarTween.IsActive())
+            {
+                cookingBarTween.Kill();
+                cookingBarTween = null;
+
+                Color c = CookingBar.color;
+                c.a = 1f;
+                CookingBar.color = c;
+            }
+        }
     }
 
     private void UpdateCookingStatus()
@@ -52,18 +74,12 @@ public class FoodStats : MonoBehaviour
         cookingStatusScript.progress = (cookingProgress/cookingTime);
         switch (cookingStatusScript.progress)
         {
-            case < 0.5f:
-                CookingBar.color = Color.blue;
-                break;
-            case >= 1f and <= 1.3f:
-                CookingBar.color = Color.green;
-                break;
             case >= 1.3f and < 1.5f:
                 CookingBar.color = Color.yellow;
                 break;
             case >1.5f:
                 CookingBar.color = Color.red;
-             this.gameObject.GetComponent<Renderer>().material = BurntMaterial;
+             //this.gameObject.GetComponent<Renderer>().material = BurntMaterial;
                 break;
         }
     }
@@ -80,19 +96,24 @@ public class FoodStats : MonoBehaviour
     }
     public void OnMouseEnter()
     {
-             
         IsHovering = true;
-        if (isCooking == true)
+
+        if (isCooking)
         {
             CookingUI.gameObject.SetActive(true);
+
             Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-            CookingUI.transform.position = screenPos + new Vector3(0, 50f, 0); // 50px above
+            CookingUI.transform.position = screenPos + new Vector3(0, 50f, 0);
         }
+
+ 
     }
+
     public void OnMouseExit()
     {
         IsHovering = false;
-        //CookingStats.text = "";
+
+
         CookingUI.gameObject.SetActive(false);
     }
 }

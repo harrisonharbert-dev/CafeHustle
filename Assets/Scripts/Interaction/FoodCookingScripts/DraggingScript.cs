@@ -73,6 +73,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         dragging = false;
         rb.useGravity = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
         foodStatsScript.StopCooking();
     }
 
