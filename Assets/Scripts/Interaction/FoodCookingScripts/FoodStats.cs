@@ -29,9 +29,9 @@ public class FoodStats : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        CookingUI.gameObject.SetActive(false);
+        
         cookingStatusScript = GetComponent<cookingStatus>();
-
+   
         baseMaterial = GetComponent<Renderer>().material;
     }
 
@@ -48,10 +48,20 @@ public class FoodStats : MonoBehaviour
         }
         if (IsHovering && isCooking)
         {
-            //CookingStats.text = $"{((cookingProgress / cookingTime) * 100f).ToString("F0")}%" + " cooked";
+           
             CookingBar.fillAmount = (cookingProgress / (cookingTime));
+            switch (cookingStatusScript.progress)
+            {
+                case >= 1.3f and < 1.5f:
+                    CookingBar.color = Color.yellow;
+                    break;
+                case > 1.5f:
+                    CookingBar.color = Color.red;
+                    //this.gameObject.GetComponent<Renderer>().material = BurntMaterial;
+                    break;
+            }
         }
-        if (cookingProgress >= cookingTime)
+        if (cookingProgress >= cookingTime && IsHovering)
         {
             if (cookingBarTween == null || !cookingBarTween.IsActive())
             {
@@ -76,16 +86,7 @@ public class FoodStats : MonoBehaviour
     private void UpdateCookingStatus()
     {
         cookingStatusScript.progress = (cookingProgress/cookingTime);
-        switch (cookingStatusScript.progress)
-        {
-            case >= 1.3f and < 1.5f:
-                CookingBar.color = Color.yellow;
-                break;
-            case >1.5f:
-                CookingBar.color = Color.red;
-             //this.gameObject.GetComponent<Renderer>().material = BurntMaterial;
-                break;
-        }
+   
     }
 
     public void StartCooking()

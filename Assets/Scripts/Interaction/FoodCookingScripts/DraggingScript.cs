@@ -33,14 +33,43 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         rb = GetComponent<Rigidbody>();
         cam = Camera.main; 
     }
-    public void Update()
-    {
-      if (Input.GetMouseButton(1) && isFood == true && dragging == true)
+    void Update()
         {
-            this.gameObject.transform.Rotate(Vector3.up * Time.deltaTime * rotationSpeed, Space.World);
+            if (dragging)
+            {
+                Vector3 mousePos = Input.mousePosition;
+                mousePos.z = carryDistance;
+
+                Vector3 targetPos = cam.ScreenToWorldPoint(mousePos);
+
+                transform.position = Vector3.Lerp(
+                    transform.position,
+                    targetPos,
+                    moveSpeed * Time.deltaTime
+                );
+            }
+
+            if (Input.GetMouseButton(1) && isFood && dragging)
+            {
+                transform.Rotate(
+                    Vector3.up * Time.deltaTime * rotationSpeed,
+                    Space.World
+                );
+            }                 
+        // Drop when left mouse is released
+        if (dragging && Input.GetMouseButtonUp(0))
+        {
+            GetComponent<MeshCollider>().enabled = true;
+
+            dragging = false;
+            rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+            if (foodStatsScript != null)
+                foodStatsScript.StopCooking();
         }
-        
     }
+    
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("Started dragging: " + gameObject.name);
@@ -84,7 +113,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         dragging = false;
         rb.useGravity = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
+        rb.constraints = RigidbodyConstraints.FreezePosition;
         foodStatsScript.StopCooking();
     }
 
