@@ -76,7 +76,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
         // Disable collider to prevent physics interference
         transform.DOShakeScale(jiggleDuration, jiggleStrength, jiggleVibrato, jiggleRandomness, true, ShakeRandomnessMode.Harmonic);
-
+        foodStatsScript.isCooking = false;
         dragging = true;
         rb.useGravity = false;
         rb.constraints = RigidbodyConstraints.FreezeAll;

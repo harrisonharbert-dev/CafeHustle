@@ -1,15 +1,20 @@
+using DG.Tweening;
+using System.Threading.Tasks.Sources;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class HotbarSlot : MonoBehaviour, IPointerDownHandler
+public class HotbarSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public Hotbar hotbar;
     public int slotIndex;
     private Camera cam;
-
+    private Vector3 originalScale;
+    private const float IncreasedScale = 1.5f;
+   
     private void Start()
     {
         cam = Camera.main;
+        originalScale = transform.localScale;
         
     }
 
@@ -50,5 +55,19 @@ public class HotbarSlot : MonoBehaviour, IPointerDownHandler
             if (col != null)
                 col.enabled = false;
         }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        transform.DOScale(originalScale * IncreasedScale, 0.2f)
+            .SetEase(Ease.OutBack);
+        Debug.Log("Hovering over hotbar slot " + slotIndex);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        transform.DOScale(originalScale, 0.2f)
+            .SetEase(Ease.OutBack);
+        Debug.Log("Stopped hovering over hotbar slot " + slotIndex);
     }
 }

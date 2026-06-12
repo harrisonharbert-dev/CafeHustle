@@ -1,10 +1,7 @@
 using UnityEngine;
 
-public class Table : MonoBehaviour
+public class PlatePerformance : MonoBehaviour
 {
-   
-    public bool isOccupied = false;
-    public Transform SeatPoint;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

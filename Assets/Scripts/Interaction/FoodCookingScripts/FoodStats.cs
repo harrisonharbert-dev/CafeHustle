@@ -9,10 +9,9 @@ public class FoodStats : MonoBehaviour
     public float cookingTime; // Time required to cook the food
 
     [SerializeField] private float cookingProgress;
-    [HideInInspector]
+                         
+    //Leave this viewable in the inspector for testing sake
     public bool isCooking;
-    //[SerializeField] private TextMeshProUGUI CookingStats;
-    [HideInInspector]
     public bool IsHovering;
 
     [HideInInspector] public cookingStatus cookingStatusScript; //Script ref for the shader script
@@ -25,13 +24,13 @@ public class FoodStats : MonoBehaviour
     private Tween cookingBarTween;
 
     private Material baseMaterial;
-
+    public Animator FlickerAnimation;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
         cookingStatusScript = GetComponent<cookingStatus>();
-   
+        FlickerAnimation = CookingBar.GetComponent<Animator>();
         baseMaterial = GetComponent<Renderer>().material;
     }
 
@@ -46,40 +45,34 @@ public class FoodStats : MonoBehaviour
             //Shader
             cookingStatusScript.UpdateShaderStatus();
         }
-        if (IsHovering && isCooking)
-        {
-           
+        if (IsHovering)
+        { 
             CookingBar.fillAmount = (cookingProgress / (cookingTime));
-            switch (cookingStatusScript.progress)
+            if (cookingStatusScript.progress < 1.3f)
             {
-                case >= 1.3f and < 1.5f:
-                    CookingBar.color = Color.yellow;
-                    break;
-                case > 1.5f:
-                    CookingBar.color = Color.red;
-                    //this.gameObject.GetComponent<Renderer>().material = BurntMaterial;
-                    break;
+                CookingBar.color = Color.green;
+            }
+            else if (cookingStatusScript.progress < 1.5f)
+            {
+                CookingBar.color = Color.yellow;
+            }
+            else
+            {
+                CookingBar.color = Color.red;
+            }
+        
+            if (cookingStatusScript.progress >= 1.1f)
+            {
+                FlickerAnimation.SetBool("IsFlickering", true);
+            }
+            if (cookingStatusScript.progress < 1.1f || isCooking == false)
+            {
+                FlickerAnimation.SetBool("IsFlickering", false);
             }
         }
-        if (cookingProgress >= cookingTime && IsHovering)
+        if (CameraController.isMoving) //Removes UI when the camera is moving to prevent UI from being left behind in the world space
         {
-            if (cookingBarTween == null || !cookingBarTween.IsActive())
-            {
-                cookingBarTween = CookingBar.DOFade(0f, 0.5f)
-                                            .SetLoops(-1, LoopType.Yoyo);
-            }
-        }
-        else
-        {
-            if (cookingBarTween != null && cookingBarTween.IsActive())
-            {
-                cookingBarTween.Kill();
-                cookingBarTween = null;
-
-                Color c = CookingBar.color;
-                c.a = 1f;
-                CookingBar.color = c;
-            }
+            CookingUI.gameObject.SetActive(false);
         }
     }
 
@@ -106,24 +99,16 @@ public class FoodStats : MonoBehaviour
     }
     public void OnMouseEnter()
     {
-        IsHovering = true;
-
-        if (isCooking)
-        {
+            IsHovering = true;
             CookingUI.gameObject.SetActive(true);
-
             Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
             CookingUI.transform.position = screenPos + new Vector3(0, 50f, 0);
-        }
-
- 
     }
 
     public void OnMouseExit()
     {
         IsHovering = false;
-
-
         CookingUI.gameObject.SetActive(false);
+        FlickerAnimation.SetBool("IsFlickering", false);
     }
 }
