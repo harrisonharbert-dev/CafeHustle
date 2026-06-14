@@ -63,7 +63,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
             dragging = false;
             rb.useGravity = true;
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
+           
 
             if (foodStatsScript != null)
                 foodStatsScript.StopCooking();
@@ -79,7 +79,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         foodStatsScript.isCooking = false;
         dragging = true;
         rb.useGravity = false;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
         GetComponent<MeshCollider>().enabled = false;
     }
 
@@ -112,8 +111,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         transform.DOShakeScale(jiggleDuration, jiggleStrength, jiggleVibrato, jiggleRandomness, true, ShakeRandomnessMode.Harmonic);
         dragging = false;
         rb.useGravity = true;
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
-        rb.constraints = RigidbodyConstraints.FreezePosition;
         foodStatsScript.StopCooking();
     }
 
