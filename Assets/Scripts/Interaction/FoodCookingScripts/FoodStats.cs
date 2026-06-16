@@ -4,8 +4,12 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class FoodStats : MonoBehaviour
 {
+    //FoodTypeStuff
+     public FoodType foodType;
+    
     public float cookingTime; // Time required to cook the food
 
     [SerializeField] private float cookingProgress;
@@ -26,6 +30,20 @@ public class FoodStats : MonoBehaviour
     private Material baseMaterial;
     public Animator FlickerAnimation;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public enum FoodType
+    {
+        Bacon,
+        Egg,
+        Tomato,
+        Sausage,
+    }
+    public float CookRatio
+    {
+        get
+        {
+            return cookingProgress / cookingTime;
+        }
+    }
     void Start()
     {
         
