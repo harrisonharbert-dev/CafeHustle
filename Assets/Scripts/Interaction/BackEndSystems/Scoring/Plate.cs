@@ -5,7 +5,12 @@ using UnityEngine;
 public class PlateScorer : MonoBehaviour
 {
     public List<FoodStats> foodsOnPlate = new List<FoodStats>();
-
+    public GameObject PerformanceUI;
+    [SerializeField] private PerformanceScreen endGameUI;
+    public void Start()
+    {
+        PerformanceUI.SetActive(false);
+    }
     private void OnTriggerEnter(Collider other)
     {
         FoodStats food = other.GetComponent<FoodStats>();
@@ -23,15 +28,10 @@ public class PlateScorer : MonoBehaviour
         if (food != null)
         {
             foodsOnPlate.Remove(food);
+
         }
     }
 
-    public PlateScorer plate;
-    public void TriggerScore()
-    {
-        float score = ScorePlate();
-        Debug.Log("Plate scored: " + score);
-    }
     public float ScorePlate()
     {
         Order order = GameManager.Instance.currentOrder;

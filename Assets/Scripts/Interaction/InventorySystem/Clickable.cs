@@ -7,12 +7,15 @@ public class Clickable : MonoBehaviour
     public UnityEvent Action;
     private TextMeshProUGUI Description;
     public string DescriptionText;
-    private bool Hovered;
+    [SerializeField] private bool HasText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Description = GameObject.Find("Description").GetComponent<TextMeshProUGUI>();
-        Description.gameObject.SetActive(false);
+        if (HasText)
+        {
+            Description = GameObject.Find("Description").GetComponent<TextMeshProUGUI>();
+            Description.gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -31,17 +34,19 @@ public class Clickable : MonoBehaviour
 
     void OnMouseOver()
     {
-      
-        
-        Description.transform.position = Input.mousePosition;
-        Description.gameObject.SetActive(true);
-        Description.text = DescriptionText;
+        if (HasText)
+        {
+            Description.transform.position = Input.mousePosition;
+            Description.gameObject.SetActive(true);
+            Description.text = DescriptionText;
+        }
     }
-
     void OnMouseExit()
     {
-   
-        Description.text = "";
-        Description.gameObject.SetActive(false);
+        if (HasText)
+        {
+            Description.text = "";
+            Description.gameObject.SetActive(false);
+        }
     }
 }

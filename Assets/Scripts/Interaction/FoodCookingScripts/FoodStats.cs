@@ -29,6 +29,7 @@ public class FoodStats : MonoBehaviour
 
     private Material baseMaterial;
     public Animator FlickerAnimation;
+    public DraggingScript draggingScript;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public enum FoodType
     {
@@ -46,7 +47,7 @@ public class FoodStats : MonoBehaviour
     }
     void Start()
     {
-        
+        draggingScript = GetComponent<DraggingScript>();
         cookingStatusScript = GetComponent<cookingStatus>();
         FlickerAnimation = CookingBar.GetComponent<Animator>();
         baseMaterial = GetComponent<Renderer>().material;
@@ -63,7 +64,7 @@ public class FoodStats : MonoBehaviour
             //Shader
             cookingStatusScript.UpdateShaderStatus();
         }
-        if (IsHovering)
+        if (IsHovering && !draggingScript.dragging)
         { 
             CookingBar.fillAmount = (cookingProgress / (cookingTime));
             if (cookingStatusScript.progress < 1.3f)
@@ -88,7 +89,7 @@ public class FoodStats : MonoBehaviour
                 FlickerAnimation.SetBool("IsFlickering", false);
             }
         }
-        if (CameraController.isMoving) //Removes UI when the camera is moving to prevent UI from being left behind in the world space
+        if (CameraController.isMoving || draggingScript.dragging) //Removes UI when the camera is moving to prevent UI from being left behind in the world space
         {
             CookingUI.gameObject.SetActive(false);
         }

@@ -79,7 +79,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         foodStatsScript.isCooking = false;
         dragging = true;
         rb.useGravity = false;
-        GetComponent<MeshCollider>().enabled = false;
+      
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -106,7 +106,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         
     public void OnEndDrag(PointerEventData eventData)
     {
-        GetComponent<MeshCollider>().enabled = true;
+        
 
         transform.DOShakeScale(jiggleDuration, jiggleStrength, jiggleVibrato, jiggleRandomness, true, ShakeRandomnessMode.Harmonic);
         dragging = false;
