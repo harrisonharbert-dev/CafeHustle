@@ -7,7 +7,7 @@ public class HotbarSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandl
 {
     public Hotbar hotbar;
     public int slotIndex;
-    private Camera cam;
+    [SerializeField] private Camera cam;
     private Vector3 originalScale;
     private const float IncreasedScale = 1.5f;
    

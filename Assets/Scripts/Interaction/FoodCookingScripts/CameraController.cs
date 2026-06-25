@@ -32,12 +32,19 @@ public class CameraController : MonoBehaviour
                 StartCoroutine(CameraMoving());
             }
         }
-        if (Input.GetKeyUp(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            LoadScene("Prototype_environment");
+            
         }
-    }
 
+    }
+    public void LoadScene(string sceneName)
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    }
     IEnumerator CameraMoving()
     {
         isMoving = true;

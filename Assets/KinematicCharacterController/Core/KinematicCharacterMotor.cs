@@ -155,12 +155,12 @@ namespace KinematicCharacterController
     [RequireComponent(typeof(CapsuleCollider))]
     public class KinematicCharacterMotor : MonoBehaviour
     {
-#pragma warning disable 0414
+
         [Header("Components")]
         /// <summary>
         /// The capsule collider of this motor
         /// </summary>
-        [ReadOnly]
+        
         public CapsuleCollider Capsule;
 
         [Header("Capsule Settings")]
@@ -187,9 +187,9 @@ namespace KinematicCharacterController
         /// </summary>
         [SerializeField]
         [Tooltip("Physics material of the Character Capsule (Does not affect character movement. Only affects things colliding with it)")]
-#pragma warning disable 0649
+
         private PhysicsMaterial CapsulePhysicsMaterial;
-#pragma warning restore 0649
+
 
 
         [Header("Grounding settings")]

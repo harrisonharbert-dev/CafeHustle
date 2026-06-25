@@ -2,57 +2,54 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.InputSystem;
+using KinematicCharacterController.Walkthrough.AddingImpulses;
+using KinematicCharacterController;
+
 
 public class Interactable : MonoBehaviour
 {
-    public bool isInRange;
+    public bool isInRange = false; // Is the player in range to interact with this object? // Has the player already interacted with this object?
     public UnityEvent interactAction;
+    public GameObject UI;
 
-    private PlayerMovement playerMovement; //Player movement reference
-
-
-
-
-    void Start()
+    public void Start()
     {
-        //Auto assign player movement by tag
-        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+  
     }
 
+    public void Update()
+    {
+        if (isInRange)
+        {
+            UI.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                InvokeEvent();
+            }
+        }
+        if (isInRange == false)
+        {
+            UI.SetActive(false);
+        }
+    }
     public void InvokeEvent() 
     {
-        Debug.Log($"UnityEvent invoked on game object: {this}");
-
-
-        if (interactAction == null) 
-        {
-            Debug.LogWarning($"UnityEvent interactAction is not assigned on:{this}");
-            return;
-        }
-        //
         interactAction.Invoke(); //Makes unity event happen which is assigned in the inspector
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            playerMovement.SetCurrentInteractable(this); // Set current interactable script that player can interact with
-
+        Debug.Log("Trigger Entered");
+     
             isInRange = true;
-        }
+            Debug.Log("Player is in range to interact with " + gameObject.name);
+        
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-
-            playerMovement.SetCurrentInteractable(null); // Reset current interactable script
-
-            isInRange = false;
-        }
+        isInRange = false;
+        
     }
 }
