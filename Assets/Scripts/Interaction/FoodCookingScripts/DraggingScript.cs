@@ -16,7 +16,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public float rotationSpeed;
     private Rigidbody rb;
     [HideInInspector] public bool dragging;
-    [HideInInspector] public bool isMeat;
+    [SerializeField] public bool isMeat;
     [SerializeField] private bool isFood;
 
 
@@ -73,7 +73,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("Started dragging: " + gameObject.name);
-
+        this.gameObject.GetComponent<MeshCollider>().enabled = false;
         // Disable collider to prevent physics interference
         transform.DOShakeScale(jiggleDuration, jiggleStrength, jiggleVibrato, jiggleRandomness, true, ShakeRandomnessMode.Harmonic);
         foodStatsScript.isCooking = false;
@@ -106,7 +106,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         
     public void OnEndDrag(PointerEventData eventData)
     {
-        
+        this.gameObject.GetComponent<MeshCollider>().enabled = true;
 
         transform.DOShakeScale(jiggleDuration, jiggleStrength, jiggleVibrato, jiggleRandomness, true, ShakeRandomnessMode.Harmonic);
         dragging = false;

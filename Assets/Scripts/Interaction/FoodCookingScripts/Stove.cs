@@ -13,9 +13,7 @@ public class Stove : MonoBehaviour
     void Update()
     {
         
-    }
-
-
+    }                        
     private void OnCollisionEnter(UnityEngine.Collision collision)
     {
         if (collision.gameObject.tag == "Ingredient")
