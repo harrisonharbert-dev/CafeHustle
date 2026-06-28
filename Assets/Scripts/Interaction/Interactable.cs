@@ -24,6 +24,7 @@ public class Interactable : MonoBehaviour
             UI.SetActive(true);
             if (Input.GetKeyDown(KeyCode.E))
             {
+                UI.SetActive(false);
                 InvokeEvent();
             }
         }
