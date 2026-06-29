@@ -7,7 +7,9 @@ public class LookPosition : MonoBehaviour
     [SerializeField] private FLookAnimator lookAnimator;
     [SerializeField] private string looktag;
 
-
+    [SerializeField] private float refreshRate = 0.2f;
+    private float refreshTimer;
+    private GameObject closest;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,7 +18,13 @@ public class LookPosition : MonoBehaviour
 
     void Update()
     {
-        GameObject closest = FindClosestWithTag(looktag);
+        refreshTimer -= Time.deltaTime;
+        if (refreshTimer <= 0f)
+        {
+            closest = FindClosestWithTag(looktag);
+            refreshTimer = refreshRate;
+        }
+
         if (closest != null)
             lookAnimator.FollowOffset = closest.transform.position;
     }
