@@ -4,10 +4,11 @@ public class CharacterAnimationController : MonoBehaviour
 {
 
     public Animator animator;
+    private PlayerInputController playerInputController;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        playerInputController = GetComponent<PlayerInputController>();
     }
 
     // Update is called once per frame
@@ -18,6 +19,7 @@ public class CharacterAnimationController : MonoBehaviour
 
         bool isRunning = horizontal != 0 || vertical != 0;
 
+        if (!playerInputController.lockMovement)
         animator.SetBool("isRunning", isRunning);
     }
 }

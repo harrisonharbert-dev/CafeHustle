@@ -2,5 +2,27 @@
 ---
 Narrator: I love cheeese.
 Narrator: I love beans.
+-> Yeah!
+    Narrator: beans
+-> I love beans!
+    Narrator: Who doesn't?
+===
 
+
+
+
+title: NPC
+---
+Girl: Hi!
+Girl: Welcome to the Spirit Cafe!
+-> Hi!
+    Girl: Hello!
+-> What should I do?
+    Girl: I don't know...
+    Girl: ...
+        -> I love beans
+            Girl: Beans?
+            <<jump Start>>
+        -> Bye
+    Girl: bye.
 ===
