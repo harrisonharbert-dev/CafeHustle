@@ -22,7 +22,7 @@ public class Interactable : MonoBehaviour
     {
         none,
         dialogue,
-        focusdialogue
+        dialogueFocusedCamera
     }
 
     [Header("Dialogue")]
@@ -58,7 +58,7 @@ public class Interactable : MonoBehaviour
                 useDialogueCamera = false;
             break;
 
-            case dialogueType.focusdialogue:
+            case dialogueType.dialogueFocusedCamera:
                 useDialogue = true;
                 useDialogueCamera = true;
             break;

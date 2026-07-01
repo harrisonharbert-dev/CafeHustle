@@ -1,12 +1,15 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterAnimationController : MonoBehaviour
 {
 
-    public Animator animator;
+    [SerializeField] private Animator animator;
+    private float moveSpeed;
+    private string blendName = "Blend";
     private PlayerInputController playerInputController;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
         playerInputController = GetComponent<PlayerInputController>();
     }
@@ -14,12 +17,20 @@ public class CharacterAnimationController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-
-        bool isRunning = horizontal != 0 || vertical != 0;
+        float blendValue = 0f;
 
         if (!playerInputController.lockMovement)
-        animator.SetBool("isRunning", isRunning);
+        {
+            float moveSpeed = playerInputController.moveInput.magnitude;
+
+            if (!playerInputController.isRunning)
+            {
+                moveSpeed *= 0.5f;
+            }
+
+            blendValue = moveSpeed;
+        }
+
+        animator.SetFloat(blendName, blendValue, 0.1f, Time.deltaTime);
     }
 }

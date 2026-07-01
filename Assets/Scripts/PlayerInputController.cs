@@ -7,10 +7,20 @@ public class PlayerInputController : MonoBehaviour
 {
 
     //Move direction vector
-    private Vector2 moveInput;
+    [HideInInspector] public Vector2 moveInput;
     private Rigidbody rigidBody;
     private Transform cameraTransform;
-    [SerializeField] private float moveSpeed = 5;
+    
+    [System.Serializable]
+    public struct moveStates
+    {
+        public float walking;
+        public float running;
+    }
+
+    public moveStates moveSpeed;
+    private float maxSpeed;
+    [HideInInspector] public bool isRunning = false;
 
     [HideInInspector] public bool lockMovement = false;
     [HideInInspector] private InteractPrompt UI;
@@ -33,6 +43,8 @@ public class PlayerInputController : MonoBehaviour
         //Find UI Prompt
         UI = GameObject.FindGameObjectWithTag("InteractPrompt").GetComponent<InteractPrompt>();
 
+        maxSpeed = moveSpeed.walking;
+
         cameraTransform = Camera.main.transform;
         // Get Rigid body if unassigned
         if (rigidBody == null)
@@ -51,13 +63,8 @@ public class PlayerInputController : MonoBehaviour
     public void SetMovementLock(bool option) 
     {
         lockMovement = option;
-
-        if (currentInteractable.useDialogueCamera) {
-            int value = option ? 1 : -1;
-            dialogueCamera.Priority = value;
-        }
-
         //Hide cursor
+        Cursor.visible = option;
         if (option == false)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -66,16 +73,26 @@ public class PlayerInputController : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
         }
-        Cursor.visible = option;
+        
+        moveInput = new Vector2(0f,0f);
+
+        if (currentInteractable.useDialogueCamera) {
+            int value = option ? 1 : -1;
+            dialogueCamera.Priority = value;
+        }
+
+        
+        
     }
 
 
     public void Move(InputAction.CallbackContext context)
     {
-        if (lockMovement) return;
-
+        if (!lockMovement)
+        {
         //Move input taken from player input
         moveInput = context.ReadValue<Vector2>().normalized;
+        }
     }
 
 
@@ -85,14 +102,26 @@ public class PlayerInputController : MonoBehaviour
         {
             currentInteractable.InvokeEvent();
             UI.SetPromptVisibility(false);
-
-            if (currentInteractable.useDialogue)
-            {
-                transform.DOLookAt(currentInteractable.transform.position, interactRotationDuration, AxisConstraint.Y);
-            }
+            transform.DOLookAt(currentInteractable.transform.position, interactRotationDuration, AxisConstraint.Y);
         }
     }
 
+
+    public void Run(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            maxSpeed = moveSpeed.running;
+            isRunning = true;
+        } 
+        
+        else if (context.canceled)
+        {
+            maxSpeed = moveSpeed.walking;
+            isRunning = false;
+        }
+
+    }
     private void FixedUpdate()
 {
     Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, transform.up).normalized;
@@ -102,7 +131,7 @@ public class PlayerInputController : MonoBehaviour
 
     Vector3 verticalVelocity = Vector3.Project(rigidBody.linearVelocity, transform.up);
 
-    rigidBody.linearVelocity = moveDirection * moveSpeed + verticalVelocity;
+    rigidBody.linearVelocity = moveDirection * maxSpeed + verticalVelocity;
 
     if (moveDirection.sqrMagnitude > 0.01f)
     {

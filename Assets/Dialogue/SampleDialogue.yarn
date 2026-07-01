@@ -1,10 +1,12 @@
 ﻿title: Start
 ---
+<<play_emote emote2 heart>>
 Narrator: I love cheeese.
 Narrator: I love beans.
 -> Yeah!
     Narrator: beans
 -> I love beans!
+    <<play_emote player_emote heart>>
     Narrator: Who doesn't?
 ===
 
@@ -13,16 +15,42 @@ Narrator: I love beans.
 
 title: NPC
 ---
-Girl: Hi!
-Girl: Welcome to the Spirit Cafe!
+<<play_emote emote exclaimation>>
+Mercedes: Hi!
+Mercedes: Welcome to the Spirit Cafe!
+
 -> Hi!
-    Girl: Hello!
+    Mercedes: Hello!
 -> What should I do?
-    Girl: I don't know...
-    Girl: ...
-        -> I love beans
-            Girl: Beans?
-            <<jump Start>>
-        -> Bye
-    Girl: bye.
+    Mercedes: I don't know...
+    <<play_emote emote dots3>>
+    Mercedes: ...
+        -> I love beans.
+            Mercedes: Beans?
+            <<play_emote emote heart>>
+            Mercedes: I love beans too!
+            <<play_emote player_emote faceHappy>>
+            Mercedes: Yay!
+        -> I hate beans.
+            Mercedes: Why?
+            <<play_emote emote faceSad>>
+            Mercedes: I like beans...
+            Mercedes: Don't you?
+    Mercedes: bye.
+===
+
+title: NPC2
+---
+HotRod: Hello I am HotRod.
+HotRod: I am in the land of the Maple Syrups right now.
+<<play_emote emote_hotrod faceSad>>
+HotRod: Sorry I can't code anything right now
+HotRod: Bye!
+===
+
+
+title: Example
+---
+Maple Syrup: I am maple syrup steve
+<<play_emote emote_stove cash>>
 ===

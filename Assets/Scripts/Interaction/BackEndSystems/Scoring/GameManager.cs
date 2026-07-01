@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        //set cursor to on
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void ServeFood()
