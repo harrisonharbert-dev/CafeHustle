@@ -2,6 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
+using NUnit.Framework;
 
 public class PlayerInputController : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class PlayerInputController : MonoBehaviour
     [HideInInspector] public Vector2 moveInput;
     private Rigidbody rigidBody;
     private Transform cameraTransform;
-    
+
     [System.Serializable]
     public struct moveStates
     {
@@ -30,7 +31,9 @@ public class PlayerInputController : MonoBehaviour
 
 
     [Header("Interactables")]
-    [SerializeField] private Interactable currentInteractable;
+    private Interactable currentInteractable;
+    private CarryObject currentCarryObject;
+    private bool isCarrying = false;
     [SerializeField] private float interactRotationDuration = 0.5f;
     [SerializeField] private CinemachineCamera dialogueCamera;
 
@@ -51,16 +54,30 @@ public class PlayerInputController : MonoBehaviour
         {
             rigidBody = GetComponent<Rigidbody>();
         }
-    }   
+    }
 
 
-    
-    public void SetCurrentInteractable(Interactable newTarget) 
+
+    public void SetCurrentInteractable(Interactable newTarget)
     {
         currentInteractable = newTarget;
     }
 
-    public void SetMovementLock(bool option) 
+    public void SetCurrentCarry(CarryObject newTarget)
+    {
+        currentCarryObject = newTarget;
+
+        if (isCarrying == false)
+        {
+            UI.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
+        }
+        else if (isCarrying == true)
+        {
+            UI.UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
+        }
+    }
+
+    public void SetMovementLock(bool option)
     {
         lockMovement = option;
         //Hide cursor
@@ -73,16 +90,17 @@ public class PlayerInputController : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
         }
-        
-        moveInput = new Vector2(0f,0f);
 
-        if (currentInteractable.useDialogueCamera) {
+        moveInput = new Vector2(0f, 0f);
+
+        if (currentInteractable != null && currentInteractable.useDialogueCamera && currentInteractable.isInRange)
+        {
             int value = option ? 1 : -1;
             dialogueCamera.Priority = value;
         }
 
-        
-        
+
+
     }
 
 
@@ -90,22 +108,55 @@ public class PlayerInputController : MonoBehaviour
     {
         if (!lockMovement)
         {
-        //Move input taken from player input
-        moveInput = context.ReadValue<Vector2>().normalized;
+            //Move input taken from player input
+            moveInput = context.ReadValue<Vector2>().normalized;
         }
     }
 
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if (currentInteractable.isInRange && lockMovement == false && context.performed && currentInteractable != null)
+        if (currentInteractable.isInRange && !lockMovement && context.performed && currentInteractable != null)
         {
-            currentInteractable.InvokeEvent();
+
             UI.SetPromptVisibility(false);
-            transform.DOLookAt(currentInteractable.transform.position, interactRotationDuration, AxisConstraint.Y);
+            transform.DOLookAt(currentInteractable.transform.position, interactRotationDuration, AxisConstraint.Y).OnComplete(() =>
+            {
+                currentInteractable.InvokeEvent();
+            });
+
         }
     }
 
+
+    public void Grab(InputAction.CallbackContext context)
+    {
+        if (currentCarryObject.isInRange && !lockMovement && context.performed && currentCarryObject != null)
+        {
+            
+            
+            transform.DOLookAt(currentCarryObject.transform.position, interactRotationDuration, AxisConstraint.Y).OnComplete(() =>
+            {
+                
+                if (isCarrying == false)
+                {
+                    currentCarryObject.SetGrab();
+                    isCarrying = true;
+
+
+                }
+                else if (isCarrying == true)
+                {
+                    currentCarryObject.SetDrop();
+                    isCarrying = false;
+
+
+                }
+
+                
+            });
+        }
+    }
 
     public void Run(InputAction.CallbackContext context)
     {
@@ -113,8 +164,8 @@ public class PlayerInputController : MonoBehaviour
         {
             maxSpeed = moveSpeed.running;
             isRunning = true;
-        } 
-        
+        }
+
         else if (context.canceled)
         {
             maxSpeed = moveSpeed.walking;
@@ -123,21 +174,21 @@ public class PlayerInputController : MonoBehaviour
 
     }
     private void FixedUpdate()
-{
-    Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, transform.up).normalized;
-    Vector3 cameraRight = Vector3.ProjectOnPlane(cameraTransform.right, transform.up).normalized;
-
-    Vector3 moveDirection = (cameraForward * moveInput.y + cameraRight * moveInput.x).normalized;
-
-    Vector3 verticalVelocity = Vector3.Project(rigidBody.linearVelocity, transform.up);
-
-    rigidBody.linearVelocity = moveDirection * maxSpeed + verticalVelocity;
-
-    if (moveDirection.sqrMagnitude > 0.01f)
     {
-        rigidBody.MoveRotation(
-            Quaternion.LookRotation(moveDirection, transform.up)
-        );
+        Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, transform.up).normalized;
+        Vector3 cameraRight = Vector3.ProjectOnPlane(cameraTransform.right, transform.up).normalized;
+
+        Vector3 moveDirection = (cameraForward * moveInput.y + cameraRight * moveInput.x).normalized;
+
+        Vector3 verticalVelocity = Vector3.Project(rigidBody.linearVelocity, transform.up);
+
+        rigidBody.linearVelocity = moveDirection * maxSpeed + verticalVelocity;
+
+        if (moveDirection.sqrMagnitude > 0.01f)
+        {
+            rigidBody.MoveRotation(
+                Quaternion.LookRotation(moveDirection, transform.up)
+            );
+        }
     }
-}
 }

@@ -14,6 +14,12 @@ public class CharacterAnimationController : MonoBehaviour
         playerInputController = GetComponent<PlayerInputController>();
     }
 
+
+    public void SetTrigger(string trigger)
+    {
+        animator.SetTrigger(trigger);        
+    }
+
     // Update is called once per frame
     void Update()
     {

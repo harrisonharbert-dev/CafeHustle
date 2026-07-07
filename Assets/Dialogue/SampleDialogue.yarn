@@ -26,10 +26,12 @@ Mercedes: Welcome to the Spirit Cafe!
     <<play_emote emote dots3>>
     Mercedes: ...
         -> I love beans.
+            <<set_eye girl_2 8>>
             Mercedes: Beans?
             <<play_emote emote heart>>
             Mercedes: I love beans too!
             <<play_emote player_emote faceHappy>>
+            <<set_eye girl_2 0>>
             Mercedes: Yay!
         -> I hate beans.
             Mercedes: Why?

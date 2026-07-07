@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+using Yarn.Unity;
 
 public class EyeAnimator : MonoBehaviour
 {
@@ -15,6 +17,8 @@ public class EyeAnimator : MonoBehaviour
         propertyBlock = new MaterialPropertyBlock();
     }
 
+
+    [YarnCommand("set_eye")]
     public void SetEyeIndex(int index)
     {
         eyeRenderer.GetPropertyBlock(propertyBlock);

@@ -34,8 +34,24 @@ public class Interactable : MonoBehaviour
 
     [SerializeField] private string dialogueName;
 
-    
+        public enum PromptText
+    {
+        Use,
+        PickUp,
+        Talk,
+        Open,
+        Read,
+        Drop
+    }
 
+    public enum PromptKey
+    {
+        E,
+        F
+    }
+    [Header("Interaction Prompt")]
+    [SerializeField] private PromptText promptText;
+    [SerializeField] private PromptKey promptKey;
     
 
 
@@ -94,7 +110,9 @@ public class Interactable : MonoBehaviour
 
             PlayerInputController player = other.GetComponent<PlayerInputController>();
             player.SetCurrentInteractable(this);
+            UI.UpdateUIInfo(promptText, promptKey);
             UI.SetPromptVisibility(true);
+            
         }
 
     }
