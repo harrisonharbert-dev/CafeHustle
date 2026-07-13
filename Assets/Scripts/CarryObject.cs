@@ -3,11 +3,22 @@ using DG.Tweening;
 
 public class CarryObject : MonoBehaviour
 {
+
+    [Header("Unity Events")]
+    [SerializeField] private UnityEvent onPickUpEvent;
+    [SerializeField] private UnityEvent onDropEvent;
+    [SerializeField] private UnityEvent onDeliverEvent;
+
+    [Header("Player References")]  
     [SerializeField] GameObject player;
+
+    //Private References
 
     private CharacterAnimationController animator;
     private PlayerInputController inputController;
     private InteractPrompt UI;
+    private string animatorTag = "isCarrying";
+    private float transitionDuration = 0.3f;
     [HideInInspector] public bool isInRange;
 
 
@@ -21,22 +32,28 @@ public class CarryObject : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created 
     public void SetGrab()
     {
-        
+
+        //Collider and rigid body
         Rigidbody rb = GetComponent<Rigidbody>();
         Collider col = GetComponent<Collider>();
 
+
+            //Attach to player arm
             transform.SetParent(player.transform);
-            transform.DOLocalMove(Vector3.zero,0.3f);
-            transform.DOLocalRotate(Vector3.zero,0.3f);
+            transform.DOLocalMove(Vector3.zero,transitionDuration);
+            transform.DOLocalRotate(Vector3.zero,transitionDuration);
 
             rb.isKinematic = true;
             col.enabled = false;
 
-            Debug.Log("carrying");
+            
 
 
 
-        animator.SetTrigger("isCarrying");
+        onPickUpEvent.Invoke();
+
+        //Character Animator trigger
+        animator.SetTrigger(animatorTag);
     }
 
     public void SetDrop()
@@ -52,9 +69,29 @@ public class CarryObject : MonoBehaviour
         Debug.Log("dropped");
 
 
+
+        //
+        onDropEvent.Invoke();
+
         // Set Animator trigger
-        animator.SetTrigger("isCarrying");
+        animator.SetTrigger(animatorTag);
     }
+
+
+
+
+
+    public void SetUse()
+    {
+        onDeliverEvent.Invoke();
+        animator.SetTrigger(animatorTag);
+    }
+
+
+
+
+
+
 
     void OnTriggerEnter(Collider other)
     {
