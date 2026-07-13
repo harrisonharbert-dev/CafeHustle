@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using DG.Tweening;
 
 public class CarryObject : MonoBehaviour
@@ -12,39 +13,33 @@ public class CarryObject : MonoBehaviour
     [Header("Player References")]  
     [SerializeField] GameObject player;
 
+    [Header("Item Properties")]
+    public string itemID;
+    [SerializeField] private Vector3 carryRotation;
+    [SerializeField] private Vector3 carryPosition;
+
     //Private References
 
-    private CharacterAnimationController animator;
-    private PlayerInputController inputController;
-    private InteractPrompt UI;
+
     private string animatorTag = "isCarrying";
     private float transitionDuration = 0.3f;
     [HideInInspector] public bool isInRange;
 
 
-    void Start()
-    {
-        animator = FindAnyObjectByType<CharacterAnimationController>();
-        inputController = FindAnyObjectByType<PlayerInputController>();
-        UI = FindAnyObjectByType<InteractPrompt>();
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created 
     public void SetGrab()
     {
 
         //Collider and rigid body
-        Rigidbody rb = GetComponent<Rigidbody>();
-        Collider col = GetComponent<Collider>();
 
 
             //Attach to player arm
             transform.SetParent(player.transform);
-            transform.DOLocalMove(Vector3.zero,transitionDuration);
-            transform.DOLocalRotate(Vector3.zero,transitionDuration);
+            transform.DOLocalMove(carryPosition,transitionDuration);
+            transform.DOLocalRotate(carryRotation,transitionDuration);
 
-            rb.isKinematic = true;
-            col.enabled = false;
+
 
             
 
@@ -52,21 +47,17 @@ public class CarryObject : MonoBehaviour
 
         onPickUpEvent.Invoke();
 
-        //Character Animator trigger
-        animator.SetTrigger(animatorTag);
+        CharacterAnimationController.instance.SetTrigger(animatorTag);
     }
 
     public void SetDrop()
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        Collider col = GetComponent<Collider>();
+
         // Remove parent and reenable colliders and rigid body
         transform.SetParent(null);
 
-        rb.isKinematic = false;
-        col.enabled = true;
 
-        Debug.Log("dropped");
+
 
 
 
@@ -74,17 +65,19 @@ public class CarryObject : MonoBehaviour
         onDropEvent.Invoke();
 
         // Set Animator trigger
-        animator.SetTrigger(animatorTag);
+        CharacterAnimationController.instance.SetTrigger(animatorTag);
     }
 
 
 
 
 
-    public void SetUse()
+    public void SetDeliver()
     {
         onDeliverEvent.Invoke();
-        animator.SetTrigger(animatorTag);
+        CharacterAnimationController.instance.SetTrigger(animatorTag);
+
+        Destroy(gameObject);
     }
 
 
@@ -98,9 +91,9 @@ public class CarryObject : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             isInRange = true;
-            inputController.SetCurrentCarry(this);
+            PlayerInputController.instance.SetCurrentCarry(this);
 
-            UI.SetPromptVisibility(true);
+            InteractPrompt.instance.SetPromptVisibility(true);
             
         }
     }
@@ -111,7 +104,7 @@ public class CarryObject : MonoBehaviour
         {
             isInRange = false;
 
-            UI.SetPromptVisibility(false);
+            InteractPrompt.instance.SetPromptVisibility(false);
         }
     }
 }

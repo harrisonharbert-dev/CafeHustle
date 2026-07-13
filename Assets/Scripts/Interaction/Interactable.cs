@@ -10,14 +10,12 @@ using Yarn.Unity;
 
 public class Interactable : MonoBehaviour
 {
-    
+
     [HideInInspector] public bool isInRange = false; // Is the player in range to interact with this object? // Has the player already interacted with this object?
     [Header("Unity Events")]
     [Space(15)]
     public UnityEvent interactAction;
-    private InteractPrompt UI;
     private DialogueRunner dialogueRunner;
-    private PlayerInputController player;
     public enum dialogueType
     {
         none,
@@ -34,14 +32,15 @@ public class Interactable : MonoBehaviour
 
     [SerializeField] private string dialogueName;
 
-        public enum PromptText
+    public enum PromptText
     {
         Use,
         PickUp,
         Talk,
         Open,
         Read,
-        Drop
+        Drop,
+        Deliver,
     }
 
     public enum PromptKey
@@ -52,32 +51,30 @@ public class Interactable : MonoBehaviour
     [Header("Interaction Prompt")]
     [SerializeField] private PromptText promptText;
     [SerializeField] private PromptKey promptKey;
-    
+
 
 
     public void Start()
     {
-        UI = GameObject.FindGameObjectWithTag("InteractPrompt").GetComponent<InteractPrompt>();
         dialogueRunner = GameObject.FindGameObjectWithTag("DialogueRunner").GetComponent<DialogueRunner>();
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInputController>();
 
         switch (dialogueOption)
         {
             case dialogueType.none:
                 useDialogue = false;
                 useDialogueCamera = false;
-            break;
+                break;
 
 
             case dialogueType.dialogue:
                 useDialogue = true;
                 useDialogueCamera = false;
-            break;
+                break;
 
             case dialogueType.dialogueFocusedCamera:
                 useDialogue = true;
                 useDialogueCamera = true;
-            break;
+                break;
         }
     }
 
@@ -87,8 +84,9 @@ public class Interactable : MonoBehaviour
     public void InvokeEvent()
     {
 
-        if (!useDialogue) {
-        interactAction.Invoke(); //Makes unity event happen which is assigned in the inspector
+        if (!useDialogue)
+        {
+            interactAction.Invoke(); //Makes unity event happen which is assigned in the inspector
         }
 
 
@@ -101,27 +99,40 @@ public class Interactable : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player")) {
+        if (other.gameObject.CompareTag("Player"))
+        {
             Debug.Log("Trigger Entered");
 
             isInRange = true;
 
             Debug.Log("Player is in range to interact with " + gameObject.name);
 
-            PlayerInputController player = other.GetComponent<PlayerInputController>();
-            player.SetCurrentInteractable(this);
-            UI.UpdateUIInfo(promptText, promptKey);
-            UI.SetPromptVisibility(true);
-            
+            PlayerInputController.instance.SetCurrentInteractable(this);
+
+            InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
+            InteractPrompt.instance.SetPromptVisibility(true);
+
         }
 
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player")) {
+        if (other.gameObject.CompareTag("Player"))
+        {
             isInRange = false;
-            UI.SetPromptVisibility(false);
+
+            switch (PlayerInputController.instance.playerCarryingState)
+            {
+                case PlayerInputController.carryingState.none:
+                    InteractPrompt.instance.SetPromptVisibility(false);
+                    break;
+
+                case PlayerInputController.carryingState.carryingObject:
+                    InteractPrompt.instance.UpdateUIInfo(PromptText.Drop, PromptKey.F);
+                    break;
+            }
+
         }
 
     }

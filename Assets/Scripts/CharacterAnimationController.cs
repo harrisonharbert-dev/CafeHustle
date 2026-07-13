@@ -7,13 +7,20 @@ public class CharacterAnimationController : MonoBehaviour
     [SerializeField] private Animator animator;
     private float moveSpeed;
     private string blendName = "Blend";
-    private PlayerInputController playerInputController;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    public static CharacterAnimationController instance {get; private set;}
     private void Awake()
     {
-        playerInputController = GetComponent<PlayerInputController>();
-    }
 
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
 
     public void SetTrigger(string trigger)
     {
@@ -25,11 +32,11 @@ public class CharacterAnimationController : MonoBehaviour
     {
         float blendValue = 0f;
 
-        if (!playerInputController.lockMovement)
+        if (!PlayerInputController.instance.lockMovement)
         {
-            float moveSpeed = playerInputController.moveInput.magnitude;
+            float moveSpeed = PlayerInputController.instance.moveInput.magnitude;
 
-            if (!playerInputController.isRunning)
+            if (!PlayerInputController.instance.isRunning)
             {
                 moveSpeed *= 0.5f;
             }

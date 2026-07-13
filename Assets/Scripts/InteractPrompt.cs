@@ -14,7 +14,7 @@ using UnityEngine.UI;
 
 public class InteractPrompt : MonoBehaviour
 {
-    
+
 
     private CanvasGroup canvasGroup;
     private RectTransform rectTransform;
@@ -32,6 +32,21 @@ public class InteractPrompt : MonoBehaviour
     [SerializeField] private Sprite eSprite;
     [SerializeField] private Sprite fSprite;
 
+    public static InteractPrompt instance { get; private set; }
+
+
+    private void Awake()
+    {
+
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -42,12 +57,12 @@ public class InteractPrompt : MonoBehaviour
         canvasGroup.alpha = 0f;
     }
 
-    
+
     public void SetPromptVisibility(bool value)
     {
-            float target = value ? 1f : 0f;
-            canvasGroup.DOFade(target, fadeDuration);
-            
+        float target = value ? 1f : 0f;
+        canvasGroup.DOFade(target, fadeDuration);
+
     }
 
     private string GetPromptText(Interactable.PromptText type)
@@ -60,6 +75,7 @@ public class InteractPrompt : MonoBehaviour
             Interactable.PromptText.Open => "Open",
             Interactable.PromptText.Read => "Read",
             Interactable.PromptText.Drop => "Drop",
+            Interactable.PromptText.Deliver => "Deliver",
             _ => "Interact"
         };
     }
