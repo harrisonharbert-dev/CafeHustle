@@ -189,7 +189,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &4026920176035076217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,65 +219,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a5b76949dd07b7439314015205daccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  emotes:
-  - name: alert
-    sprite: {fileID: 21300000, guid: ea409224bb26d7747a0ac52a84f55231, type: 3}
-  - name: anger
-    sprite: {fileID: 21300000, guid: 85925363e5422c34fa81e5c481dab101, type: 3}
-  - name: bars
-    sprite: {fileID: 21300000, guid: 1a4c51baebcab1f4f8f6211372b4b3d6, type: 3}
-  - name: cash
-    sprite: {fileID: 21300000, guid: 61317dbe43707ee42a992ff8fa765344, type: 3}
-  - name: circle
-    sprite: {fileID: 21300000, guid: c15e741a2d5c45b499c25e929132e4bd, type: 3}
-  - name: cloud
-    sprite: {fileID: 21300000, guid: 96dcbedf7bbe6ee43aa3b3788d95780b, type: 3}
-  - name: cross
-    sprite: {fileID: 21300000, guid: e6ecd93d2128fe24fad317d1a006c48d, type: 3}
-  - name: dots1
-    sprite: {fileID: 21300000, guid: 24837918fec4bb64cb8090a179e88562, type: 3}
-  - name: dots2
-    sprite: {fileID: 21300000, guid: 360ab1d56aed3364cb2609ff6fc52f4a, type: 3}
-  - name: dots3
-    sprite: {fileID: 21300000, guid: 360ab1d56aed3364cb2609ff6fc52f4a, type: 3}
-  - name: drop
-    sprite: {fileID: 21300000, guid: fa3fbee1091e92d4fa6503b6f4dade99, type: 3}
-  - name: drops
-    sprite: {fileID: 21300000, guid: 5538b2f0931131843b60e57cb05f09c8, type: 3}
-  - name: exclaimation
-    sprite: {fileID: 21300000, guid: 514788ae80b648741baeb27b23278c54, type: 3}
-  - name: exclaimations
-    sprite: {fileID: 21300000, guid: b0ed18063c0a21e4a9b68af7117759f1, type: 3}
-  - name: faceAngry
-    sprite: {fileID: 21300000, guid: 158d4ea8458c06b4689f2e79ab17bafa, type: 3}
-  - name: faceHappy
-    sprite: {fileID: 21300000, guid: 3fb1874bb5b9ab648b09ad7b33e4e91c, type: 3}
-  - name: faceSad
-    sprite: {fileID: 21300000, guid: 733e4c405e2d3384ba9ddc86205c0744, type: 3}
-  - name: heart
-    sprite: {fileID: 21300000, guid: 306c8c04750801d419b67008ca3600c9, type: 3}
-  - name: heartBroken
-    sprite: {fileID: 21300000, guid: 59fdfb85dfa8da5409be223fe3083209, type: 3}
-  - name: hearts
-    sprite: {fileID: 21300000, guid: 26a0ffb4aff42c74aa89eef07acb18cd, type: 3}
-  - name: idea
-    sprite: {fileID: 21300000, guid: a3f7c5631d999114abcf19c4f4dc4e05, type: 3}
-  - name: laugh
-    sprite: {fileID: 21300000, guid: 46eb5d5c0a857fc4ea1a9b5738207262, type: 3}
-  - name: music
-    sprite: {fileID: 21300000, guid: 8daadfd1fa2549e4fb1bcb90346de42f, type: 3}
-  - name: question
-    sprite: {fileID: 21300000, guid: 7efca24c37667df438fb5c388c931b9b, type: 3}
-  - name: sleep
-    sprite: {fileID: 21300000, guid: 77146f494c4e3154a82164e57e26cbdc, type: 3}
-  - name: sleeps
-    sprite: {fileID: 21300000, guid: a648db625684c424e90d04cd94192748, type: 3}
-  - name: star
-    sprite: {fileID: 21300000, guid: 83fc9d3df402bb74580b76e7a474aa65, type: 3}
-  - name: stars
-    sprite: {fileID: 21300000, guid: 0a4c58218628b7a45839f7044cd4a641, type: 3}
-  - name: swirl
-    sprite: {fileID: 21300000, guid: fe85a9925204c3b469beda1b00daf2c8, type: 3}
+  emoteDictionary:
+    m_keys:
+    - alert
+    - anger
+    - bars
+    - cash
+    - circle
+    - cloud
+    - cross
+    - dots1
+    - dots2
+    - dots3
+    - drop
+    - drops
+    - exclaimation
+    - exclaimations
+    - faceAngry
+    - faceHappy
+    - faceSad
+    - heart
+    - heartBroken
+    - hearts
+    - idea
+    - laugh
+    - music
+    - question
+    - sleep
+    - sleeps
+    - star
+    - stars
+    - swirl
+    m_values:
+    - {fileID: 21300000, guid: ea409224bb26d7747a0ac52a84f55231, type: 3}
+    - {fileID: 21300000, guid: 85925363e5422c34fa81e5c481dab101, type: 3}
+    - {fileID: 21300000, guid: 1a4c51baebcab1f4f8f6211372b4b3d6, type: 3}
+    - {fileID: 21300000, guid: 61317dbe43707ee42a992ff8fa765344, type: 3}
+    - {fileID: 21300000, guid: c15e741a2d5c45b499c25e929132e4bd, type: 3}
+    - {fileID: 21300000, guid: 96dcbedf7bbe6ee43aa3b3788d95780b, type: 3}
+    - {fileID: 21300000, guid: e6ecd93d2128fe24fad317d1a006c48d, type: 3}
+    - {fileID: 21300000, guid: 24837918fec4bb64cb8090a179e88562, type: 3}
+    - {fileID: 21300000, guid: 360ab1d56aed3364cb2609ff6fc52f4a, type: 3}
+    - {fileID: 21300000, guid: b0aa903affd1d9e4ba691b92d90da337, type: 3}
+    - {fileID: 21300000, guid: fa3fbee1091e92d4fa6503b6f4dade99, type: 3}
+    - {fileID: 21300000, guid: 5538b2f0931131843b60e57cb05f09c8, type: 3}
+    - {fileID: 21300000, guid: 514788ae80b648741baeb27b23278c54, type: 3}
+    - {fileID: 21300000, guid: b0ed18063c0a21e4a9b68af7117759f1, type: 3}
+    - {fileID: 21300000, guid: 158d4ea8458c06b4689f2e79ab17bafa, type: 3}
+    - {fileID: 21300000, guid: 3fb1874bb5b9ab648b09ad7b33e4e91c, type: 3}
+    - {fileID: 21300000, guid: 733e4c405e2d3384ba9ddc86205c0744, type: 3}
+    - {fileID: 21300000, guid: 306c8c04750801d419b67008ca3600c9, type: 3}
+    - {fileID: 21300000, guid: 59fdfb85dfa8da5409be223fe3083209, type: 3}
+    - {fileID: 21300000, guid: 26a0ffb4aff42c74aa89eef07acb18cd, type: 3}
+    - {fileID: 21300000, guid: a3f7c5631d999114abcf19c4f4dc4e05, type: 3}
+    - {fileID: 21300000, guid: 46eb5d5c0a857fc4ea1a9b5738207262, type: 3}
+    - {fileID: 21300000, guid: 8daadfd1fa2549e4fb1bcb90346de42f, type: 3}
+    - {fileID: 21300000, guid: 7efca24c37667df438fb5c388c931b9b, type: 3}
+    - {fileID: 21300000, guid: 77146f494c4e3154a82164e57e26cbdc, type: 3}
+    - {fileID: 21300000, guid: a648db625684c424e90d04cd94192748, type: 3}
+    - {fileID: 21300000, guid: 83fc9d3df402bb74580b76e7a474aa65, type: 3}
+    - {fileID: 21300000, guid: 0a4c58218628b7a45839f7044cd4a641, type: 3}
+    - {fileID: 21300000, guid: fe85a9925204c3b469beda1b00daf2c8, type: 3}
   emoteImage: {fileID: 4504808933610524846}
   transitionFrames:
   - {fileID: 21300000, guid: 0ff3bc0a238ebca4da153d7b13514a58, type: 3}

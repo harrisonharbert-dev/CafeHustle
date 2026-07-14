@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -19,10 +20,12 @@ public class DeliveryZone : MonoBehaviour
         {
             Debug.Log("Entered Delivery Zone");
             PlayerInputController.instance.inCarryDeliveryZone = true;
-            PlayerInputController.instance.deliveryZone = gameObject;
+            PlayerInputController.instance.deliveryZonePos = gameObject;
             InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Deliver, Interactable.PromptKey.F);
+            InteractPrompt.instance.SetPromptVisibility(true);
         }
     }
+
 
     void OnTriggerExit(Collider other)
     {
@@ -41,10 +44,6 @@ public class DeliveryZone : MonoBehaviour
                     break;
 
             }
-
-
-
-
         }
     }
 }

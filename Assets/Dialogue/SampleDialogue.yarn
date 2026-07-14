@@ -21,9 +21,11 @@ Mercedes: Welcome to the Spirit Cafe!
 
 -> Hi!
     Mercedes: Hello!
+    <<play_cutscene CutsceneAnimator character_wave>>
 -> What should I do?
     Mercedes: I don't know...
     <<play_emote emote dots3>>
+    
     Mercedes: ...
         -> I love beans.
             <<set_eye girl_2 8>>

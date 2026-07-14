@@ -41,7 +41,7 @@ public class PlayerInputController : MonoBehaviour
         carryingObject,
     }
     public carryingState playerCarryingState;
-    [HideInInspector] public GameObject deliveryZone;
+    [HideInInspector] public GameObject deliveryZonePos;
     [HideInInspector] public bool inCarryDeliveryZone;
     public string currentCarryItemID;
 
@@ -167,9 +167,14 @@ public class PlayerInputController : MonoBehaviour
 
             transform.DOLookAt(currentCarryObject.transform.position, interactRotationDuration, AxisConstraint.Y).OnComplete(() =>
             {
+                useItem();
+            });
+        }
+    }
 
-
-                switch (playerCarryingState)
+    public void useItem()
+    {
+        switch (playerCarryingState)
                 {
                     case carryingState.none:
                         currentCarryObject.SetGrab();
@@ -186,17 +191,20 @@ public class PlayerInputController : MonoBehaviour
                         else
                         {
                             currentCarryObject.SetDeliver();
-                            InteractPrompt.instance.SetPromptVisibility(false);
                         }
                         
                         playerCarryingState = carryingState.none;
                         currentCarryItemID = null;
                         break;
                 }
-            });
-        }
     }
 
+    public void useDrop()
+    {
+        currentCarryObject.SetDrop();
+        InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
+        playerCarryingState = carryingState.none;
+    }
     public void Run(InputAction.CallbackContext context)
     {
         if (context.performed)

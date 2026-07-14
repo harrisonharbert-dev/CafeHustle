@@ -108,9 +108,11 @@ public class Interactable : MonoBehaviour
             Debug.Log("Player is in range to interact with " + gameObject.name);
 
             PlayerInputController.instance.SetCurrentInteractable(this);
-
-            InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
             InteractPrompt.instance.SetPromptVisibility(true);
+            InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
+
+
+
 
         }
 

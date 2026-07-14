@@ -4,17 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using Yarn.Unity;
 
-[System.Serializable]
-public class Emote
-{
-    public string name;
-    public Sprite sprite;
-}
-
 public class CharacterEmote : MonoBehaviour
 {
     [Header("Emotes")]
-    [SerializeField] private List<Emote> emotes = new();
+    public SerializableDictionary<string,Sprite> emoteDictionary;
 
     [Header("UI")]
     [SerializeField] private Image emoteImage;
@@ -26,22 +19,11 @@ public class CharacterEmote : MonoBehaviour
     [SerializeField] private float frameDuration = 0.08f;
     [SerializeField] private float emoteDuration = 2f;
 
-    private Dictionary<string, Sprite> emoteDictionary;
 
     private void Awake()
     {
         //Set default
         emoteImage.sprite = transitionFrames[0];
-
-        emoteDictionary = new Dictionary<string, Sprite>();
-
-        foreach (Emote emote in emotes)
-        {
-            if (!emoteDictionary.ContainsKey(emote.name))
-                emoteDictionary.Add(emote.name, emote.sprite);
-            else
-                Debug.LogWarning($"Duplicate emote name: {emote.name}");
-        }
     }
 
     public Sprite GetEmote(string name)

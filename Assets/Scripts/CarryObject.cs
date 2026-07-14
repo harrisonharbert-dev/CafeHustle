@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class CarryObject : MonoBehaviour
 {
@@ -11,7 +13,7 @@ public class CarryObject : MonoBehaviour
     [SerializeField] private UnityEvent onDeliverEvent;
 
     [Header("Player References")]
-    [SerializeField] GameObject player;
+    [SerializeField] GameObject playerCarryPosition;
 
     [Header("Item Properties")]
     public string itemID;
@@ -22,9 +24,9 @@ public class CarryObject : MonoBehaviour
 
 
     private string carryingTag = "isCarrying";
-    private string throwTag = "isThrow";
     private float transitionDuration = 0.3f;
-    private float jumpPower = 0.3f;
+    private float jumpPower = 1.5f;
+    private float throwDelay = 0.75f;
     [HideInInspector] public bool isInRange;
 
 
@@ -36,7 +38,7 @@ public class CarryObject : MonoBehaviour
 
 
         //Attach to player arm
-        transform.SetParent(player.transform);
+        transform.SetParent(playerCarryPosition.transform);
         transform.DOLocalMove(carryPosition, transitionDuration);
         transform.DOLocalRotate(carryRotation, transitionDuration);
 
@@ -70,13 +72,24 @@ public class CarryObject : MonoBehaviour
 
     public void SetDeliver()
     {
-        CharacterAnimationController.instance.SetTrigger(throwTag);
-    }
+        CutsceneAnimator.instance.playAction("character_throw");
+        CharacterAnimationController.instance.SetTrigger(carryingTag);
 
-    public void Throw()
+
+        StartCoroutine(Throw(throwDelay));
+
+    }
+    public IEnumerator Throw(float delay)
     {
+        yield return new WaitForSeconds(delay);
         onDeliverEvent.Invoke();
-        transform.SetParent(PlayerInputController.instance.deliveryZonePos.transform);
+
+
+        if (PlayerInputController.instance.deliveryZonePos != null)
+
+        {
+            transform.SetParent(PlayerInputController.instance.deliveryZonePos.transform);
+        }
 
         transform.DOLocalJump(Vector3.zero, jumpPower, 1, transitionDuration).OnComplete(() =>
         {
@@ -89,15 +102,17 @@ public class CarryObject : MonoBehaviour
 
 
 
-
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
             isInRange = true;
-            PlayerInputController.instance.SetCurrentCarry(this);
+            if (PlayerInputController.instance.playerCarryingState == PlayerInputController.carryingState.none)
+            {
+                PlayerInputController.instance.SetCurrentCarry(this);
+                InteractPrompt.instance.SetPromptVisibility(true);
+            }
 
-            InteractPrompt.instance.SetPromptVisibility(true);
 
         }
     }
@@ -107,8 +122,10 @@ public class CarryObject : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             isInRange = false;
-
-            InteractPrompt.instance.SetPromptVisibility(false);
+            if (PlayerInputController.instance.playerCarryingState == PlayerInputController.carryingState.none)
+            {
+                InteractPrompt.instance.SetPromptVisibility(false);
+            }
         }
     }
 }
