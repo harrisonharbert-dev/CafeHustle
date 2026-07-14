@@ -10,7 +10,7 @@ public class CarryObject : MonoBehaviour
     [SerializeField] private UnityEvent onDropEvent;
     [SerializeField] private UnityEvent onDeliverEvent;
 
-    [Header("Player References")]  
+    [Header("Player References")]
     [SerializeField] GameObject player;
 
     [Header("Item Properties")]
@@ -21,8 +21,10 @@ public class CarryObject : MonoBehaviour
     //Private References
 
 
-    private string animatorTag = "isCarrying";
+    private string carryingTag = "isCarrying";
+    private string throwTag = "isThrow";
     private float transitionDuration = 0.3f;
+    private float jumpPower = 0.3f;
     [HideInInspector] public bool isInRange;
 
 
@@ -31,23 +33,17 @@ public class CarryObject : MonoBehaviour
     public void SetGrab()
     {
 
-        //Collider and rigid body
 
 
-            //Attach to player arm
-            transform.SetParent(player.transform);
-            transform.DOLocalMove(carryPosition,transitionDuration);
-            transform.DOLocalRotate(carryRotation,transitionDuration);
-
-
-
-            
-
+        //Attach to player arm
+        transform.SetParent(player.transform);
+        transform.DOLocalMove(carryPosition, transitionDuration);
+        transform.DOLocalRotate(carryRotation, transitionDuration);
 
 
         onPickUpEvent.Invoke();
 
-        CharacterAnimationController.instance.SetTrigger(animatorTag);
+        CharacterAnimationController.instance.SetTrigger(carryingTag);
     }
 
     public void SetDrop()
@@ -65,7 +61,7 @@ public class CarryObject : MonoBehaviour
         onDropEvent.Invoke();
 
         // Set Animator trigger
-        CharacterAnimationController.instance.SetTrigger(animatorTag);
+        CharacterAnimationController.instance.SetTrigger(carryingTag);
     }
 
 
@@ -74,12 +70,20 @@ public class CarryObject : MonoBehaviour
 
     public void SetDeliver()
     {
-        onDeliverEvent.Invoke();
-        CharacterAnimationController.instance.SetTrigger(animatorTag);
-
-        Destroy(gameObject);
+        CharacterAnimationController.instance.SetTrigger(throwTag);
     }
 
+    public void Throw()
+    {
+        onDeliverEvent.Invoke();
+        transform.SetParent(PlayerInputController.instance.deliveryZonePos.transform);
+
+        transform.DOLocalJump(Vector3.zero, jumpPower, 1, transitionDuration).OnComplete(() =>
+        {
+            Destroy(gameObject);
+        }
+        );
+    }
 
 
 
@@ -94,7 +98,7 @@ public class CarryObject : MonoBehaviour
             PlayerInputController.instance.SetCurrentCarry(this);
 
             InteractPrompt.instance.SetPromptVisibility(true);
-            
+
         }
     }
 

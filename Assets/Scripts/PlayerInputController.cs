@@ -41,7 +41,7 @@ public class PlayerInputController : MonoBehaviour
         carryingObject,
     }
     public carryingState playerCarryingState;
-    private bool isCarrying = false;
+    [HideInInspector] public GameObject deliveryZone;
     [HideInInspector] public bool inCarryDeliveryZone;
     public string currentCarryItemID;
 
@@ -94,7 +94,6 @@ public class PlayerInputController : MonoBehaviour
     public void SetCurrentCarry(CarryObject newTarget)
     {
         currentCarryObject = newTarget;
-
         switch (playerCarryingState)
         {
             case carryingState.none:

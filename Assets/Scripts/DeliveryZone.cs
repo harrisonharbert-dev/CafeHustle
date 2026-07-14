@@ -17,9 +17,9 @@ public class DeliveryZone : MonoBehaviour
     {
         if (other.CompareTag("Player") && PlayerInputController.instance.currentCarryItemID == requiredItemID)
         {
-
             Debug.Log("Entered Delivery Zone");
             PlayerInputController.instance.inCarryDeliveryZone = true;
+            PlayerInputController.instance.deliveryZone = gameObject;
             InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Deliver, Interactable.PromptKey.F);
         }
     }
@@ -47,7 +47,4 @@ public class DeliveryZone : MonoBehaviour
 
         }
     }
-
-    // Update is called once per frame
-
 }
