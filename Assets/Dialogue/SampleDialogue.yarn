@@ -57,4 +57,25 @@ title: Example
 ---
 Maple Syrup: I am maple syrup steve
 <<play_emote emote_stove cash>>
+Maple Syrup: Steve.
+<<play_cutscene CutsceneAnimator character_wave>>
+===
+
+
+
+
+title: Steve
+---
+Steve: Hi!
+<<play_cutscene CutsceneAnimator character_wave>>
+Steve: I am gay.
+<<play_emote player_emote faceSad>>
+    -> You suck
+        <<play_cutscene CutsceneAnimator character_throw>>
+        Kean: You suck. It sucks to be gay.
+        Steve: Well you got one bit right.
+    -> You should kys
+        Kean: By the way, KYS stands for Keep Yourself Safe.
+        Steve: Thanks buddy.
+Steve: Okay, bye lad.
 ===
