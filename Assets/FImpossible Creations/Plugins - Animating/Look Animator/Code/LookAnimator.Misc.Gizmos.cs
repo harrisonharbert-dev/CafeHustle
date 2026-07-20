@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using FIMSpace.FEditor;
 using UnityEditor;
 using UnityEngine;
@@ -111,7 +111,7 @@ namespace FIMSpace.FLook
 
             if (LeadBone != null)
             {
-                if (LeadBone != transform) UnityEditor.Handles.Label(LeadBone.position, _tex_Finalbone);
+                if (LeadBone != transform) Handles.Label(LeadBone.position, _tex_Finalbone);
 
                 Vector3 previousCheckPos = LeadBone ? LeadBone.position : Vector3.zero;
                 for (int i = 1; i < LookBones.Count; i++)

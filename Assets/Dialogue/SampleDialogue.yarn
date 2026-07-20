@@ -10,37 +10,40 @@ Narrator: I love beans.
     Narrator: Who doesn't?
 ===
 
-
+title: Intro
+---
+The cabin rattles as the wheels glide along the tracks.
+The train screeches to a stop.
+MC: Village Name. Finally, a new start.
+MC: Grandma’s house should be somewhere around here. I was told it would be near the station.
+===
 
 
 title: NPC
 ---
-<<play_emote emote exclaimation>>
-Mercedes: Hi!
-Mercedes: Welcome to the Spirit Cafe!
+Boy: Oh, hey! You must be the new person!
 
--> Hi!
-    Mercedes: Hello!
-    <<play_cutscene CutsceneAnimator character_wave>>
--> What should I do?
-    Mercedes: I don't know...
-    <<play_emote emote dots3>>
-    
-    Mercedes: ...
-        -> I love beans.
-            <<set_eye girl_2 8>>
-            Mercedes: Beans?
-            <<play_emote emote heart>>
-            Mercedes: I love beans too!
-            <<play_emote player_emote faceHappy>>
-            <<set_eye girl_2 0>>
-            Mercedes: Yay!
-        -> I hate beans.
-            Mercedes: Why?
-            <<play_emote emote faceSad>>
-            Mercedes: I like beans...
-            Mercedes: Don't you?
-    Mercedes: bye.
+Boy: My name’s Charlie. What’s yours?
+
+MC: My name’s MC name. What’re doing here?
+
+Boy: My parents have gone inside the station to say goodbye to a friend, so I’m riding my bike. Wanna join?
+
+MC: I think I’m a bit big for your bike, but maybe another time when I get a bike of my own!
+<<player_look_at Character parent1>>
+
+Man: Charlie, who’s this? Oh wait, you must be the newcomer!
+
+Man: I’m Name. You’ve already met Charlie. And this is my wife Name and daughter Name.
+<<player_look_at Character parent2>>
+
+Wife: It’s nice to meet you finally. We’ve been excited to hear a new person was moving all the way out here. It not often you see a new face. What was your name again, love?
+
+MC: My name’s Name. It’s good to see some friendly faces.
+<<player_look_at Character parent1>>
+Man: Well, if you ever need anything, please let us know. We own the local grocery store, so you will know where to find us.
+
+Man: Well, we better get on now, it’s been a big day kids. Take care MC name.
 ===
 
 title: NPC2

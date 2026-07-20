@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace FIMSpace.FLook
 {
@@ -125,7 +125,7 @@ namespace FIMSpace.FLook
             else
             {
                 if (EyesTarget == null)
-                    if (LookState != FLookAnimator.EFHeadLookState.ClampedAngle && LookState != EFHeadLookState.Following) fade = true;
+                    if (LookState != EFHeadLookState.ClampedAngle && LookState != EFHeadLookState.Following) fade = true;
             }
 
             if (fade)

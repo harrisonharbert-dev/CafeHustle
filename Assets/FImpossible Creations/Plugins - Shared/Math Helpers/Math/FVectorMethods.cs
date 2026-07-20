@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace FIMSpace
 {
@@ -12,7 +12,7 @@ namespace FIMSpace
         /// </summary>
         public static Vector3 RandomVector(float rangeA, float rangeB)
         {
-            return new Vector3(UnityEngine.Random.Range(rangeA, rangeB), UnityEngine.Random.Range(rangeA, rangeB), UnityEngine.Random.Range(rangeA, rangeB));
+            return new Vector3(Random.Range(rangeA, rangeB), Random.Range(rangeA, rangeB), Random.Range(rangeA, rangeB));
         }
 
 
@@ -30,7 +30,7 @@ namespace FIMSpace
         /// </summary>
         public static Vector3 RandomVectorNoY(float rangeA, float rangeB)
         {
-            return new Vector3(UnityEngine.Random.Range(rangeA, rangeB), 0f, UnityEngine.Random.Range(rangeA, rangeB));
+            return new Vector3(Random.Range(rangeA, rangeB), 0f, Random.Range(rangeA, rangeB));
         }
 
 
@@ -40,15 +40,15 @@ namespace FIMSpace
         public static Vector3 RandomVectorMinMax(float min, float max)
         {
             float mul1 = 1f;
-            if (UnityEngine.Random.Range(0, 2) == 1) mul1 = -1f;
+            if (Random.Range(0, 2) == 1) mul1 = -1f;
 
             float mul2 = 1f;
-            if (UnityEngine.Random.Range(0, 2) == 1) mul2 = -1f;
+            if (Random.Range(0, 2) == 1) mul2 = -1f;
 
             float mul3 = 1f;
-            if (UnityEngine.Random.Range(0, 2) == 1) mul3 = -1f;
+            if (Random.Range(0, 2) == 1) mul3 = -1f;
 
-            return new Vector3(UnityEngine.Random.Range(min, max) * mul1, UnityEngine.Random.Range(min, max) * mul2, UnityEngine.Random.Range(min, max) * mul3);
+            return new Vector3(Random.Range(min, max) * mul1, Random.Range(min, max) * mul2, Random.Range(min, max) * mul3);
         }
 
 
@@ -58,12 +58,12 @@ namespace FIMSpace
         public static Vector3 RandomVectorNoYMinMax(float min, float max)
         {
             float mul1 = 1f;
-            if (UnityEngine.Random.Range(0, 2) == 1) mul1 = -1f;
+            if (Random.Range(0, 2) == 1) mul1 = -1f;
 
             float mul2 = 1f;
-            if (UnityEngine.Random.Range(0, 2) == 1) mul2 = -1f;
+            if (Random.Range(0, 2) == 1) mul2 = -1f;
 
-            return new Vector3(UnityEngine.Random.Range(min, max) * mul1, 0f, UnityEngine.Random.Range(min, max) * mul2);
+            return new Vector3(Random.Range(min, max) * mul1, 0f, Random.Range(min, max) * mul2);
         }
 
 

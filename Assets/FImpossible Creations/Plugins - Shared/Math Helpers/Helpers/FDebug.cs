@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace FIMSpace
@@ -56,7 +56,7 @@ namespace FIMSpace
             _debugWatch.Stop();
             _LastMeasureMilliseconds = _debugWatch.ElapsedMilliseconds;
             _LastMeasureTicks = _debugWatch.ElapsedTicks;
-            UnityEngine.Debug.Log("Measure " + v + ": " + _debugWatch.ElapsedTicks + " ticks   " + _debugWatch.ElapsedMilliseconds + "ms");
+            Debug.Log("Measure " + v + ": " + _debugWatch.ElapsedTicks + " ticks   " + _debugWatch.ElapsedMilliseconds + "ms");
         }
 
         public static long EndMeasureAndGetTicks()

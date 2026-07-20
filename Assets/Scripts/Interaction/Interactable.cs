@@ -10,12 +10,22 @@ using Yarn.Unity;
 
 public class Interactable : MonoBehaviour
 {
+        public enum interactableType
+    {
+        none,
+        dialogueOnly,
+        dialogueWithEvent,
+        interactableEvent,
+
+    }
+    public interactableType interactType;
 
     [HideInInspector] public bool isInRange = false; // Is the player in range to interact with this object? // Has the player already interacted with this object?
     [Header("Unity Events")]
     [Space(15)]
     public UnityEvent interactAction;
     private DialogueRunner dialogueRunner;
+
     public enum dialogueType
     {
         none,
@@ -28,6 +38,9 @@ public class Interactable : MonoBehaviour
 
     [SerializeField] private dialogueType dialogueOption;
     [HideInInspector] public bool useDialogue;
+
+
+
     [HideInInspector] public bool useDialogueCamera;
 
     [SerializeField] private string dialogueName;
@@ -84,15 +97,23 @@ public class Interactable : MonoBehaviour
     public void InvokeEvent()
     {
 
-        if (!useDialogue)
+        switch(interactType)
         {
-            interactAction.Invoke(); //Makes unity event happen which is assigned in the inspector
-        }
+            case interactableType.none:
+            break;
 
-
-        if (useDialogue)
-        {
+            case interactableType.dialogueOnly:
             dialogueRunner.StartDialogue(dialogueName);
+            break;
+
+            case interactableType.dialogueWithEvent:
+            dialogueRunner.StartDialogue(dialogueName);
+            interactAction.Invoke();
+            break;
+
+            case interactableType.interactableEvent:
+            interactAction.Invoke();
+            break;
         }
     }
 
@@ -138,4 +159,7 @@ public class Interactable : MonoBehaviour
         }
 
     }
+
+
+    
 }

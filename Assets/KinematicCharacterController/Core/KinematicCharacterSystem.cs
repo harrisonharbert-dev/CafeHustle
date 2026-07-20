@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -36,7 +36,7 @@ namespace KinematicCharacterController
 
                 Settings = ScriptableObject.CreateInstance<KCCSettings>();
 
-                GameObject.DontDestroyOnLoad(systemGameObject);
+                DontDestroyOnLoad(systemGameObject);
             }
         }
 

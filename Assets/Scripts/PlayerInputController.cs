@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 using NUnit.Framework;
+using Yarn.Unity;
 
 
 
@@ -128,11 +129,12 @@ public class PlayerInputController : MonoBehaviour
             int value = option ? 1 : -1;
             dialogueCamera.Priority = value;
         }
-
-
-
     }
-
+    [YarnCommand("player_look_at")]
+    public void LookAt(GameObject target)
+    {
+        transform.DOLookAt(target.transform.position, interactRotationDuration,AxisConstraint.Y);
+    }
 
     public void Move(InputAction.CallbackContext context)
     {

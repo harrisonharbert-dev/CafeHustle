@@ -62,8 +62,6 @@ public class InteractPrompt : MonoBehaviour
     {
         float target = value ? 1f : 0f;
         if (target == canvasGroup.alpha) return;
-        if (PlayerInputController.instance.lockMovement) { target = 0f; }
-        ;
         canvasGroup.DOFade(target, fadeDuration);
 
     }
