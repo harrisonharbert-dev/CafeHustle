@@ -261,6 +261,45 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Flipping Minigame",
+            "id": "ec8f0538-fc50-4e89-ad97-55f429a051f3",
+            "actions": [
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "fe1e292c-e9c0-4adf-a072-cac44c279d91",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3d7f7289-7030-475d-aca4-168e8c206783",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5599cd98-a6a3-446c-b466-e21ba267aae5",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

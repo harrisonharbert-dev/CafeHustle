@@ -1,0 +1,88 @@
+using UnityEngine;
+using DG.Tweening;
+using UnityEngine.Events;
+using UnityEngine.UI;
+using UnityEngine.InputSystem;
+
+public class FryingMinigame : MonoBehaviour
+{
+
+    [Header("Game Items")]
+    [SerializeField] private GameObject panPrefab;
+    [SerializeField] private GameObject cookingFoodPrefab;
+
+
+    [Header("Events")]
+    public UnityEvent unityEvent;
+    //Flip Settings
+    private float flipHeight = 0.5f;
+    private int flipNums = 1;
+    private float flipDuration = 1f;
+
+    //QTE Settings
+    private bool popUpActive = false;
+    private float popUpDuration = 3f;
+    private float uiTransitionDuration = 0.3f;
+    [SerializeField] private CanvasGroup popUpUI;
+    [SerializeField] private Image uiCounter;
+
+
+    private Vector3 flipRotation = new Vector3(360f, 0f, 360f);
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    void Start()
+    {
+        popUpUI.alpha = 0f;
+    }
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            unityEvent.Invoke();
+        }
+    }
+
+
+    public void onPopUpEvent()
+    {
+        DOTween.Clear();
+        //show UI
+        uiCounter.fillAmount = 1f;
+        popUpUI.DOFade(1f, uiTransitionDuration);
+
+        popUpActive = true;
+
+        //Count down
+
+        uiCounter.DOFillAmount(0f, popUpDuration).SetEase(Ease.Linear)
+        .OnComplete(() =>
+        {
+            popUpUI.DOFade(0f, uiTransitionDuration);
+            popUpActive = false;
+        });
+    }
+
+
+    // Update is called once per frame
+    public void onFlipFood(GameObject food)
+    {
+        food.transform.DOLocalJump(Vector3.zero, flipHeight, flipNums, flipDuration);
+        food.transform.DOLocalRotate(flipRotation, flipDuration, RotateMode.FastBeyond360);
+    }
+
+    void popUpHide()
+    {
+        popUpUI.DOFade(0f, uiTransitionDuration);
+        popUpActive = false;
+    }
+    public void onPlayerInteract(InputAction.CallbackContext context)
+    {
+        if (context.performed && popUpActive)
+        {
+            popUpUI.DOFade(0f, uiTransitionDuration);
+            popUpActive = false;
+            onFlipFood(cookingFoodPrefab);
+            Debug.Log("Yay you flipped it");
+        }
+    }
+}

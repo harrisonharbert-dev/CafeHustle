@@ -347,6 +347,45 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Flipping Minigame"",
+            ""id"": ""ec8f0538-fc50-4e89-ad97-55f429a051f3"",
+            ""actions"": [
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""fe1e292c-e9c0-4adf-a072-cac44c279d91"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3d7f7289-7030-475d-aca4-168e8c206783"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5599cd98-a6a3-446c-b466-e21ba267aae5"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -359,11 +398,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Game_Escape = m_Game.FindAction("Escape", throwIfNotFound: true);
         m_Game_Sprint = m_Game.FindAction("Sprint", throwIfNotFound: true);
         m_Game_Grab = m_Game.FindAction("Grab", throwIfNotFound: true);
+        // Flipping Minigame
+        m_FlippingMinigame = asset.FindActionMap("Flipping Minigame", throwIfNotFound: true);
+        m_FlippingMinigame_Interact = m_FlippingMinigame.FindAction("Interact", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
     {
         UnityEngine.Debug.Assert(!m_Game.enabled, "This will cause a leak and performance issues, PlayerInput.Game.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_FlippingMinigame.enabled, "This will cause a leak and performance issues, PlayerInput.FlippingMinigame.Disable() has not been called.");
     }
 
     /// <summary>
@@ -586,6 +629,102 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="GameActions" /> instance referencing this action map.
     /// </summary>
     public GameActions @Game => new GameActions(this);
+
+    // Flipping Minigame
+    private readonly InputActionMap m_FlippingMinigame;
+    private List<IFlippingMinigameActions> m_FlippingMinigameActionsCallbackInterfaces = new List<IFlippingMinigameActions>();
+    private readonly InputAction m_FlippingMinigame_Interact;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Flipping Minigame".
+    /// </summary>
+    public struct FlippingMinigameActions
+    {
+        private @PlayerInput m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public FlippingMinigameActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "FlippingMinigame/Interact".
+        /// </summary>
+        public InputAction @Interact => m_Wrapper.m_FlippingMinigame_Interact;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_FlippingMinigame; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="FlippingMinigameActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(FlippingMinigameActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="FlippingMinigameActions" />
+        public void AddCallbacks(IFlippingMinigameActions instance)
+        {
+            if (instance == null || m_Wrapper.m_FlippingMinigameActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_FlippingMinigameActionsCallbackInterfaces.Add(instance);
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="FlippingMinigameActions" />
+        private void UnregisterCallbacks(IFlippingMinigameActions instance)
+        {
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="FlippingMinigameActions.UnregisterCallbacks(IFlippingMinigameActions)" />.
+        /// </summary>
+        /// <seealso cref="FlippingMinigameActions.UnregisterCallbacks(IFlippingMinigameActions)" />
+        public void RemoveCallbacks(IFlippingMinigameActions instance)
+        {
+            if (m_Wrapper.m_FlippingMinigameActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="FlippingMinigameActions.AddCallbacks(IFlippingMinigameActions)" />
+        /// <seealso cref="FlippingMinigameActions.RemoveCallbacks(IFlippingMinigameActions)" />
+        /// <seealso cref="FlippingMinigameActions.UnregisterCallbacks(IFlippingMinigameActions)" />
+        public void SetCallbacks(IFlippingMinigameActions instance)
+        {
+            foreach (var item in m_Wrapper.m_FlippingMinigameActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_FlippingMinigameActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="FlippingMinigameActions" /> instance referencing this action map.
+    /// </summary>
+    public FlippingMinigameActions @FlippingMinigame => new FlippingMinigameActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Game" which allows adding and removing callbacks.
     /// </summary>
@@ -635,5 +774,20 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnGrab(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Flipping Minigame" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="FlippingMinigameActions.AddCallbacks(IFlippingMinigameActions)" />
+    /// <seealso cref="FlippingMinigameActions.RemoveCallbacks(IFlippingMinigameActions)" />
+    public interface IFlippingMinigameActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInteract(InputAction.CallbackContext context);
     }
 }
