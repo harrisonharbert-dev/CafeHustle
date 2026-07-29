@@ -2,88 +2,176 @@ using UnityEngine;
 
 public class KnifeDrawer : MonoBehaviour
 {
+    [Header("References")]
     public Camera cam;
+    public Transform knife;
+
+    [Header("Layers")]
+    public LayerMask knifeLayer;
     public LayerMask foodLayer;
+
+    [Header("Knife Movement")]
+    public float hoverHeight = 0.25f;
+    public float cutHeight = 0.02f;
+    public float boardHeight = 0f;
+    public float knifeFollowSpeed = 50f;
+
+    [Header("Cut Settings")]
+    public float minimumCutDistance = 0.5f;
+    public float bladeCheckRadius = 0.05f;
+
+    private bool holdingKnife;
+    private bool knifeLowered;
 
     private FoodCuttable currentFood;
 
-    private bool dragging;
+    private Vector3 cutStart;
+    private Vector3 lastKnifePosition;
 
-    private Vector3 startPoint;
-    private Vector3 endPoint;
-
-    public LineRenderer line;
-
-    public float lineOffset = 0.05f;
-
-    void Start()
-    {
-        line.enabled = false;
-        line.positionCount = 2;
-        line.useWorldSpace = true;
-
-        line.startWidth = 0.01f;
-        line.endWidth = 0.01f;
-    }
+    private float cutDistance;
 
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        HandlePickup();
+
+        if (!holdingKnife)
+            return;
+
+        MoveKnife();
+
+        HandleCutting();
+    }
+
+
+    void HandlePickup()
+    {
+        // Drop knife
+        if (holdingKnife && Input.GetMouseButtonDown(0))
+        {
+            holdingKnife = false;
+            knifeLowered = false;
+
+            currentFood = null;
+            cutDistance = 0;
+
+            return;
+        }
+
+
+        // Pick up knife
+        if (!holdingKnife && Input.GetMouseButtonDown(0))
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 10f, foodLayer))
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, knifeLayer))
             {
-                currentFood = hit.collider.GetComponent<FoodCuttable>();
+                holdingKnife = true;
+            }
+        }
+    }
 
-                if (currentFood != null)
+
+    void MoveKnife()
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+        Plane plane = new Plane(
+            Vector3.up,
+            new Vector3(0, boardHeight, 0)
+        );
+
+
+        if (plane.Raycast(ray, out float distance))
+        {
+            Vector3 target = ray.GetPoint(distance);
+
+            target.y = boardHeight +
+                (knifeLowered ? cutHeight : hoverHeight);
+
+
+            knife.position = Vector3.Lerp(
+                knife.position,
+                target,
+                Time.deltaTime * knifeFollowSpeed
+            );
+        }
+    }
+
+
+    void HandleCutting()
+    {
+        // Start cutting
+        if (Input.GetMouseButtonDown(1))
+        {
+            knifeLowered = true;
+
+            cutStart = knife.position;
+
+            lastKnifePosition = knife.position;
+
+            cutDistance = 0;
+
+            currentFood = null;
+        }
+
+
+        // While knife is lowered
+        if (knifeLowered)
+        {
+            float movement = Vector3.Distance(
+                knife.position,
+                lastKnifePosition
+            );
+
+            cutDistance += movement;
+
+
+            Vector3 direction = knife.position - lastKnifePosition;
+
+
+            if (direction.sqrMagnitude > 0.001f)
+            {
+                if (Physics.SphereCast(
+                    lastKnifePosition,
+                    bladeCheckRadius,
+                    direction.normalized,
+                    out RaycastHit hit,
+                    direction.magnitude,
+                    foodLayer))
                 {
-                    dragging = true;
+                    FoodCuttable food =
+                        hit.collider.GetComponent<FoodCuttable>();
 
-                    // Push line slightly above the food surface
-                    Vector3 offset = hit.normal * 0.02f;
-
-                    startPoint = hit.point + offset;
-                    endPoint = hit.point + offset;
-
-                    line.enabled = true;
-
-                    line.SetPosition(0, startPoint);
-                    line.SetPosition(1, endPoint);
+                    if (food != null)
+                    {
+                        currentFood = food;
+                    }
                 }
             }
+
+
+            lastKnifePosition = knife.position;
         }
 
 
-        if (dragging)
+        // Finish cutting
+        if (Input.GetMouseButtonUp(1))
         {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            knifeLowered = false;
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 10f, foodLayer))
+
+            if (currentFood != null &&
+               cutDistance >= minimumCutDistance)
             {
-                Vector3 offset = hit.normal * 0.02f;
-
-                endPoint = hit.point + offset;
-
-                line.SetPosition(0, startPoint);
-                line.SetPosition(1, endPoint);
+                currentFood.IsCorrectCut(
+                    cutStart,
+                    knife.position
+                );
             }
-        }
 
 
-
-        if (Input.GetMouseButtonUp(0) && dragging)
-        {
-            dragging = false;
-
-            // Remove offset before checking accuracy
-            Vector3 checkStart = startPoint;
-            Vector3 checkEnd = endPoint;
-
-            currentFood.IsCorrectCut(checkStart, checkEnd);
-
-            line.enabled = false;
+            currentFood = null;
         }
     }
 }

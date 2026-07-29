@@ -508,17 +508,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 309470199}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f829c67298b2834dacf2fba05415d04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KnifeDrawer
   cam: {fileID: 4940350486156342395}
+  knife: {fileID: 0}
+  knifeLayer:
+    serializedVersion: 2
+    m_Bits: 0
   foodLayer:
     serializedVersion: 2
     m_Bits: 64
-  line: {fileID: 309470203}
-  lineOffset: 0.02
+  hoverHeight: 0.25
+  cutHeight: 0.03
+  boardHeight: 0
+  knifeFollowSpeed: 50
+  minimumCutDistance: 0.5
+  bladeCheckRadius: 0.05
 --- !u!120 &309470203
 LineRenderer:
   serializedVersion: 3
@@ -629,6 +637,73 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1001 &313310407
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -9.512244
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.744
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -9.04
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.00000020861623
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.70710635
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.00000023841855
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.70710725
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_Name
+      value: model-knife
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 885196719}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 885196718}
+  m_SourcePrefab: {fileID: 100100000, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
 --- !u!1 &468149000
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,6 +1425,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06353ee0d5cb23943b3f832ae7be31d7, type: 3}
+--- !u!1 &885196717 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+  m_PrefabInstance: {fileID: 313310407}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &885196718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 885196717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f829c67298b2834dacf2fba05415d04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KnifeDrawer
+  cam: {fileID: 4940350486156342395}
+  knife: {fileID: 885196722}
+  knifeLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  foodLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  hoverHeight: 1.5
+  cutHeight: 1
+  boardHeight: 0
+  knifeFollowSpeed: 50
+  minimumCutDistance: 0.8
+  bladeCheckRadius: 0.05
+--- !u!65 &885196719
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 885196717}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5700341, y: 0.035395596, z: 0.096106626}
+  m_Center: {x: -0.07779654, y: -0.0015296135, z: -0.010895506}
+--- !u!4 &885196722 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
+  m_PrefabInstance: {fileID: 313310407}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1026329871 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 80b1365a08da45a4dac20f9ec4210de5, type: 3}
@@ -6227,3 +6359,4 @@ SceneRoots:
   - {fileID: 8230361096746298598}
   - {fileID: 1714367247}
   - {fileID: 784882348}
+  - {fileID: 313310407}
