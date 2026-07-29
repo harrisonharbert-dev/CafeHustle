@@ -14,6 +14,8 @@ public class FryingMinigame : MonoBehaviour
 
     [Header("Events")]
     public UnityEvent unityEvent;
+    public UnityEvent onWinEvent;
+    public UnityEvent onFailEvent;
     //Flip Settings
     private float flipHeight = 0.5f;
     private int flipNums = 1;
@@ -27,7 +29,7 @@ public class FryingMinigame : MonoBehaviour
     [SerializeField] private Image uiCounter;
 
 
-    private Vector3 flipRotation = new Vector3(360f, 0f, 360f);
+    private Vector3 flipRotation = new Vector3(360f, 0f, 0f);
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     void Start()

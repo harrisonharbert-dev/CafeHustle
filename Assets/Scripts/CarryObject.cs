@@ -14,8 +14,11 @@ public class CarryObject : MonoBehaviour
 
     [Header("Player References")]
     [SerializeField] GameObject playerCarryPosition;
+    [SerializeField] private string throwAnimation = "character_throw";
 
     [Header("Item Properties")]
+    [SerializeField] private bool isPlaceObject;
+    [SerializeField] public bool canDrop = true;
     public string itemID;
     [SerializeField] private Vector3 carryRotation;
     [SerializeField] private Vector3 carryPosition;
@@ -53,12 +56,6 @@ public class CarryObject : MonoBehaviour
 
         // Remove parent and reenable colliders and rigid body
         transform.SetParent(null);
-
-
-
-
-
-
         //
         onDropEvent.Invoke();
 
@@ -72,7 +69,7 @@ public class CarryObject : MonoBehaviour
 
     public void SetDeliver()
     {
-        CutsceneAnimator.instance.playAction("character_throw");
+        CutsceneAnimator.instance.playAction(throwAnimation);
         CharacterAnimationController.instance.SetTrigger(carryingTag);
 
 
@@ -93,7 +90,14 @@ public class CarryObject : MonoBehaviour
 
         transform.DOLocalJump(Vector3.zero, jumpPower, 1, transitionDuration).OnComplete(() =>
         {
+
+            if (!isPlaceObject){ 
             Destroy(gameObject);
+            } 
+            else
+            {
+            Destroy(this);
+            }
         }
         );
     }
