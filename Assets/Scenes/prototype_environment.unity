@@ -9626,10 +9626,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 33073436339444091, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1597859936947205789, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -9708,62 +9704,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1597859936947205789, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2464640917214610911, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2464640917214610911, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2464640917214610911, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 146.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 2464640917214610911, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 182.4125
-      objectReference: {fileID: 0}
-    - target: {fileID: 2464640917214610911, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2669217026650238231, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2669217026650238231, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2669217026650238231, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 52.987503
-      objectReference: {fileID: 0}
-    - target: {fileID: 2669217026650238231, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -30
-      objectReference: {fileID: 0}
-    - target: {fileID: 3248552536724623825, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_Spacing
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3248552536724623825, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_ChildAlignment
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6116648771719483009, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 258.85
-      objectReference: {fileID: 0}
-    - target: {fileID: 8417827620685075559, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_margin.x
-      value: -11.387856
-      objectReference: {fileID: 0}
-    - target: {fileID: 8417827620685075559, guid: 907f336f33df02744aa9cbcf2b4769c7, type: 3}
-      propertyPath: m_TextWrappingMode
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -19403,18 +19343,6 @@ MonoBehaviour:
       - m_Target: {fileID: 8548452299829061438}
         m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
         m_MethodName: useItem
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1590298768}
-        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
-        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
