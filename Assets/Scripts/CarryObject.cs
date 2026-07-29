@@ -37,9 +37,6 @@ public class CarryObject : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created 
     public void SetGrab()
     {
-
-
-
         //Attach to player arm
         transform.SetParent(playerCarryPosition.transform);
         transform.DOLocalMove(carryPosition, transitionDuration);
@@ -71,8 +68,6 @@ public class CarryObject : MonoBehaviour
     {
         CutsceneAnimator.instance.playAction(throwAnimation);
         CharacterAnimationController.instance.SetTrigger(carryingTag);
-
-
         StartCoroutine(Throw(throwDelay));
 
     }
@@ -80,6 +75,7 @@ public class CarryObject : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         onDeliverEvent.Invoke();
+        InteractPrompt.instance.Refresh();
 
 
         if (PlayerInputController.instance.deliveryZonePos != null)
@@ -90,13 +86,15 @@ public class CarryObject : MonoBehaviour
 
         transform.DOLocalJump(Vector3.zero, jumpPower, 1, transitionDuration).OnComplete(() =>
         {
-
-            if (!isPlaceObject){ 
-            Destroy(gameObject);
-            } 
+            PlayerInputController.instance.SetCurrentCarry(null);
+            InteractPrompt.instance.SetPromptVisibility(false);
+            if (!isPlaceObject)
+            {
+                Destroy(gameObject);
+            }
             else
             {
-            Destroy(this);
+                Destroy(this);
             }
         }
         );
@@ -111,11 +109,11 @@ public class CarryObject : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             isInRange = true;
-            if (PlayerInputController.instance.playerCarryingState == PlayerInputController.carryingState.none)
+            if (PlayerInputController.instance.playerState == PlayerInputController.playState.none)
             {
                 PlayerInputController.instance.SetCurrentCarry(this);
-                InteractPrompt.instance.SetPromptVisibility(true);
             }
+            InteractPrompt.instance.Refresh();
 
 
         }
@@ -126,10 +124,9 @@ public class CarryObject : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             isInRange = false;
-            if (PlayerInputController.instance.playerCarryingState == PlayerInputController.carryingState.none)
-            {
-                InteractPrompt.instance.SetPromptVisibility(false);
-            }
+
+            PlayerInputController.instance.SetCurrentCarry(null);
+            InteractPrompt.instance.Refresh();
         }
     }
 }

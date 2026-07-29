@@ -130,14 +130,14 @@ public class Interactable : MonoBehaviour
             switch (interactType)
             {
                 case interactableType.interactableWithTrigger:
-                InteractPrompt.instance.SetPromptVisibility(false);
+                    InteractPrompt.instance.Refresh();
                     InvokeEvent();
                 break;
 
                 case interactableType.interactableWithInput:
-                    PlayerInputController.instance.SetCurrentInteractable(this);
-                    InteractPrompt.instance.SetPromptVisibility(true);
                     InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
+                    PlayerInputController.instance.SetCurrentInteractable(this);
+                    InteractPrompt.instance.Refresh();
                     break;
             }
 
@@ -151,17 +151,8 @@ public class Interactable : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             isInRange = false;
-
-            switch (PlayerInputController.instance.playerCarryingState)
-            {
-                case PlayerInputController.carryingState.none:
-                    InteractPrompt.instance.SetPromptVisibility(false);
-                    break;
-
-                case PlayerInputController.carryingState.carryingObject:
-                    InteractPrompt.instance.UpdateUIInfo(PromptText.Drop, PromptKey.F);
-                    break;
-            }
+            PlayerInputController.instance.SetCurrentInteractable(null);
+            InteractPrompt.instance.Refresh();
 
         }
 

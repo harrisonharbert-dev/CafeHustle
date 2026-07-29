@@ -42,7 +42,7 @@ public class CutsceneAnimator : MonoBehaviour
         director.playableAsset = currentAsset;
         director.Play();
         
-        if(PlayerInputController.instance.playerCarryingState == PlayerInputController.carryingState.none) return;
+        if(PlayerInputController.instance.playerState == PlayerInputController.playState.none) return;
         PlayerInputController.instance.useDrop();
     }
     //Play as emote, drop held item
@@ -65,8 +65,9 @@ public class CutsceneAnimator : MonoBehaviour
 
     private IEnumerator pausePlayerMovement(float duration)
     {
+        // If player can't already move, then do nothing
         if(PlayerInputController.instance.lockMovement == true) yield break;
-        
+
         PlayerInputController.instance.SetMovementLock(true);
 
         yield return new WaitForSeconds(duration);
