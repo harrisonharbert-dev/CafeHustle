@@ -124,8 +124,10 @@ public class CarryObject : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             isInRange = false;
-
-            PlayerInputController.instance.SetCurrentCarry(null);
+            if (PlayerInputController.instance.playerState == PlayerInputController.playState.none)
+            {
+                PlayerInputController.instance.SetCurrentCarry(null);
+            }
             InteractPrompt.instance.Refresh();
         }
     }

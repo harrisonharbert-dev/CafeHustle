@@ -61,6 +61,7 @@ public class FryingMinigame : MonoBehaviour
         {
             popUpUI.DOFade(0f, uiTransitionDuration);
             popUpActive = false;
+            onFailEvent?.Invoke();
         });
     }
 
@@ -68,6 +69,8 @@ public class FryingMinigame : MonoBehaviour
     // Update is called once per frame
     public void onFlipFood(GameObject food)
     {
+        
+
         food.transform.DOLocalJump(Vector3.zero, flipHeight, flipNums, flipDuration);
         food.transform.DOLocalRotate(flipRotation, flipDuration, RotateMode.FastBeyond360);
     }
@@ -81,9 +84,11 @@ public class FryingMinigame : MonoBehaviour
     {
         if (context.performed && popUpActive)
         {
+            DOTween.Clear();
             popUpUI.DOFade(0f, uiTransitionDuration);
             popUpActive = false;
             onFlipFood(cookingFoodPrefab);
+            onWinEvent?.Invoke();
             Debug.Log("Yay you flipped it");
         }
     }
