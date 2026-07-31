@@ -5,6 +5,7 @@ public class KnifeDrawer : MonoBehaviour
     [Header("References")]
     public Camera cam;
     public Transform knife;
+    public Transform bladeTip;
 
     [Header("Layers")]
     public LayerMask knifeLayer;
@@ -13,8 +14,7 @@ public class KnifeDrawer : MonoBehaviour
     [Header("Knife Movement")]
     public float hoverHeight = 0.25f;
     public float cutHeight = 0.02f;
-    public float boardHeight = 0f;
-    public float knifeFollowSpeed = 50f;
+    public float knifeSpeed = 15f;
 
     [Header("Cut Settings")]
     public float minimumCutDistance = 0.5f;
@@ -26,10 +26,10 @@ public class KnifeDrawer : MonoBehaviour
     private FoodCuttable currentFood;
 
     private Vector3 cutStart;
-    private Vector3 lastKnifePosition;
+    private Vector3 lastBladePosition;
 
     private float cutDistance;
-
+    public LayerMask boardLayer;
 
     void Update()
     {
@@ -39,7 +39,6 @@ public class KnifeDrawer : MonoBehaviour
             return;
 
         MoveKnife();
-
         HandleCutting();
     }
 
@@ -51,15 +50,13 @@ public class KnifeDrawer : MonoBehaviour
         {
             holdingKnife = false;
             knifeLowered = false;
-
             currentFood = null;
-            cutDistance = 0;
-
+            cutDistance = 0f;
             return;
         }
 
 
-        // Pick up knife
+        // Pickup knife
         if (!holdingKnife && Input.GetMouseButtonDown(0))
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -76,24 +73,24 @@ public class KnifeDrawer : MonoBehaviour
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        Plane plane = new Plane(
-            Vector3.up,
-            new Vector3(0, boardHeight, 0)
-        );
-
-
-        if (plane.Raycast(ray, out float distance))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, boardLayer))
         {
-            Vector3 target = ray.GetPoint(distance);
+            Vector3 target = hit.point;
 
-            target.y = boardHeight +
-                (knifeLowered ? cutHeight : hoverHeight);
+            target.y = knifeLowered ? cutHeight : hoverHeight;
+
+            Vector3 bladeOffset =
+                knife.TransformVector(
+                    knife.InverseTransformPoint(bladeTip.position)
+                );
+
+            Vector3 finalPosition = target - bladeOffset;
 
 
             knife.position = Vector3.Lerp(
                 knife.position,
-                target,
-                Time.deltaTime * knifeFollowSpeed
+                finalPosition,
+                knifeSpeed * Time.deltaTime
             );
         }
     }
@@ -101,39 +98,36 @@ public class KnifeDrawer : MonoBehaviour
 
     void HandleCutting()
     {
-        // Start cutting
+        // Lower knife
         if (Input.GetMouseButtonDown(1))
         {
             knifeLowered = true;
 
-            cutStart = knife.position;
+            cutStart = bladeTip.position;
+            lastBladePosition = bladeTip.position;
 
-            lastKnifePosition = knife.position;
-
-            cutDistance = 0;
-
+            cutDistance = 0f;
             currentFood = null;
         }
 
 
-        // While knife is lowered
         if (knifeLowered)
         {
             float movement = Vector3.Distance(
-                knife.position,
-                lastKnifePosition
+                bladeTip.position,
+                lastBladePosition
             );
 
             cutDistance += movement;
 
 
-            Vector3 direction = knife.position - lastKnifePosition;
+            Vector3 direction = bladeTip.position - lastBladePosition;
 
 
-            if (direction.sqrMagnitude > 0.001f)
+            if (direction.sqrMagnitude > 0.0001f)
             {
                 if (Physics.SphereCast(
-                    lastKnifePosition,
+                    lastBladePosition,
                     bladeCheckRadius,
                     direction.normalized,
                     out RaycastHit hit,
@@ -151,22 +145,22 @@ public class KnifeDrawer : MonoBehaviour
             }
 
 
-            lastKnifePosition = knife.position;
+            lastBladePosition = bladeTip.position;
         }
 
 
-        // Finish cutting
+        // Release cut
         if (Input.GetMouseButtonUp(1))
         {
             knifeLowered = false;
 
 
             if (currentFood != null &&
-               cutDistance >= minimumCutDistance)
+                cutDistance >= minimumCutDistance)
             {
                 currentFood.IsCorrectCut(
                     cutStart,
-                    knife.position
+                    bladeTip.position
                 );
             }
 

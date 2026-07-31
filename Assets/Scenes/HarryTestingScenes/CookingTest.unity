@@ -515,6 +515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KnifeDrawer
   cam: {fileID: 4940350486156342395}
   knife: {fileID: 0}
+  bladeTip: {fileID: 0}
   knifeLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -523,10 +524,12 @@ MonoBehaviour:
     m_Bits: 64
   hoverHeight: 0.25
   cutHeight: 0.03
-  boardHeight: 0
-  knifeFollowSpeed: 50
+  knifeSpeed: 15
   minimumCutDistance: 0.5
   bladeCheckRadius: 0.05
+  boardLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!120 &309470203
 LineRenderer:
   serializedVersion: 3
@@ -643,19 +646,19 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1823051335}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.512244
+      value: 0.021756172
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.744
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.04
+      value: 0.15400028
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1443,7 +1446,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KnifeDrawer
   cam: {fileID: 4940350486156342395}
-  knife: {fileID: 885196722}
+  knife: {fileID: 1823051335}
+  bladeTip: {fileID: 1942436256}
   knifeLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -1452,10 +1456,12 @@ MonoBehaviour:
     m_Bits: 64
   hoverHeight: 1.5
   cutHeight: 1
-  boardHeight: 0
-  knifeFollowSpeed: 50
+  knifeSpeed: 15
   minimumCutDistance: 0.8
   bladeCheckRadius: 0.05
+  boardLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!65 &885196719
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1817,6 +1823,70 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80b1365a08da45a4dac20f9ec4210de5, type: 3}
+--- !u!1 &1823051334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1823051335}
+  m_Layer: 0
+  m_Name: Knife
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1823051335
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823051334}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.534, y: 1.744, z: -9.194}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 885196722}
+  - {fileID: 1942436256}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1942436255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1942436256}
+  m_Layer: 0
+  m_Name: BladeTip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1942436256
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942436255}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.401}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1823051335}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!222 &7698995840770046
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3212,6 +3282,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::cookingStatus
   sliderPropertyName: _Cooking_Stage
   progress: 0
+  failBonus: 0
+  baseMaterial: {fileID: 0}
+  keyword: 
 --- !u!114 &3442614171743009414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3239,6 +3312,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::cookingStatus
   sliderPropertyName: _Cooking_Stage
   progress: 0
+  failBonus: 0
+  baseMaterial: {fileID: 0}
+  keyword: 
 --- !u!65 &3494579887265442601
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3570,6 +3646,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::cookingStatus
   sliderPropertyName: _Cooking_Stage
   progress: 0
+  failBonus: 0
+  baseMaterial: {fileID: 0}
+  keyword: 
 --- !u!222 &4174146940191819697
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4105,6 +4184,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::cookingStatus
   sliderPropertyName: _Cooking_Stage
   progress: 0
+  failBonus: 0
+  baseMaterial: {fileID: 0}
+  keyword: 
 --- !u!114 &5242015249664120663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5467,7 +5549,7 @@ GameObject:
   - component: {fileID: 4806912119373336242}
   - component: {fileID: 7196972933865139421}
   - component: {fileID: 3494579887265442601}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6359,4 +6441,4 @@ SceneRoots:
   - {fileID: 8230361096746298598}
   - {fileID: 1714367247}
   - {fileID: 784882348}
-  - {fileID: 313310407}
+  - {fileID: 1823051335}
