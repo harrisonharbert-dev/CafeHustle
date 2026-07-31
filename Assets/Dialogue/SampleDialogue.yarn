@@ -16,6 +16,12 @@ The cabin rattles as the wheels glide along the tracks.
 The train screeches to a stop.
 MC: Village Name. Finally, a new start.
 MC: Grandma’s house should be somewhere around here. I was told it would be near the station.
+-> Lets go!
+    MC: Yeah!
+-> Poop
+    MC: what?
+-> Wahoo!
+    MC: wahooooo!
 ===
 
 
@@ -30,20 +36,18 @@ MC: My name’s MC name. What’re doing here?
 Boy: My parents have gone inside the station to say goodbye to a friend, so I’m riding my bike. Wanna join?
 
 MC: I think I’m a bit big for your bike, but maybe another time when I get a bike of my own!
-<<move_npc default_dude_1 walk_target 2>>
-<<move_npc default_dude_2 walk_target_2 2>>
-<<wait 2>>
-<<player_look_at Character default_dude_1>>
+
+<<player_look_at Character parent1>>
 
 Man: Charlie, who’s this? Oh wait, you must be the newcomer!
 
 Man: I’m Name. You’ve already met Charlie. And this is my wife Name and daughter Name.
-<<player_look_at Character default_dude_2>>
+<<player_look_at Character parent2>>
 
 Wife: It’s nice to meet you finally. We’ve been excited to hear a new person was moving all the way out here. It not often you see a new face. What was your name again, love?
 
 MC: My name’s Name. It’s good to see some friendly faces.
-<<player_look_at Character default_dude_1>>
+<<player_look_at Character parent1>>
 Man: Well, if you ever need anything, please let us know. We own the local grocery store, so you will know where to find us.
 
 Man: Well, we better get on now, it’s been a big day kids. Take care MC name.
@@ -59,12 +63,42 @@ HotRod: Bye!
 ===
 
 
-title: Example
+title: ApproachingHouse
 ---
-Maple Syrup: I am maple syrup steve
-<<play_emote emote_stove cash>>
-Maple Syrup: Steve.
-<<play_cutscene CutsceneAnimator character_wave>>
+MC: No wonder Grams never told me about this place.
+MC: I wonder if she ever even lived here.
+MC: Well, I pretty sure this is what she left me in the will. It’s gonna be a fixer upper, though.
+===
+
+title: FirstSpiritIntro
+---
+
+<<play_cutscene CutsceneAnimator character_scared>>
+MC: It that a… ghost?!
+
+MC: Nup, nope, I’m out of here. Sorry Grams. This is just too much.
+
+Spirit: Wait, wait!
+
+Spirit: Wow, it’s been a long time since I’ve seen a human here.
+
+Spirit: Are you… wait, I know you. Or at least I think I do…
+
+Spirit: Anne, is that you? You’ve gotten younger. And leaner.
+
+MC: That’s my Grandma you’re talking about. My name is MC.
+
+Spirit: Grandma? I didn’t think it had been that long.
+
+Spirit: It’s nice to meet you MC
+
+Spirit: She. This place. It’s been left alone so long, that all my friends have left.
+
+Spirit: Now it’s just me. I don’t get why she would just leave us. This place broke down, and the spiritual energy with it.
+
+Spirit: But now you’re here, maybe you can help!
+
+MC: You’re a spirit?
 ===
 
 

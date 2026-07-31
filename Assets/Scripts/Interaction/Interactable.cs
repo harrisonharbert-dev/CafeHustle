@@ -10,15 +10,16 @@ using Yarn.Unity;
 
 public class Interactable : MonoBehaviour
 {
-        public enum interactableType
+    public enum interactableType
     {
         none,
-        dialogueOnly,
-        dialogueWithEvent,
-        interactableEvent,
+        interactableWithTrigger,
+        interactableWithInput,
 
     }
     public interactableType interactType;
+    [SerializeField] private bool playOnce;
+    private bool played;
 
     [HideInInspector] public bool isInRange = false; // Is the player in range to interact with this object? // Has the player already interacted with this object?
     [Header("Unity Events")]
@@ -96,25 +97,19 @@ public class Interactable : MonoBehaviour
 
     public void InvokeEvent()
     {
+        if (interactType == interactableType.none) return;
+        //
+        played = true;
 
-        switch(interactType)
+        if (dialogueName != null)
         {
-            case interactableType.none:
-            break;
-
-            case interactableType.dialogueOnly:
             dialogueRunner.StartDialogue(dialogueName);
-            break;
-
-            case interactableType.dialogueWithEvent:
-            dialogueRunner.StartDialogue(dialogueName);
-            interactAction.Invoke();
-            break;
-
-            case interactableType.interactableEvent:
-            interactAction.Invoke();
-            break;
         }
+        if (interactAction != null)
+        {
+            interactAction.Invoke();
+        }
+
     }
 
 
@@ -122,17 +117,29 @@ public class Interactable : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            if(played && playOnce) return;
+            
             Debug.Log("Trigger Entered");
 
             isInRange = true;
 
             Debug.Log("Player is in range to interact with " + gameObject.name);
 
-            PlayerInputController.instance.SetCurrentInteractable(this);
-            InteractPrompt.instance.SetPromptVisibility(true);
-            InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
 
 
+            switch (interactType)
+            {
+                case interactableType.interactableWithTrigger:
+                    InteractPrompt.instance.Refresh();
+                    InvokeEvent();
+                break;
+
+                case interactableType.interactableWithInput:
+                    InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
+                    PlayerInputController.instance.SetCurrentInteractable(this);
+                    InteractPrompt.instance.Refresh();
+                    break;
+            }
 
 
         }
@@ -144,22 +151,13 @@ public class Interactable : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             isInRange = false;
-
-            switch (PlayerInputController.instance.playerCarryingState)
-            {
-                case PlayerInputController.carryingState.none:
-                    InteractPrompt.instance.SetPromptVisibility(false);
-                    break;
-
-                case PlayerInputController.carryingState.carryingObject:
-                    InteractPrompt.instance.UpdateUIInfo(PromptText.Drop, PromptKey.F);
-                    break;
-            }
+            PlayerInputController.instance.SetCurrentInteractable(null);
+            InteractPrompt.instance.Refresh();
 
         }
 
     }
 
 
-    
+
 }

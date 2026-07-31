@@ -14,6 +14,8 @@ public class FryingMinigame : MonoBehaviour
 
     [Header("Events")]
     public UnityEvent unityEvent;
+    public UnityEvent onWinEvent;
+    public UnityEvent onFailEvent;
     //Flip Settings
     private float flipHeight = 0.5f;
     private int flipNums = 1;
@@ -27,7 +29,7 @@ public class FryingMinigame : MonoBehaviour
     [SerializeField] private Image uiCounter;
 
 
-    private Vector3 flipRotation = new Vector3(360f, 0f, 360f);
+    private Vector3 flipRotation = new Vector3(360f, 0f, 0f);
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     void Start()
@@ -59,6 +61,7 @@ public class FryingMinigame : MonoBehaviour
         {
             popUpUI.DOFade(0f, uiTransitionDuration);
             popUpActive = false;
+            onFailEvent?.Invoke();
         });
     }
 
@@ -66,6 +69,8 @@ public class FryingMinigame : MonoBehaviour
     // Update is called once per frame
     public void onFlipFood(GameObject food)
     {
+        
+
         food.transform.DOLocalJump(Vector3.zero, flipHeight, flipNums, flipDuration);
         food.transform.DOLocalRotate(flipRotation, flipDuration, RotateMode.FastBeyond360);
     }
@@ -79,9 +84,11 @@ public class FryingMinigame : MonoBehaviour
     {
         if (context.performed && popUpActive)
         {
+            DOTween.Clear();
             popUpUI.DOFade(0f, uiTransitionDuration);
             popUpActive = false;
             onFlipFood(cookingFoodPrefab);
+            onWinEvent?.Invoke();
             Debug.Log("Yay you flipped it");
         }
     }

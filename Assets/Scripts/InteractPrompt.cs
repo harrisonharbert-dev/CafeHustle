@@ -58,13 +58,7 @@ public class InteractPrompt : MonoBehaviour
     }
 
 
-    public void SetPromptVisibility(bool value)
-    {
-        float target = value ? 1f : 0f;
-        if (target == canvasGroup.alpha) return;
-        canvasGroup.DOFade(target, fadeDuration);
 
-    }
 
     private string GetPromptText(Interactable.PromptText type)
     {
@@ -96,5 +90,69 @@ public class InteractPrompt : MonoBehaviour
     {
         interactPromptText.text = GetPromptText(textType);
         interactImage.sprite = GetKeySprite(keyType);
+    }
+
+    public void SetPromptVisibility(bool value)
+    {
+        float target = value ? 1f : 0f;
+        if (target == canvasGroup.alpha) return;
+        canvasGroup.DOFade(target, fadeDuration);
+
+    }
+
+    public void Refresh()
+    {
+        PlayerInputController.playState playerState = PlayerInputController.instance.playerState;
+        bool currentInteractable = PlayerInputController.instance.currentInteractable != null;
+        bool currentCarryObject = PlayerInputController.instance.currentCarryObject != null;
+        bool isInDialogue = PlayerInputController.instance.isinDialogue;
+        bool isInDeliveryZone = PlayerInputController.instance.inCarryDeliveryZone;
+
+        if (isInDialogue)
+        {
+            SetPromptVisibility(false);
+            return;
+        }
+
+
+        switch (playerState)
+        {
+            case PlayerInputController.playState.none:
+                if (currentCarryObject || currentInteractable)
+                {
+                    SetPromptVisibility(true);
+                }
+                else if (!currentCarryObject && !currentInteractable)
+                {
+                    SetPromptVisibility(false);
+                }
+                break;
+
+            case PlayerInputController.playState.carryingObject:
+                SetPromptVisibility(true);
+                if (isInDeliveryZone)
+                {
+                    UpdateUIInfo(Interactable.PromptText.Deliver, Interactable.PromptKey.F);
+                }
+                else
+                {
+                    UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
+                }
+                ;
+                break;
+
+            case PlayerInputController.playState.carryingNonDroppable:
+                if (!currentInteractable && !isInDeliveryZone)
+                {
+                    SetPromptVisibility(false);
+                    return;
+                }
+                    SetPromptVisibility(true);
+                    if (isInDeliveryZone)
+                    UpdateUIInfo(Interactable.PromptText.Deliver, Interactable.PromptKey.F);
+            
+
+                break;
+        }
     }
 }

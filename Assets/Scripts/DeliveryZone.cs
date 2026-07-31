@@ -22,7 +22,7 @@ public class DeliveryZone : MonoBehaviour
             PlayerInputController.instance.inCarryDeliveryZone = true;
             PlayerInputController.instance.deliveryZonePos = gameObject;
             InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Deliver, Interactable.PromptKey.F);
-            InteractPrompt.instance.SetPromptVisibility(true);
+            InteractPrompt.instance.Refresh();
         }
     }
 
@@ -32,14 +32,10 @@ public class DeliveryZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerInputController.instance.inCarryDeliveryZone = false;
-
-            switch (PlayerInputController.instance.playerCarryingState)
+            InteractPrompt.instance.Refresh();
+            switch (PlayerInputController.instance.playerState)
             {
-                case PlayerInputController.carryingState.none:
-                    InteractPrompt.instance.SetPromptVisibility(false);
-                    break;
-                case PlayerInputController.carryingState.carryingObject:
-                    InteractPrompt.instance.SetPromptVisibility(true);
+                case PlayerInputController.playState.carryingObject:
                     InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Drop,Interactable.PromptKey.F);
                     break;
 

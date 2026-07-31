@@ -62,7 +62,7 @@ public class FoodStats : MonoBehaviour
             UpdateCookingStatus();
 
             //Shader
-            cookingStatusScript.UpdateShaderStatus();
+            cookingStatusScript.UpdateShaderStatus(cookingProgress);
         }
         if (IsHovering && !draggingScript.dragging)
         { 

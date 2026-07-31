@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -40,7 +42,7 @@ public class CutsceneAnimator : MonoBehaviour
         director.playableAsset = currentAsset;
         director.Play();
         
-        if(PlayerInputController.instance.playerCarryingState == PlayerInputController.carryingState.none) return;
+        if(PlayerInputController.instance.playerState == PlayerInputController.playState.none) return;
         PlayerInputController.instance.useDrop();
     }
     //Play as emote, drop held item
@@ -49,9 +51,27 @@ public class CutsceneAnimator : MonoBehaviour
 
     public void playAction(string name)
     {
+        // Get current asset to be played
         timelineAssets.TryGetValue(name,out TimelineAsset currentAsset);
         director.playableAsset = currentAsset;
+        //pause player movement
+        float duration = (float)director.playableAsset.duration;
+        StartCoroutine(pausePlayerMovement(duration));
+
+        //
         director.Play();
     }
     //play as action so it works with delivery zones
+
+    private IEnumerator pausePlayerMovement(float duration)
+    {
+        // If player can't already move, then do nothing
+        if(PlayerInputController.instance.lockMovement == true) yield break;
+
+        PlayerInputController.instance.SetMovementLock(true);
+
+        yield return new WaitForSeconds(duration);
+
+        PlayerInputController.instance.SetMovementLock(false);
+    }
 }

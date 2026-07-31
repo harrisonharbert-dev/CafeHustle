@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 using NUnit.Framework;
 using Yarn.Unity;
+using UnityEngine.Events;
 
 
 
@@ -25,6 +26,7 @@ public class PlayerInputController : MonoBehaviour
     public moveStates moveSpeed;
     private float maxSpeed;
     [HideInInspector] public bool isRunning = false;
+    public bool isinDialogue = false;
 
     [HideInInspector] public bool lockMovement = false;
 
@@ -33,20 +35,22 @@ public class PlayerInputController : MonoBehaviour
 
 
     [Header("Interactables")]
-    private Interactable currentInteractable;
-    private CarryObject currentCarryObject;
+    public Interactable currentInteractable;
+    public CarryObject currentCarryObject;
 
-    public enum carryingState
+    public enum playState
     {
         none,
         carryingObject,
+        carryingNonDroppable
     }
-    public carryingState playerCarryingState;
+    public playState playerState;
     [HideInInspector] public GameObject deliveryZonePos;
-    [HideInInspector] public bool inCarryDeliveryZone;
+    public bool inCarryDeliveryZone;
     public string currentCarryItemID;
 
-
+    [Header("Unity Events")]
+    [SerializeField] private UnityEvent onStartEvent;
 
 
 
@@ -71,6 +75,9 @@ public class PlayerInputController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        onStartEvent.Invoke();
+
+
         //Hide cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -95,22 +102,33 @@ public class PlayerInputController : MonoBehaviour
     public void SetCurrentCarry(CarryObject newTarget)
     {
         currentCarryObject = newTarget;
-        switch (playerCarryingState)
+        switch (playerState)
         {
-            case carryingState.none:
+            case playState.none:
                 InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
                 break;
 
-            case carryingState.carryingObject:
+            case playState.carryingObject:
                 InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
                 break;
 
         }
     }
 
+    public void setDialogue(bool option)
+    {
+        isinDialogue = option;
+        SetMovementLock(option);
+    }
     public void SetMovementLock(bool option)
     {
         lockMovement = option;
+
+        if (isinDialogue)
+        { lockMovement = true; }
+
+        Debug.Log("Lock set to" + option + "by" + this);
+
         //Hide cursor
         Cursor.visible = option;
         if (option == false)
@@ -130,10 +148,11 @@ public class PlayerInputController : MonoBehaviour
             dialogueCamera.Priority = value;
         }
     }
+
     [YarnCommand("player_look_at")]
     public void LookAt(GameObject target)
     {
-        transform.DOLookAt(target.transform.position, interactRotationDuration,AxisConstraint.Y);
+        transform.DOLookAt(target.transform.position, interactRotationDuration, AxisConstraint.Y);
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -148,9 +167,8 @@ public class PlayerInputController : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if (currentInteractable.isInRange && !lockMovement && context.performed && currentInteractable != null)
+        if (currentInteractable.isInRange && !lockMovement && context.performed && currentInteractable != null && currentInteractable.interactType == Interactable.interactableType.interactableWithInput)
         {
-
             InteractPrompt.instance.SetPromptVisibility(false);
             transform.DOLookAt(currentInteractable.transform.position, interactRotationDuration, AxisConstraint.Y).OnComplete(() =>
             {
@@ -165,8 +183,6 @@ public class PlayerInputController : MonoBehaviour
     {
         if (currentCarryObject.isInRange && !lockMovement && context.performed && currentCarryObject != null)
         {
-
-
             transform.DOLookAt(currentCarryObject.transform.position, interactRotationDuration, AxisConstraint.Y).OnComplete(() =>
             {
                 useItem();
@@ -176,36 +192,61 @@ public class PlayerInputController : MonoBehaviour
 
     public void useItem()
     {
-        switch (playerCarryingState)
-                {
-                    case carryingState.none:
-                        currentCarryObject.SetGrab();
-                        playerCarryingState = carryingState.carryingObject;
-                        InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
-                        currentCarryItemID = currentCarryObject.itemID;
-                        break;
-                    case carryingState.carryingObject:
-                        if (!inCarryDeliveryZone)
-                        {
-                            currentCarryObject.SetDrop();
-                            InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
-                        }
-                        else
-                        {
-                            currentCarryObject.SetDeliver();
-                        }
-                        
-                        playerCarryingState = carryingState.none;
-                        currentCarryItemID = null;
-                        break;
-                }
-    }
+        currentCarryObject.isInRange = true;
+        switch (playerState)
+        {
+            case playState.none:
+                currentCarryObject.SetGrab();
 
+                if (currentCarryObject.canDrop)
+                {
+                    playerState = playState.carryingObject;
+                }
+                else
+                {
+                    playerState = playState.carryingNonDroppable;
+                }
+
+                InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
+                currentCarryItemID = currentCarryObject.itemID;
+                break;
+            case playState.carryingObject:
+
+
+                if (!inCarryDeliveryZone)
+                {
+                    currentCarryObject.SetDrop();
+                    InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
+                    clearHeldItem();
+                }
+                else
+                {
+                    currentCarryObject.SetDeliver();
+                    clearHeldItem();
+                }
+                break;
+
+            case playState.carryingNonDroppable:
+                if (inCarryDeliveryZone)
+                {
+                    currentCarryObject.SetDeliver();
+                    clearHeldItem();
+                }
+                break;
+        }
+    }
+    void clearHeldItem()
+    {
+        
+        playerState = playState.none;
+        currentCarryItemID = null;
+        InteractPrompt.instance.Refresh();
+    }
     public void useDrop()
     {
         currentCarryObject.SetDrop();
         InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
-        playerCarryingState = carryingState.none;
+        playerState = playState.none;
     }
     public void Run(InputAction.CallbackContext context)
     {
