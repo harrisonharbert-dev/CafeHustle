@@ -522,14 +522,12 @@ MonoBehaviour:
   foodLayer:
     serializedVersion: 2
     m_Bits: 64
+  boardHeight: 0
   hoverHeight: 0.25
   cutHeight: 0.03
   knifeSpeed: 15
   minimumCutDistance: 0.5
   bladeCheckRadius: 0.05
-  boardLayer:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!120 &309470203
 LineRenderer:
   serializedVersion: 3
@@ -1454,14 +1452,12 @@ MonoBehaviour:
   foodLayer:
     serializedVersion: 2
     m_Bits: 64
+  boardHeight: 0
   hoverHeight: 1.5
   cutHeight: 1
   knifeSpeed: 15
   minimumCutDistance: 0.8
   bladeCheckRadius: 0.05
-  boardLayer:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!65 &885196719
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1881,7 +1877,7 @@ Transform:
   m_GameObject: {fileID: 1942436255}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.401}
+  m_LocalPosition: {x: 0, y: 0, z: -0.006}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
