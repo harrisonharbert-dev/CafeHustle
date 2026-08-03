@@ -515,6 +515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KnifeDrawer
   cam: {fileID: 4940350486156342395}
   knife: {fileID: 0}
+  pickupPoint: {fileID: 0}
   bladeTip: {fileID: 0}
   knifeLayer:
     serializedVersion: 2
@@ -528,6 +529,9 @@ MonoBehaviour:
   knifeSpeed: 15
   minimumCutDistance: 0.5
   bladeCheckRadius: 0.05
+  enableIdleWiggle: 1
+  wiggleAngle: 8
+  wiggleSpeed: 0.25
 --- !u!120 &309470203
 LineRenderer:
   serializedVersion: 3
@@ -701,9 +705,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
       insertIndex: -1
       addedObject: {fileID: 885196719}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 885196718}
   m_SourcePrefab: {fileID: 100100000, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
 --- !u!1 &468149000
 GameObject:
@@ -1133,9 +1134,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodCuttable
   cutStart: {fileID: 1320530813}
   cutEnd: {fileID: 1485412547}
-  startTolerance: 1
-  endTolerance: 1
-  angleTolerance: 30
+  lineTolerance: 0.08
+  angleTolerance: 45
   topHalf: {fileID: 583316740}
   topMovePosition: {x: 0, y: 0, z: 0}
   topRotation: {x: 0, y: 0, z: 0}
@@ -1431,33 +1431,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
   m_PrefabInstance: {fileID: 313310407}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &885196718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 885196717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f829c67298b2834dacf2fba05415d04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KnifeDrawer
-  cam: {fileID: 4940350486156342395}
-  knife: {fileID: 1823051335}
-  bladeTip: {fileID: 1942436256}
-  knifeLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  foodLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  boardHeight: 0
-  hoverHeight: 1.5
-  cutHeight: 1
-  knifeSpeed: 15
-  minimumCutDistance: 0.8
-  bladeCheckRadius: 0.05
 --- !u!65 &885196719
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1484,6 +1457,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
   m_PrefabInstance: {fileID: 313310407}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &942507829
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 942507830}
+  m_Layer: 0
+  m_Name: PickupPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &942507830
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942507829}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.006}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1823051335}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1026329871 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 80b1365a08da45a4dac20f9ec4210de5, type: 3}
@@ -1689,7 +1693,7 @@ Transform:
   m_GameObject: {fileID: 1320530812}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.197, y: 0.633, z: -0.702}
+  m_LocalPosition: {x: 0.197, y: 0.425, z: -0.702}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1720,7 +1724,7 @@ Transform:
   m_GameObject: {fileID: 1485412546}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.779, y: 0.6330001, z: -0.702}
+  m_LocalPosition: {x: 0.779, y: 0.425, z: -0.702}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1828,6 +1832,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1823051335}
+  - component: {fileID: 1823051336}
   m_Layer: 0
   m_Name: Knife
   m_TagString: Untagged
@@ -1850,8 +1855,40 @@ Transform:
   m_Children:
   - {fileID: 885196722}
   - {fileID: 1942436256}
+  - {fileID: 942507830}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1823051336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823051334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f829c67298b2834dacf2fba05415d04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KnifeDrawer
+  cam: {fileID: 4940350486156342395}
+  knife: {fileID: 1823051335}
+  pickupPoint: {fileID: 942507830}
+  bladeTip: {fileID: 1942436256}
+  knifeLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  foodLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  boardHeight: 0
+  hoverHeight: 1.5
+  cutHeight: 1
+  knifeSpeed: 15
+  minimumCutDistance: 0.8
+  bladeCheckRadius: 0.05
+  enableIdleWiggle: 1
+  wiggleAngle: 8
+  wiggleSpeed: 0.25
 --- !u!1 &1942436255
 GameObject:
   m_ObjectHideFlags: 0
@@ -1877,7 +1914,7 @@ Transform:
   m_GameObject: {fileID: 1942436255}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.006}
+  m_LocalPosition: {x: 0, y: 0, z: 0.415}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

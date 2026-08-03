@@ -1,83 +1,169 @@
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+
+
 public class FoodCuttable : MonoBehaviour
 {
     [Header("Correct Cut")]
     public Transform cutStart;
     public Transform cutEnd;
-    private LineRenderer line;
 
 
     [Header("Tolerance")]
-    public float startTolerance = 0.05f;
-    public float endTolerance = 0.05f;
-    public float angleTolerance = 15f;
+    public float lineTolerance = 0.08f;
+    public float angleTolerance = 20f;
+
+
     [Header("Cut Animation")]
     public Transform topHalf;
     public Vector3 topMovePosition;
     public Vector3 topRotation;
     public float cutAnimationTime = 0.5f;
-    public bool cutSuccessful = false;
-    public bool IsCorrectCut(Vector3 playerStart, Vector3 playerEnd)
+
+
+    public bool cutSuccessful;
+
+
+    public bool CheckCut(List<Vector3> path)
     {
-        float startDist = Vector3.Distance(playerStart, cutStart.position);
-        float endDist = Vector3.Distance(playerEnd, cutEnd.position);
+        if (path.Count < 2)
+            return false;
 
-        Vector3 correctDir = (cutEnd.position - cutStart.position).normalized;
-        Vector3 playerDir = (playerEnd - playerStart).normalized;
 
-        float angle = Vector3.Angle(correctDir, playerDir);
+        bool touchedStart = false;
+        bool touchedEnd = false;
+
+
+        Vector3 cutDirection =
+            (cutEnd.position -
+             cutStart.position).normalized;
+
+
+        Vector3 playerDirection =
+            (path[path.Count - 1] -
+             path[0]).normalized;
+
+
+        float angle =
+            Vector3.Angle(
+                cutDirection,
+                playerDirection);
+
+
+        if (angle > angleTolerance &&
+            angle < 180 - angleTolerance)
+        {
+            Debug.Log("Wrong angle");
+            return false;
+        }
+
+
+
+        for (int i = 0; i < path.Count - 1; i++)
+        {
+            Vector3 a = path[i];
+            Vector3 b = path[i + 1];
+
+
+            if (Vector3.Distance(
+                ClosestPointOnLine(a, b, cutStart.position),
+                cutStart.position)
+                <= lineTolerance)
+            {
+                touchedStart = true;
+            }
+
+
+            if (Vector3.Distance(
+                ClosestPointOnLine(a, b, cutEnd.position),
+                cutEnd.position)
+                <= lineTolerance)
+            {
+                touchedEnd = true;
+            }
+        }
+
+
 
         bool success =
-            startDist <= startTolerance &&
-            endDist <= endTolerance &&
-            angle <= angleTolerance;
+            touchedStart &&
+            touchedEnd;
+
+
 
         if (success && !cutSuccessful)
         {
-            Debug.Log("Perfect Cut!");
             cutSuccessful = true;
-            successful();
+
+            Debug.Log("Perfect Cut!");
+
+            Successful();
         }
         else
         {
             Debug.Log("Wrong Cut");
         }
 
+
         return success;
     }
 
-    void Awake()
+
+
+    Vector3 ClosestPointOnLine(
+        Vector3 a,
+        Vector3 b,
+        Vector3 point)
     {
-        line = GetComponent<LineRenderer>();
+        Vector3 direction = b - a;
 
-        line.positionCount = 2;
-        line.useWorldSpace = true;
+        float length =
+            direction.magnitude;
 
-        // Make it a constant width
-        line.startWidth = 0.01f;
-        line.endWidth = 0.01f;
+
+        if (length == 0)
+            return a;
+
+              
+        direction /= length;
+
+
+        float distance =
+            Vector3.Dot(
+                point - a,
+                direction);
+
+
+        distance =
+            Mathf.Clamp(
+                distance,
+                0,
+                length);
+
+
+        return a + direction * distance;
     }
 
-    void LateUpdate()
+
+
+    void Successful()
     {
-        Vector3 offset = transform.up * 0.05f;
+        Sequence sequence =
+            DOTween.Sequence();
 
-        line.SetPosition(0, cutStart.position + offset);
-        line.SetPosition(1, cutEnd.position + offset);
-    }
-    void successful()
-    {
-        Sequence cutSequence = DOTween.Sequence();
 
-        cutSequence.Append(
-            topHalf.DOLocalMove(topMovePosition, cutAnimationTime)
-            .SetEase(Ease.OutQuad)
-        );
+        sequence.Append(
+            topHalf.DOLocalMove(
+                topMovePosition,
+                cutAnimationTime)
+            .SetEase(Ease.OutQuad));
 
-        cutSequence.Join(
-            topHalf.DOLocalRotate(topRotation, cutAnimationTime)
-            .SetEase(Ease.OutBack)
-        );
+
+        sequence.Join(
+            topHalf.DOLocalRotate(
+                topRotation,
+                cutAnimationTime)
+            .SetEase(Ease.OutBack));
     }
 }
