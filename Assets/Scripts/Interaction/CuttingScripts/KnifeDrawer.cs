@@ -3,26 +3,26 @@ using UnityEngine;
 public class KnifeDrawer : MonoBehaviour
 {
     [Header("References")]
-    public Camera cam;
-    public Transform knife;
-    public Transform bladeTip;
+    [SerializeField] private Camera cam;
+    [SerializeField] private Transform knife;
+    [SerializeField] private Transform bladeTip;
 
     [Header("Layers")]
-    public LayerMask knifeLayer;
-    public LayerMask foodLayer;
+    [SerializeField] private LayerMask knifeLayer;
+    [SerializeField] private LayerMask foodLayer;
 
     [Header("Board")]
     [Tooltip("Y position of the cutting board.")]
-    public float boardHeight = 0f;
+    [SerializeField] private float boardHeight = 0f;
 
     [Header("Knife Movement")]
-    public float hoverHeight = 0.25f;
-    public float cutHeight = 0.02f;
-    public float knifeSpeed = 20f;
+    [SerializeField] private float hoverHeight = 0.25f;
+    [SerializeField] private float cutHeight = 0.02f;
+    [SerializeField] private float knifeSpeed = 20f;
 
     [Header("Cut Settings")]
-    public float minimumCutDistance = 0.5f;
-    public float bladeCheckRadius = 0.05f;
+    [SerializeField] private float minimumCutDistance = 0.5f;
+    [SerializeField] private float bladeCheckRadius = 0.05f;
 
     private bool holdingKnife;
     private bool knifeLowered;
@@ -46,20 +46,9 @@ public class KnifeDrawer : MonoBehaviour
         boardPlane = new Plane(Vector3.up, new Vector3(0f, boardHeight, 0f));
     }
 
-    void Update()
-    {
-        HandlePickup();
-
-        if (!holdingKnife)
-            return;
-
-        MoveKnife();
-        HandleCutting();
-    }
-
     void HandlePickup()
     {
-        if (holdingKnife && Input.GetMouseButtonDown(0))
+        if (holdingKnife)
         {
             holdingKnife = false;
             knifeLowered = false;
@@ -68,7 +57,7 @@ public class KnifeDrawer : MonoBehaviour
             return;
         }
 
-        if (!holdingKnife && Input.GetMouseButtonDown(0))
+        if (!holdingKnife)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
@@ -100,7 +89,7 @@ public class KnifeDrawer : MonoBehaviour
 
             knife.position = target - offset;
 
-   
+
             knife.position = Vector3.MoveTowards(
               knife.position,
                target - offset,
@@ -108,17 +97,16 @@ public class KnifeDrawer : MonoBehaviour
         }
     }
 
-    void HandleCutting()
+    public void HandleCutting()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            knifeLowered = true;
 
-            cutStart = bladeTip.position;
-            lastBladePosition = bladeTip.position;
-            cutDistance = 0f;
-            currentFood = null;
-        }
+        knifeLowered = true;
+
+        cutStart = bladeTip.position;
+        lastBladePosition = bladeTip.position;
+        cutDistance = 0f;
+        currentFood = null;
+
 
         if (knifeLowered)
         {
@@ -153,20 +141,44 @@ public class KnifeDrawer : MonoBehaviour
             lastBladePosition = bladeTip.position;
         }
 
-        if (Input.GetMouseButtonUp(1))
+
+    }
+
+    void HandleCuttingEnd()
+    {
+        knifeLowered = false;
+
+        if (currentFood != null &&
+            cutDistance >= minimumCutDistance)
         {
-            knifeLowered = false;
+            currentFood.IsCorrectCut(
+                cutStart,
+                bladeTip.position
+            );
+        }
 
-            if (currentFood != null &&
-                cutDistance >= minimumCutDistance)
-            {
-                currentFood.IsCorrectCut(
-                    cutStart,
-                    bladeTip.position
-                );
-            }
+        currentFood = null;
 
-            currentFood = null;
+    }
+
+    public void onMouseLeft(InputAction.ContextCallback context)
+    {
+        if (context.performed)
+        {
+            HandlePickup();
+        }
+    }
+
+    public void onMouseRight(InputAction.ContextCallback context)
+    {
+        if (context.performed && holdingKnife)
+        {
+            MoveKnife();
+            HandleCutting();
+        }
+        else if (context.canceled && holdingKnife)
+        {
+            HandleCuttingEnd();
         }
     }
 
