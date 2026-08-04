@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KnifeDrawer : MonoBehaviour
 {
@@ -8,183 +8,282 @@ public class KnifeDrawer : MonoBehaviour
     public Transform knife;
     public Transform pickupPoint;
     public Transform bladeTip;
+    public Transform bladeDirection;
+
 
     [Header("Layers")]
     public LayerMask knifeLayer;
     public LayerMask foodLayer;
 
-    [Header("Board")]
-    public float boardHeight = 0f;
 
     [Header("Knife Movement")]
     public float hoverHeight = 0.25f;
     public float cutHeight = 0.02f;
-    public float knifeSpeed = 18f;
 
-    [Header("Cut Settings")]
-    public float minimumCutDistance = 0.5f;
+    public float knifeMoveSpeed = 18f;
+
+
+    [Header("Knife Press Animation")]
+    public float lowerSpeed = 8f;
+    public float raiseSpeed = 10f;
+
+    public float pressRotationAmount = 15f;
+
+
+    [Header("Cut Detection")]
     public float bladeCheckRadius = 0.04f;
+
 
     private bool holdingKnife;
     private bool knifeLowered;
+    private bool rotationLocked;
+    private bool cutting;
+
+
+    private Quaternion lockedRotation;
+    private Quaternion startRotation;
+    private Quaternion pressRotation;
+
 
     private Vector3 pickupOffset;
-
-    private List<Vector3> cutPath = new List<Vector3>();
-
-    private FoodCuttable currentFood;
-
-    private Vector3 lastBladePosition;
-    private float cutDistance;
 
     private Plane movementPlane;
 
 
     void Start()
     {
-        pickupOffset = pickupPoint.position - knife.position;
+        pickupOffset =
+            pickupPoint.position -
+            knife.position;
+
+
+        startRotation = knife.rotation;
+
+
+        pressRotation =
+            startRotation *
+            Quaternion.Euler(
+                pressRotationAmount,
+                0,
+                0);
     }
+
 
 
     void Update()
     {
+        if (Input.GetKey(KeyCode.R))
+        {
+            SceneManager.LoadScene(
+                SceneManager.GetActiveScene().name);
+        }
         HandlePickup();
+
 
         if (!holdingKnife)
             return;
 
+
         MoveKnife();
-        HandleCutting();
+
+
+        HandleLowering();
+
+
+        HandleCut();
     }
+
 
 
     void HandlePickup()
     {
-        if (holdingKnife && Input.GetMouseButtonDown(0))
+        // Drop knife
+        if (holdingKnife &&
+           Input.GetMouseButtonDown(0))
         {
             holdingKnife = false;
+
             knifeLowered = false;
-            cutPath.Clear();
-            currentFood = null;
+            cutting = false;
+
+            rotationLocked = false;
+
             return;
         }
 
 
-        if (!holdingKnife && Input.GetMouseButtonDown(0))
-        {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, knifeLayer))
+        // Pickup knife
+        if (!holdingKnife &&
+           Input.GetMouseButtonDown(0))
+        {
+            Ray ray =
+                cam.ScreenPointToRay(
+                    Input.mousePosition);
+
+
+
+            if (Physics.Raycast(
+                ray,
+                out RaycastHit hit,
+                100f,
+                knifeLayer))
             {
                 holdingKnife = true;
 
+
                 pickupOffset =
-                    pickupPoint.position - knife.position;
+                    pickupPoint.position -
+                    knife.position;
             }
         }
     }
+
 
 
     void MoveKnife()
     {
-        float height = knifeLowered ? cutHeight : hoverHeight;
-
         movementPlane.SetNormalAndPosition(
             Vector3.up,
-            new Vector3(0, height, 0));
+            new Vector3(
+                0,
+                Mathf.Lerp(
+                    hoverHeight,
+                    cutHeight,
+                    knifeLowered ? 1 : 0),
+                0));
 
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        if (movementPlane.Raycast(ray, out float distance))
+        Ray ray =
+            cam.ScreenPointToRay(
+                Input.mousePosition);
+
+
+
+        if (movementPlane.Raycast(
+            ray,
+            out float distance))
         {
-            Vector3 mousePosition = ray.GetPoint(distance);
+            Vector3 mouse =
+                ray.GetPoint(distance);
+
+
 
             Vector3 target =
-                mousePosition - pickupOffset;
+                mouse -
+                pickupOffset;
 
 
-            knife.position = Vector3.MoveTowards(
-                knife.position,
-                target,
-                knifeSpeed * Time.deltaTime);
+
+            knife.position =
+                Vector3.MoveTowards(
+                    knife.position,
+                    target,
+                    knifeMoveSpeed *
+                    Time.deltaTime);
+        }
+
+
+
+        if (rotationLocked)
+        {
+            knife.rotation =
+                lockedRotation;
         }
     }
 
 
-    void HandleCutting()
+
+    void HandleLowering()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButton(1))
         {
             knifeLowered = true;
 
-            cutPath.Clear();
 
-            cutPath.Add(bladeTip.position);
-
-            lastBladePosition = bladeTip.position;
-
-            cutDistance = 0;
-
-            currentFood = null;
-        }
+            knife.rotation =
+                Quaternion.Lerp(
+                    startRotation,
+                    pressRotation,
+                    Time.deltaTime * lowerSpeed);
 
 
-        if (knifeLowered)
-        {
-            float movement =
-                Vector3.Distance(
-                    bladeTip.position,
-                    lastBladePosition);
-
-
-            if (movement > 0.001f)
+            if (!rotationLocked)
             {
-                cutDistance += movement;
-
-                cutPath.Add(bladeTip.position);
-
-
-                Vector3 direction =
-                    bladeTip.position -
-                    lastBladePosition;
-
-
-                if (Physics.SphereCast(
-                    lastBladePosition,
-                    bladeCheckRadius,
-                    direction.normalized,
-                    out RaycastHit hit,
-                    direction.magnitude,
-                    foodLayer))
-                {
-                    FoodCuttable food =
-                        hit.collider.GetComponent<FoodCuttable>();
-
-                    if (food != null)
-                        currentFood = food;
-                }
-
-
-                lastBladePosition = bladeTip.position;
+                LockRotation();
             }
         }
-
-
-        if (Input.GetMouseButtonUp(1))
+        else
         {
             knifeLowered = false;
+            rotationLocked = false;
 
 
-            if (currentFood != null &&
-                cutDistance >= minimumCutDistance)
+            knife.rotation =
+                Quaternion.Lerp(
+                    knife.rotation,
+                    startRotation,
+                    Time.deltaTime * raiseSpeed);
+        }
+    }
+
+
+
+    void LockRotation()
+    {
+        rotationLocked = true;
+
+        lockedRotation =
+            knife.rotation;
+    }
+
+
+
+    void HandleCut()
+    {
+        // Only cut once when releasing right click
+        if (Input.GetMouseButtonUp(1))
+        {
+            TryCut();
+        }
+    }
+
+
+
+    void TryCut()
+    {
+        Collider[] hits =
+            Physics.OverlapSphere(
+                bladeTip.position,
+                bladeCheckRadius,
+                foodLayer);
+
+
+        if (hits.Length == 0)
+        {
+            Debug.Log("No food detected");
+            return;
+        }
+
+
+        foreach (Collider hit in hits)
+        {
+            FoodCuttable food =
+                hit.GetComponent<FoodCuttable>();
+
+
+            if (food != null)
             {
-                currentFood.CheckCut(cutPath);
+                Debug.Log("Knife hit food");
+
+
+                food.CheckCut(
+                    bladeDirection.forward);
+
+
+                return;
             }
-
-
-            cutPath.Clear();
-            currentFood = null;
         }
     }
 }

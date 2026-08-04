@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
-
+using EzySlice;
 
 public class FoodCuttable : MonoBehaviour
 {
@@ -9,161 +8,149 @@ public class FoodCuttable : MonoBehaviour
     public Transform cutStart;
     public Transform cutEnd;
 
-
     [Header("Tolerance")]
     public float lineTolerance = 0.08f;
     public float angleTolerance = 20f;
 
-
-    [Header("Cut Animation")]
-    public Transform topHalf;
-    public Vector3 topMovePosition;
-    public Vector3 topRotation;
-    public float cutAnimationTime = 0.5f;
-
+    [Header("Slice")]
+    public Material crossSectionMaterial;
+    public float sliceForce = 1.5f;
+    public float halfSeparation = 0.05f;
 
     public bool cutSuccessful;
 
-
-    public bool CheckCut(List<Vector3> path)
+    [Header("Cut Guide Line")]
+    public LineRenderer cutGuideLine;
+    public float guideHeight = 0.03f;
+    public float guideWidth = 0.02f;
+    void Start()
     {
-        if (path.Count < 2)
-            return false;
+        SetupCutGuide();
+    }
+    void SetupCutGuide()
+    {
+        if (cutGuideLine == null)
+        {
+            Debug.LogWarning("No Cut Guide LineRenderer assigned!");
+            return;
+        }
 
+        cutGuideLine.positionCount = 2;
+        cutGuideLine.useWorldSpace = true;
 
-        bool touchedStart = false;
-        bool touchedEnd = false;
+        cutGuideLine.startWidth = guideWidth;
+        cutGuideLine.endWidth = guideWidth;
 
+        Vector3 offset = Vector3.up * guideHeight;
 
+        cutGuideLine.SetPosition(0, cutStart.position + offset);
+        cutGuideLine.SetPosition(1, cutEnd.position + offset);
+
+        cutGuideLine.enabled = true;
+    }
+    public bool CheckCut(Vector3 knifeDirection)
+    {
         Vector3 cutDirection =
-            (cutEnd.position -
-             cutStart.position).normalized;
-
-
-        Vector3 playerDirection =
-            (path[path.Count - 1] -
-             path[0]).normalized;
+            (cutEnd.position - cutStart.position).normalized;
 
 
         float angle =
             Vector3.Angle(
                 cutDirection,
-                playerDirection);
+                knifeDirection);
 
 
-        if (angle > angleTolerance &&
-            angle < 180 - angleTolerance)
+        // Allow upside down direction
+        if (angle > 90f)
+            angle = 180f - angle;
+
+
+        if (angle > angleTolerance)
         {
-            Debug.Log("Wrong angle");
+            Debug.Log($"Wrong angle {angle:F1}");
             return false;
         }
 
 
-
-        for (int i = 0; i < path.Count - 1; i++)
-        {
-            Vector3 a = path[i];
-            Vector3 b = path[i + 1];
-
-
-            if (Vector3.Distance(
-                ClosestPointOnLine(a, b, cutStart.position),
-                cutStart.position)
-                <= lineTolerance)
-            {
-                touchedStart = true;
-            }
-
-
-            if (Vector3.Distance(
-                ClosestPointOnLine(a, b, cutEnd.position),
-                cutEnd.position)
-                <= lineTolerance)
-            {
-                touchedEnd = true;
-            }
-        }
-
-
-
-        bool success =
-            touchedStart &&
-            touchedEnd;
-
-
-
-        if (success && !cutSuccessful)
+        if (!cutSuccessful)
         {
             cutSuccessful = true;
 
             Debug.Log("Perfect Cut!");
 
-            Successful();
+            SliceTomato(
+                cutStart.position,
+                cutEnd.position);
         }
-        else
+
+
+        return true;
+    }
+
+    void SliceTomato(Vector3 start, Vector3 end)
+    {
+        Vector3 direction =
+            (end - start).normalized;
+
+
+        Vector3 planeNormal =
+            Vector3.Cross(
+                direction,
+                Vector3.up)
+                .normalized;
+
+
+        Vector3 slicePosition =
+            (start + end) * 0.5f;
+
+
+        SlicedHull hull =
+            gameObject.Slice(
+                slicePosition,
+                planeNormal,
+                crossSectionMaterial);
+
+
+        if (hull == null)
         {
-            Debug.Log("Wrong Cut");
+            Debug.LogWarning("Slice failed");
+            return;
         }
 
 
-        return success;
+        GameObject upper =
+            hull.CreateUpperHull(
+                gameObject,
+                crossSectionMaterial);
+
+
+        GameObject lower =
+            hull.CreateLowerHull(
+                gameObject,
+                crossSectionMaterial);
+
+
+    
+
+
+        Rigidbody upperRB =
+            upper.AddComponent<Rigidbody>();
+
+        Rigidbody lowerRB =
+            lower.AddComponent<Rigidbody>();
+
+
+        upperRB.AddForce(
+            planeNormal * sliceForce,
+            ForceMode.Impulse);
+
+
+        lowerRB.AddForce(
+            -planeNormal * sliceForce,
+            ForceMode.Impulse);
+
+
+        Destroy(gameObject);
     }
 
-
-
-    Vector3 ClosestPointOnLine(
-        Vector3 a,
-        Vector3 b,
-        Vector3 point)
-    {
-        Vector3 direction = b - a;
-
-        float length =
-            direction.magnitude;
-
-
-        if (length == 0)
-            return a;
-
-              
-        direction /= length;
-
-
-        float distance =
-            Vector3.Dot(
-                point - a,
-                direction);
-
-
-        distance =
-            Mathf.Clamp(
-                distance,
-                0,
-                length);
-
-
-        return a + direction * distance;
-    }
-
-
-
-    void Successful()
-    {
-        Sequence sequence =
-            DOTween.Sequence();
-
-
-        sequence.Append(
-            topHalf.DOLocalMove(
-                topMovePosition,
-                cutAnimationTime)
-            .SetEase(Ease.OutQuad));
-
-
-        sequence.Join(
-            topHalf.DOLocalRotate(
-                topRotation,
-                cutAnimationTime)
-            .SetEase(Ease.OutBack));
-    }
 }
