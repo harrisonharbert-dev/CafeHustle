@@ -15,27 +15,11 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isMoving)
-        {
-            if (Input.GetKey(KeyCode.A))
-            {
-                // Switch to the first camera
-                Cameras[0].SetActive(true);
-                Cameras[1].SetActive(false);
-                StartCoroutine(CameraMoving());
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                // Switch to the second camera
-                Cameras[0].SetActive(false);
-                Cameras[1].SetActive(true);
-                StartCoroutine(CameraMoving());
-            }
-        }
+        //RestartScene
         if (Input.GetKeyDown(KeyCode.R))
         {
-            LoadScene("Prototype_environment");
             
+          LoadScene("CookingTest");
         }
 
     }
@@ -45,10 +29,10 @@ public class CameraController : MonoBehaviour
         Cursor.visible = true;
         SceneManager.LoadScene(sceneName);
     }
-    IEnumerator CameraMoving()
+    public void NextStage(int stageIndex)
     {
-        isMoving = true;
-        yield return new WaitForSeconds(0.1f);
-        isMoving = false;
+        Debug.Log("NextStage called with index: " + stageIndex);
+        Cameras[stageIndex - 1].SetActive(false);
+        Cameras[stageIndex].SetActive(true);
     }
 }

@@ -74,8 +74,7 @@ public class KnifeDrawer : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.R))
         {
-            SceneManager.LoadScene(
-                SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene("CookingTest");
         }
         HandlePickup();
 
