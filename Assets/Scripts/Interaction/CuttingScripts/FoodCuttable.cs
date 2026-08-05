@@ -25,8 +25,9 @@ public class FoodCuttable : MonoBehaviour
     public LineRenderer cutGuideLine;
     public float guideHeight = 0.03f;
     public float guideWidth = 0.02f;
-    public UnityEvent onCutSuccess;
 
+    public UnityEvent onCutSuccess;
+    public UnityEvent onCutFail;
     void Start()
     {
         SetupCutGuide();
@@ -75,6 +76,7 @@ public class FoodCuttable : MonoBehaviour
         if (angle > angleTolerance)
         {
             Debug.Log($"Wrong angle {angle:F1}");
+            onCutFail?.Invoke();
             return false;
         }
 
@@ -120,6 +122,7 @@ public class FoodCuttable : MonoBehaviour
         if (hull == null)
         {
             Debug.LogWarning("Slice failed");
+            onCutFail?.Invoke();
             return;
         }
 

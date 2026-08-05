@@ -6,10 +6,15 @@ public class CameraController : MonoBehaviour
 {
     public GameObject[] Cameras;
     public static bool isMoving;
+
+    //UIStuff
+    public GameObject FoodHotBar;
+    public FoodCuttable[] CuttableFoods;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        FoodHotBar.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -18,8 +23,8 @@ public class CameraController : MonoBehaviour
         //RestartScene
         if (Input.GetKeyDown(KeyCode.R))
         {
-            
-          LoadScene("CookingTest");
+
+            LoadScene("CookingTest");
         }
 
     }
@@ -29,10 +34,44 @@ public class CameraController : MonoBehaviour
         Cursor.visible = true;
         SceneManager.LoadScene(sceneName);
     }
-    public void NextStage(int stageIndex)
+    public void NextStage(int nextCam)
     {
-        Debug.Log("NextStage called with index: " + stageIndex);
+        if (CuttableFoods == null || CuttableFoods.Length == 0)
+            return;
+
+        foreach (var food in CuttableFoods)
+        {
+            if (!food.cutSuccessful)
+            {
+                // At least one food hasn't been cut yet.
+                return;
+            }
+        }
+
+        // If we got here, every food has been cut successfully.
+        StartCoroutine(DelayedStage(nextCam));
+    }
+
+    IEnumerator DelayedStage(int stageIndex)
+    {
+
+        KnifeDrawer knifeDrawer = FindAnyObjectByType<KnifeDrawer>();
+        knifeDrawer.holdingKnife = false;
+
+        knifeDrawer.knifeLowered = false;
+        knifeDrawer.cutting = false;
+        knifeDrawer.interactable = false;
+        yield return new WaitForSeconds(2f);
         Cameras[stageIndex - 1].SetActive(false);
         Cameras[stageIndex].SetActive(true);
+        if (stageIndex == 1)
+        {
+            FoodHotBar.SetActive(true);
+        }
+        else
+        {
+            FoodHotBar.SetActive(false);
+        }
     }
+
 }

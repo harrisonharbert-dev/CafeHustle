@@ -13,4 +13,14 @@ public class Bin : MonoBehaviour
     {
         
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ingredient"))
+        {
+            other.GetComponent<FoodStats>().CookingUI.SetActive(false);
+            Destroy(other.gameObject);
+        }
+    }
 }
+

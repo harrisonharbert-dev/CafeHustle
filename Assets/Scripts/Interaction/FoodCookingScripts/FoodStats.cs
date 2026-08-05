@@ -19,9 +19,10 @@ public class FoodStats : MonoBehaviour
 
 
     [Header("Cooking")]
-    public float cookingTime; // Time required to cook one side
+    public float cookingTime;
 
     [SerializeField] private float cookingProgress;
+
 
     [Header("Meat Cooking")]
     public bool requiresTwoSides;
@@ -32,7 +33,6 @@ public class FoodStats : MonoBehaviour
     public int currentSide = 1;
 
 
-    // Inspector testing
     public bool isCooking;
     public bool IsHovering;
 
@@ -40,30 +40,45 @@ public class FoodStats : MonoBehaviour
     [Header("Burn")]
     [SerializeField] private float burnThreshold = 1.5f;
 
+
     [Header("References")]
     public GameObject CookingUI;
     public Image CookingBar;
     public Material BurntMaterial;
-
-    private Tween cookingBarTween;
 
     private Material baseMaterial;
 
     public Animator FlickerAnimation;
     public DraggingScript draggingScript;
 
-    [HideInInspector] public cookingStatus cookingStatusScript;
+    [HideInInspector]
+    public cookingStatus cookingStatusScript;
 
 
-    // Cooking checks
-    public bool SideOneCooked => sideOneProgress >= cookingTime;
-    public bool SideTwoCooked => sideTwoProgress >= cookingTime;
     [Header("Flip Animation")]
     public float flipDuration = 0.6f;
     public float flipHeight = 0.25f;
+
     public bool isFlipping;
 
-    public Transform foodModel; // Drag your visible food mesh here
+    public Transform foodModel;
+
+
+    [Header("Flip Settings")]
+    public float flipCooldown = 0.7f;
+
+    private bool canFlip = true;
+
+
+    public bool SideOneCooked =>
+        sideOneProgress >= cookingTime;
+
+
+    public bool SideTwoCooked =>
+        sideTwoProgress >= cookingTime;
+
+
+
     public bool FullyCooked
     {
         get
@@ -76,41 +91,57 @@ public class FoodStats : MonoBehaviour
     }
 
 
+
     public float CookRatio
     {
         get
         {
-            if (requiresTwoSides)
-                return cookingProgress / cookingTime;
-
             return cookingProgress / cookingTime;
         }
     }
 
 
+
     void Start()
     {
         draggingScript = GetComponent<DraggingScript>();
-        cookingStatusScript = GetComponent<cookingStatus>();
 
-        FlickerAnimation = CookingBar.GetComponent<Animator>();
-
-        baseMaterial = GetComponent<Renderer>().material;
+        cookingStatusScript =
+            GetComponent<cookingStatus>();
 
 
-        // Meat needs two sides
-        requiresTwoSides = foodType == FoodType.Bacon ||
-                           foodType == FoodType.Sausage;
+        if (CookingBar != null)
+            FlickerAnimation =
+                CookingBar.GetComponent<Animator>();
+
+
+        baseMaterial =
+            GetComponent<Renderer>().material;
+
+
+        requiresTwoSides =
+            foodType == FoodType.Bacon ||
+            foodType == FoodType.Sausage;
     }
+
 
 
     void Update()
     {
+        // Right click flip
+        if (IsHovering &&
+            Input.GetMouseButtonDown(1) &&
+            !isFlipping)
+        {
+            FlipFood();
+        }
+
+
+
         if (isCooking)
         {
             if (requiresTwoSides)
             {
-                // Cook current side
                 if (currentSide == 1)
                 {
                     sideOneProgress += Time.deltaTime;
@@ -130,13 +161,26 @@ public class FoodStats : MonoBehaviour
 
             UpdateCookingStatus();
 
-            cookingStatusScript.UpdateShaderStatus(cookingProgress);
+
+            if (cookingStatusScript != null)
+            {
+                cookingStatusScript.UpdateShaderStatus(
+                    cookingProgress / cookingTime
+                );
+            }
         }
 
 
-        if (IsHovering && !draggingScript.dragging)
+
+        if (IsHovering &&
+            draggingScript != null &&
+            !draggingScript.dragging)
         {
-            CookingBar.fillAmount = cookingProgress / cookingTime;
+            if (CookingBar != null)
+            {
+                CookingBar.fillAmount =
+                    cookingProgress / cookingTime;
+            }
 
 
             if (cookingStatusScript.progress < 1.3f)
@@ -155,18 +199,23 @@ public class FoodStats : MonoBehaviour
 
             if (cookingStatusScript.progress >= 1.1f)
             {
-                FlickerAnimation.SetBool("IsFlickering", true);
+                FlickerAnimation.SetBool(
+                    "IsFlickering",
+                    true);
             }
-
-
-            if (cookingStatusScript.progress < 1.1f || !isCooking)
+            else
             {
-                FlickerAnimation.SetBool("IsFlickering", false);
+                FlickerAnimation.SetBool(
+                    "IsFlickering",
+                    false);
             }
         }
 
 
-        if (CameraController.isMoving || draggingScript.dragging)
+
+        if (CameraController.isMoving ||
+            (draggingScript != null &&
+             draggingScript.dragging))
         {
             CookingUI.SetActive(false);
         }
@@ -174,9 +223,10 @@ public class FoodStats : MonoBehaviour
 
 
 
-    private void UpdateCookingStatus()
+    void UpdateCookingStatus()
     {
-        cookingStatusScript.progress = cookingProgress / cookingTime;
+        cookingStatusScript.progress =
+            cookingProgress / cookingTime;
     }
 
 
@@ -199,74 +249,116 @@ public class FoodStats : MonoBehaviour
 
 
 
-    // Call this when food gets flipped
     public void FlipFood()
     {
-        if (!requiresTwoSides || isFlipping)
+        // Only meat has two sides
+        if (!requiresTwoSides ||
+            isFlipping ||
+            !canFlip)
             return;
 
 
-        // Stop cooking while flipping
         StopCooking();
 
+
         isFlipping = true;
+        canFlip = false;
 
 
-        // Pick model to rotate
-        Transform target = foodModel != null ? foodModel : transform;
+        Transform target =
+            foodModel != null
+            ? foodModel
+            : transform;
 
 
-        Sequence flipSequence = DOTween.Sequence();
+
+        Vector3 startPosition =
+            target.position;
 
 
-        // Jump upwards
-        flipSequence.Append(
+        Vector3 startRotation =
+            target.eulerAngles;
+
+
+
+        Sequence flip =
+            DOTween.Sequence();
+
+
+
+        flip.Append(
             target.DOMoveY(
-                target.position.y + flipHeight,
-                flipDuration / 2f
-            )
+                startPosition.y + flipHeight,
+                flipDuration / 2f)
             .SetEase(Ease.OutQuad)
         );
 
 
-        // Rotate halfway through the jump
-        flipSequence.Join(
+
+        flip.Join(
             target.DORotate(
-                target.eulerAngles + new Vector3(180f, 0f, 0f),
-                flipDuration
-            )
+                startRotation +
+                new Vector3(180f, 0, 0),
+                flipDuration)
             .SetEase(Ease.InOutSine)
         );
 
 
-        // Come back down
-        flipSequence.Append(
+
+        flip.Append(
             target.DOMoveY(
-                target.position.y,
-                flipDuration / 2f
-            )
+                startPosition.y,
+                flipDuration / 2f)
             .SetEase(Ease.InQuad)
         );
 
 
-        flipSequence.OnComplete(() =>
+
+        flip.OnComplete(() =>
         {
-            // Change cooking side
-            currentSide = currentSide == 1 ? 2 : 1;
+            currentSide =
+                currentSide == 1
+                ? 2
+                : 1;
 
 
-            // Load correct progress
-            cookingProgress = currentSide == 1
+
+            cookingProgress =
+                currentSide == 1
                 ? sideOneProgress
                 : sideTwoProgress;
+
+
+
+            UpdateCookingStatus();
+
+
+            if (cookingStatusScript != null)
+            {
+                cookingStatusScript.UpdateShaderStatus(
+                    cookingProgress / cookingTime);
+            }
+
 
 
             isFlipping = false;
 
 
-            Debug.Log("Now cooking side " + currentSide);
+            StartCoroutine(
+                FlipCooldown());
         });
     }
+
+
+
+    IEnumerator FlipCooldown()
+    {
+        yield return new WaitForSeconds(
+            flipCooldown);
+
+        canFlip = true;
+    }
+
 
 
     public bool IsFoodReady()
@@ -280,12 +372,23 @@ public class FoodStats : MonoBehaviour
     {
         IsHovering = true;
 
-        CookingUI.SetActive(true);
 
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+        if (CookingUI != null)
+            CookingUI.SetActive(true);
 
-        CookingUI.transform.position =
-            screenPos + new Vector3(0, 50f, 0);
+
+
+        if (CookingUI != null)
+        {
+            Vector3 screenPos =
+                Camera.main.WorldToScreenPoint(
+                    transform.position);
+
+
+            CookingUI.transform.position =
+                screenPos +
+                new Vector3(0, 50f, 0);
+        }
     }
 
 
@@ -294,8 +397,16 @@ public class FoodStats : MonoBehaviour
     {
         IsHovering = false;
 
-        CookingUI.SetActive(false);
 
-        FlickerAnimation.SetBool("IsFlickering", false);
+        if (CookingUI != null)
+            CookingUI.SetActive(false);
+
+
+        if (FlickerAnimation != null)
+        {
+            FlickerAnimation.SetBool(
+                "IsFlickering",
+                false);
+        }
     }
 }

@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+using DG.Tweening;
 
 public class KnifeDrawer : MonoBehaviour
 {
@@ -19,35 +21,38 @@ public class KnifeDrawer : MonoBehaviour
     [Header("Knife Movement")]
     public float hoverHeight = 0.25f;
     public float cutHeight = 0.02f;
-
     public float knifeMoveSpeed = 18f;
 
 
-    [Header("Knife Press Animation")]
-    public float lowerSpeed = 8f;
-    public float raiseSpeed = 10f;
+    [Header("Pickup Animation")]
+    public Vector3 pickedUpRotation = new Vector3(90f, 0f, 0f);
+    public float pickupRotateDuration = 0.25f;
+    public Ease pickupEase = Ease.OutBack;
 
-    public float pressRotationAmount = 15f;
+
+    [Header("Knife Lower Animation")]
+    public Vector3 loweredRotation = new Vector3(110f, 0f, 0f);
+    public float lowerRotateDuration = 0.15f;
+    public Ease lowerEase = Ease.OutQuad;
 
 
     [Header("Cut Detection")]
     public float bladeCheckRadius = 0.04f;
 
 
-    private bool holdingKnife;
-    private bool knifeLowered;
-    private bool rotationLocked;
-    private bool cutting;
+    public bool holdingKnife;
+    public bool knifeLowered;
+    public bool cutting;
+    public bool interactable = true;
 
 
-    private Quaternion lockedRotation;
-    private Quaternion startRotation;
-    private Quaternion pressRotation;
-
+    private Quaternion originalLocalRotation;
 
     private Vector3 pickupOffset;
 
     private Plane movementPlane;
+
+    public UnityEvent onCutFail;
 
 
     void Start()
@@ -57,25 +62,24 @@ public class KnifeDrawer : MonoBehaviour
             knife.position;
 
 
-        startRotation = knife.rotation;
-
-
-        pressRotation =
-            startRotation *
-            Quaternion.Euler(
-                pressRotationAmount,
-                0,
-                0);
+        originalLocalRotation =
+            knife.localRotation;
     }
 
 
 
     void Update()
     {
+        if (!interactable)
+            return;
+
+
         if (Input.GetKey(KeyCode.R))
         {
             SceneManager.LoadScene("CookingTest");
         }
+
+
         HandlePickup();
 
 
@@ -94,18 +98,26 @@ public class KnifeDrawer : MonoBehaviour
 
 
 
-    void HandlePickup()
+    public void HandlePickup()
     {
         // Drop knife
         if (holdingKnife &&
-           Input.GetMouseButtonDown(0))
+            Input.GetMouseButtonDown(0))
         {
             holdingKnife = false;
 
             knifeLowered = false;
             cutting = false;
 
-            rotationLocked = false;
+
+            knife.DOKill();
+
+
+            knife.DOLocalRotate(
+                originalLocalRotation.eulerAngles,
+                pickupRotateDuration)
+                .SetEase(Ease.OutSine);
+
 
             return;
         }
@@ -114,12 +126,11 @@ public class KnifeDrawer : MonoBehaviour
 
         // Pickup knife
         if (!holdingKnife &&
-           Input.GetMouseButtonDown(0))
+            Input.GetMouseButtonDown(0))
         {
             Ray ray =
                 cam.ScreenPointToRay(
                     Input.mousePosition);
-
 
 
             if (Physics.Raycast(
@@ -134,6 +145,15 @@ public class KnifeDrawer : MonoBehaviour
                 pickupOffset =
                     pickupPoint.position -
                     knife.position;
+
+
+                knife.DOKill();
+
+
+                knife.DOLocalRotate(
+                    pickedUpRotation,
+                    pickupRotateDuration)
+                    .SetEase(pickupEase);
             }
         }
     }
@@ -182,70 +202,53 @@ public class KnifeDrawer : MonoBehaviour
                     knifeMoveSpeed *
                     Time.deltaTime);
         }
-
-
-
-        if (rotationLocked)
-        {
-            knife.rotation =
-                lockedRotation;
-        }
     }
 
 
 
     void HandleLowering()
     {
-        if (Input.GetMouseButton(1))
+        // Press knife down
+        if (Input.GetMouseButtonDown(1))
         {
             knifeLowered = true;
 
 
-            knife.rotation =
-                Quaternion.Lerp(
-                    startRotation,
-                    pressRotation,
-                    Time.deltaTime * lowerSpeed);
+            knife.DOKill();
 
 
-            if (!rotationLocked)
-            {
-                LockRotation();
-            }
+            knife.DOLocalRotate(
+                loweredRotation,
+                lowerRotateDuration)
+                .SetEase(lowerEase);
         }
-        else
+
+
+
+        // Release knife
+        if (Input.GetMouseButtonUp(1))
         {
             knifeLowered = false;
-            rotationLocked = false;
 
 
-            knife.rotation =
-                Quaternion.Lerp(
-                    knife.rotation,
-                    startRotation,
-                    Time.deltaTime * raiseSpeed);
+            knife.DOKill();
+
+
+            knife.DOLocalRotate(
+                pickedUpRotation,
+                lowerRotateDuration)
+                .SetEase(Ease.OutSine);
+
+
+            TryCut();
         }
-    }
-
-
-
-    void LockRotation()
-    {
-        rotationLocked = true;
-
-        lockedRotation =
-            knife.rotation;
     }
 
 
 
     void HandleCut()
     {
-        // Only cut once when releasing right click
-        if (Input.GetMouseButtonUp(1))
-        {
-            TryCut();
-        }
+        // Kept empty because cut now happens on release
     }
 
 
@@ -259,11 +262,14 @@ public class KnifeDrawer : MonoBehaviour
                 foodLayer);
 
 
+
         if (hits.Length == 0)
         {
             Debug.Log("No food detected");
+            onCutFail?.Invoke();
             return;
         }
+
 
 
         foreach (Collider hit in hits)

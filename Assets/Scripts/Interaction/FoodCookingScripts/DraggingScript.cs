@@ -1,118 +1,276 @@
 using DG.Tweening;
-using System.Collections;
-using System.Diagnostics.SymbolStore;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    
     private Camera cam;
 
     [Header("Carry Settings")]
     public float carryDistance = 2f;
     public float moveSpeed = 15f;
-    public float rotationSpeed;
-    private Rigidbody rb;
-    [HideInInspector] public bool dragging;
-    [SerializeField] public bool isMeat;
-    [SerializeField] private bool isFood;
 
 
-    [Header("Reactivity Settings")]
+    [Header("Food Rotation")]
+    public float rotationSpeed = 120f;
+
+
+    [Header("Flip Animation")]
+    public float flipDuration = 0.5f;
+    public Ease flipEase = Ease.InOutSine;
+
+
+    [Header("Food")]
+    public bool isFood = true;
+
+
+    [Header("Reactivity")]
     [SerializeField] private float jiggleDuration = 0.3f;
     [SerializeField][Range(0f, 1f)] private float jiggleStrength = 0.3f;
     [SerializeField] private int jiggleVibrato = 10;
     [SerializeField][Range(0f, 180f)] private float jiggleRandomness = 90f;
 
-    [HideInInspector] public FoodStats foodStatsScript;
+
+
+    private Rigidbody rb;
+
+    [HideInInspector]
+    public bool dragging;
+
+
+    private bool isFlipping;
+
+
+    [HideInInspector]
+    public FoodStats foodStatsScript;
+
+
+
     void Start()
     {
-        foodStatsScript = GetComponent<FoodStats>();
+        cam = Camera.main;
+
         rb = GetComponent<Rigidbody>();
-        cam = Camera.main; 
+
+        foodStatsScript = GetComponent<FoodStats>();
     }
+
+
+
     void Update()
+    {
+        // Move while holding
+        if (dragging)
         {
-            if (dragging)
-            {
-                Vector3 mousePos = Input.mousePosition;
-                mousePos.z = carryDistance;
+            Vector3 mousePos =
+                Input.mousePosition;
 
-                Vector3 targetPos = cam.ScreenToWorldPoint(mousePos);
+            mousePos.z = carryDistance;
 
-                transform.position = Vector3.Lerp(
+
+            Vector3 target =
+                cam.ScreenToWorldPoint(mousePos);
+
+
+            transform.position =
+                Vector3.Lerp(
                     transform.position,
-                    targetPos,
-                    moveSpeed * Time.deltaTime
-                );
-            }
+                    target,
+                    moveSpeed * Time.deltaTime);
+        }
 
-            if (Input.GetMouseButton(1) && isFood && dragging)
-            {
-                transform.Rotate(
-                    Vector3.up * Time.deltaTime * rotationSpeed,
-                    Space.World
-                );
-            }                 
-        // Drop when left mouse is released
-        if (dragging && Input.GetMouseButtonUp(0))
+
+
+        // Rotate ONLY local Z while holding
+        if (dragging &&
+            Input.GetMouseButton(1) &&
+            isFood)
         {
-            GetComponent<MeshCollider>().enabled = true;
+            transform.Rotate(
+                0f,
+                0f,
+                rotationSpeed * Time.deltaTime,
+                Space.Self);
+        }
+
+
+
+        if (!dragging &&
+          Input.GetMouseButtonDown(1) &&
+          isFood)
+        {
+            CheckForFlipClick();
+        }
+
+
+
+        // Drop
+        if (dragging &&
+            Input.GetMouseButtonUp(0))
+        {
+            MeshCollider mesh =
+                GetComponent<MeshCollider>();
+
+            if (mesh != null)
+                mesh.enabled = true;
+
 
             dragging = false;
+
             rb.useGravity = true;
-           
+
 
             if (foodStatsScript != null)
                 foodStatsScript.StopCooking();
         }
     }
-    
+
+
+    void CheckForFlipClick()
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        {
+            if (hit.collider.gameObject == gameObject)
+            {
+                FlipFood();
+            }
+        }
+    }
+
+    private void FlipFood()
+    {
+        if (isFlipping)
+            return;
+
+
+        if (foodStatsScript == null)
+            return;
+
+
+        isFlipping = true;
+
+
+        // Kill only THIS food's tweens
+        transform.DOKill();
+
+
+
+        Vector3 targetRotation =
+            transform.localEulerAngles;
+
+
+        targetRotation.x += 180f;
+
+
+
+        transform.DOLocalRotate(
+            targetRotation,
+            flipDuration,
+            RotateMode.FastBeyond360)
+            .SetEase(flipEase)
+            .OnComplete(() =>
+            {
+                isFlipping = false;
+
+
+                // Tell only this food its side changed
+                foodStatsScript.FlipFood();
+            });
+    }
+
+
+
+
+
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("Started dragging: " + gameObject.name);
-        this.gameObject.GetComponent<MeshCollider>().enabled = false;
-        // Disable collider to prevent physics interference
-        transform.DOShakeScale(jiggleDuration, jiggleStrength, jiggleVibrato, jiggleRandomness, true, ShakeRandomnessMode.Harmonic);
-        foodStatsScript.isCooking = false;
+        MeshCollider mesh =
+            GetComponent<MeshCollider>();
+
+        if (mesh != null)
+            mesh.enabled = false;
+
+
+
+        transform.DOShakeScale(
+            jiggleDuration,
+            jiggleStrength,
+            jiggleVibrato,
+            jiggleRandomness,
+            true,
+            ShakeRandomnessMode.Harmonic);
+
+
+
         dragging = true;
+
+
         rb.useGravity = false;
-      
+
+
+        if (foodStatsScript != null)
+            foodStatsScript.StopCooking();
     }
+
+
+
+
 
     public void OnDrag(PointerEventData eventData)
     {
-        dragging = true;
-       
-        // Mouse position on screen
-        Vector3 mousePos = eventData.position;
+        Vector3 mousePos =
+            eventData.position;
 
-        // Set depth from camera
+
         mousePos.z = carryDistance;
 
-        // Convert to world position near camera
-        Vector3 targetPos = cam.ScreenToWorldPoint(mousePos);
 
-        // Smooth movement
-        transform.position = Vector3.Lerp(
-            transform.position,
-            targetPos,
-            moveSpeed * Time.deltaTime
-        );
-        
-    }              
-        
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        this.gameObject.GetComponent<MeshCollider>().enabled = true;
+        Vector3 target =
+            cam.ScreenToWorldPoint(mousePos);
 
-        transform.DOShakeScale(jiggleDuration, jiggleStrength, jiggleVibrato, jiggleRandomness, true, ShakeRandomnessMode.Harmonic);
-        dragging = false;
-        rb.useGravity = true;
-        foodStatsScript.StopCooking();
+
+
+        transform.position =
+            Vector3.Lerp(
+                transform.position,
+                target,
+                moveSpeed * Time.deltaTime);
     }
 
 
+
+
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        MeshCollider mesh =
+            GetComponent<MeshCollider>();
+
+        if (mesh != null)
+            mesh.enabled = true;
+
+
+
+        transform.DOShakeScale(
+            jiggleDuration,
+            jiggleStrength,
+            jiggleVibrato,
+            jiggleRandomness,
+            true,
+            ShakeRandomnessMode.Harmonic);
+
+
+
+        dragging = false;
+
+
+        rb.useGravity = true;
+
+
+
+        if (foodStatsScript != null)
+            foodStatsScript.StopCooking();
+    }
 }

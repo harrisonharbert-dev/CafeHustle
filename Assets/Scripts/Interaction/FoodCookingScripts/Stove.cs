@@ -19,7 +19,7 @@ public class Stove : MonoBehaviour
         if (collision.gameObject.tag == "Ingredient")
         {
             Debug.Log("Collided with ingredient: " + collision.gameObject.name);
-            if (collision.gameObject.GetComponent<DraggingScript>() != null && collision.gameObject.GetComponent<DraggingScript>().isMeat == true)
+            if (collision.gameObject.GetComponent<DraggingScript>() != null && collision.gameObject.GetComponent<DraggingScript>().isFood == true)
             {
                 Debug.Log("Starting to cook: " + collision.gameObject.name);
                 collision.gameObject.GetComponent<FoodStats>().StartCooking();
@@ -32,7 +32,7 @@ public class Stove : MonoBehaviour
         Debug.Log("Stopping cooking: " + collision.gameObject.name);
             if (collision.gameObject.tag == "Ingredient")
             {
-            if (collision.gameObject.GetComponent<DraggingScript>() != null && collision.gameObject.GetComponent<DraggingScript>().isMeat == true)
+            if (collision.gameObject.GetComponent<DraggingScript>() != null && collision.gameObject.GetComponent<DraggingScript>().isFood == true)
             {          
                 collision.gameObject.GetComponent<FoodStats>().StopCooking();
             }
