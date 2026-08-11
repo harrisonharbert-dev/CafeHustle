@@ -12,20 +12,21 @@ public class CutsceneAnimator : MonoBehaviour
 
 
     private PlayableDirector director;
-    public SerializableDictionary<string,TimelineAsset> timelineAssets;
+    public SerializableDictionary<string, TimelineAsset> timelineAssets;
 
     private TimelineAsset currentAsset;
 
 
 
-    public static CutsceneAnimator instance {get; private set;}
+    public static CutsceneAnimator instance { get; private set; }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if(instance==null)
+        if (instance == null)
         {
             instance = this;
-        } else
+        }
+        else
         {
             Destroy(this);
         }
@@ -36,13 +37,13 @@ public class CutsceneAnimator : MonoBehaviour
     [YarnCommand("play_cutscene")]
     public void playEmote(string name)
     {
-        
 
-        timelineAssets.TryGetValue(name,out TimelineAsset currentAsset);
+
+        timelineAssets.TryGetValue(name, out TimelineAsset currentAsset);
         director.playableAsset = currentAsset;
         director.Play();
-        
-        if(PlayerInputController.instance.playerState == PlayerInputController.playState.none) return;
+
+        if (PlayerInputController.instance.playerState == PlayerInputController.playState.none) return;
         PlayerInputController.instance.useDrop();
     }
     //Play as emote, drop held item
@@ -52,11 +53,11 @@ public class CutsceneAnimator : MonoBehaviour
     public void playAction(string name)
     {
         // Get current asset to be played
-        timelineAssets.TryGetValue(name,out TimelineAsset currentAsset);
+        timelineAssets.TryGetValue(name, out TimelineAsset currentAsset);
         director.playableAsset = currentAsset;
         //pause player movement
         float duration = (float)director.playableAsset.duration;
-        StartCoroutine(pausePlayerMovement(duration));
+        StartCoroutine(pausePlayerMovement(duration + 0.1f));
 
         //
         director.Play();
@@ -66,12 +67,16 @@ public class CutsceneAnimator : MonoBehaviour
     private IEnumerator pausePlayerMovement(float duration)
     {
         // If player can't already move, then do nothing
-        if(PlayerInputController.instance.lockMovement == true) yield break;
+        if (PlayerInputController.instance.lockMovement == true) yield break;
 
         PlayerInputController.instance.SetMovementLock(true);
 
         yield return new WaitForSeconds(duration);
+        
+        if (PlayerInputController.instance.isinDialogue == false)
+        {
+            PlayerInputController.instance.SetMovementLock(false);
+        }
 
-        PlayerInputController.instance.SetMovementLock(false);
     }
 }

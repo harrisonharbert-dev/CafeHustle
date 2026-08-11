@@ -130,10 +130,11 @@ public class PlayerInputController : MonoBehaviour
         }
                 
 
-        Debug.Log("Lock set to" + option + "by" + this);
+        Debug.Log("Lock set to" + option);
 
         //Hide cursor
         Cursor.visible = option;
+
         if (option == false)
         {
             Cursor.lockState = CursorLockMode.Locked;

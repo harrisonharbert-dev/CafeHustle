@@ -171,7 +171,7 @@ public class Interactable : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (!isInteractable) return;
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && PlayerInputController.instance.currentInteractable==this)
         {
             isInRange = false;
             PlayerInputController.instance.SetCurrentInteractable(null);
