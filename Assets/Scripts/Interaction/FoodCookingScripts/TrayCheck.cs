@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TrayCheck : MonoBehaviour
 {
@@ -10,15 +12,23 @@ public class TrayCheck : MonoBehaviour
     [Tooltip("Target ratio is 1.0. Lower/Upper bounds define acceptable cooking perfection for each side.")]
     [SerializeField] private float minCookRatio = 0.8f;  // Minimum acceptable doneness ratio (prevents undercooking)
     [SerializeField] private float maxCookRatio = 1.2f;  // Maximum acceptable doneness ratio (prevents overcooking)
-
+    public TextResponse EmoteResponse; // Reference to the TextResponse component for emotes
+    public UnityEvent Success;
     private void Start()
     {
         if (NextSectionUI != null)
         {
             NextSectionUI.SetActive(false);
         }
+        EmoteResponse = FindAnyObjectByType<TextResponse>();
     }
-
+    public void Update()
+    {
+        if(foodsOnTray != null)
+        {
+            foodsOnTray.RemoveAll(item => item == null); // Clean up any null references
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         FoodStats food = other.GetComponent<FoodStats>();
@@ -58,6 +68,10 @@ public class TrayCheck : MonoBehaviour
         {
             if (!IsFoodCookedProperly(food))
             {
+                if (food.CookRatio < minCookRatio)
+                    EmoteResponse.SetText("Food is undercooked!"); // Trigger emote for undercooked food
+                else if (food.CookRatio > maxCookRatio)
+                    EmoteResponse.SetText("Food is overcooked!"); // Trigger emote for overcooked food
                 return false; // Reject if undercooked or overcooked on any side
             }
 
@@ -83,7 +97,9 @@ public class TrayCheck : MonoBehaviour
         // 3. Reject if extra unrequested food items are present
         if (trayCounts.Count > 0)
         {
+            EmoteResponse.SetText("Extra food on tray!"); // Trigger emote for extra items
             return false;
+
         }
 
         return true;
@@ -151,6 +167,13 @@ public class TrayCheck : MonoBehaviour
 
     private void TriggerNextSection()
     {
+        Success?.Invoke(); // Trigger success emote
+        StartCoroutine(EnterNextStage());
+    }
+
+    public IEnumerator EnterNextStage()
+    {
+        yield return new WaitForSeconds(2f); // Optional delay for feedback or transition
         if (NextSectionUI != null)
         {
             NextSectionUI.SetActive(true);

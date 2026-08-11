@@ -128,7 +128,7 @@ public class FoodStats : MonoBehaviour
             // Right click flip
             if (IsHovering &&
                 Input.GetMouseButtonDown(1) &&
-                !isFlipping)
+                isFlipping == false)
             {
                 FlipFood();
             }
