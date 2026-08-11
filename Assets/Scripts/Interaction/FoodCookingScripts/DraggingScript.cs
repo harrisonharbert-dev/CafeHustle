@@ -40,7 +40,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     private bool isFlipping;
 
-
+    public bool CanBeFlipped;
     [HideInInspector]
     public FoodStats foodStatsScript;
 
@@ -97,7 +97,8 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
         if (!dragging &&
           Input.GetMouseButtonDown(1) &&
-          isFood)
+          isFood &&
+          CanBeFlipped)
         {
             CheckForFlipClick();
         }

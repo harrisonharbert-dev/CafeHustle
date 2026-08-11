@@ -54,13 +54,10 @@ public class CameraController : MonoBehaviour
 
     IEnumerator DelayedStage(int stageIndex)
     {
-
+        Debug.Log("RanKnifeDrop");
         KnifeDrawer knifeDrawer = FindAnyObjectByType<KnifeDrawer>();
-        knifeDrawer.holdingKnife = false;
-
-        knifeDrawer.knifeLowered = false;
-        knifeDrawer.cutting = false;
-        knifeDrawer.interactable = false;
+        knifeDrawer.HandlePickup();
+        knifeDrawer.GetComponent<KnifeDrawer>().holdingKnife = false;
         yield return new WaitForSeconds(2f);
         Cameras[stageIndex - 1].SetActive(false);
         Cameras[stageIndex].SetActive(true);

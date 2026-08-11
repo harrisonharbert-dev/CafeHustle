@@ -67,7 +67,7 @@ public class FoodStats : MonoBehaviour
     [Header("Flip Settings")]
     public float flipCooldown = 0.7f;
 
-    private bool canFlip = true;
+    public bool canFlip = true;
 
 
     public bool SideOneCooked =>
@@ -117,25 +117,22 @@ public class FoodStats : MonoBehaviour
 
         baseMaterial =
             GetComponent<Renderer>().material;
-
-
-        requiresTwoSides =
-            foodType == FoodType.Bacon ||
-            foodType == FoodType.Sausage;
     }
 
 
 
     void Update()
     {
-        // Right click flip
-        if (IsHovering &&
-            Input.GetMouseButtonDown(1) &&
-            !isFlipping)
+        if (canFlip == true && requiresTwoSides == true)
         {
-            FlipFood();
+            // Right click flip
+            if (IsHovering &&
+                Input.GetMouseButtonDown(1) &&
+                !isFlipping)
+            {
+                FlipFood();
+            }
         }
-
 
 
         if (isCooking)
@@ -197,7 +194,7 @@ public class FoodStats : MonoBehaviour
             }
 
 
-            if (cookingStatusScript.progress >= 1.1f)
+            if (cookingStatusScript.progress >= 1.1f && isCooking == true)
             {
                 FlickerAnimation.SetBool(
                     "IsFlickering",

@@ -53,8 +53,6 @@ public class KnifeDrawer : MonoBehaviour
     private Plane movementPlane;
 
     public UnityEvent onCutFail;
-
-
     void Start()
     {
         pickupOffset =
@@ -100,8 +98,8 @@ public class KnifeDrawer : MonoBehaviour
 
     public void HandlePickup()
     {
-        // Drop knife
-        if (holdingKnife &&
+            // Drop knife
+            if (holdingKnife &&
             Input.GetMouseButtonDown(0))
         {
             holdingKnife = false;
@@ -206,42 +204,42 @@ public class KnifeDrawer : MonoBehaviour
 
 
 
-    void HandleLowering()
+   public void HandleLowering()
     {
-        // Press knife down
-        if (Input.GetMouseButtonDown(1))
-        {
-            knifeLowered = true;
+            // Press knife down
+            if (Input.GetMouseButtonDown(1))
+            {
+                knifeLowered = true;
 
 
-            knife.DOKill();
+                knife.DOKill();
 
 
-            knife.DOLocalRotate(
-                loweredRotation,
-                lowerRotateDuration)
-                .SetEase(lowerEase);
-        }
+                knife.DOLocalRotate(
+                    loweredRotation,
+                    lowerRotateDuration)
+                    .SetEase(lowerEase);
+            }
 
 
 
-        // Release knife
-        if (Input.GetMouseButtonUp(1))
-        {
-            knifeLowered = false;
+            // Release knife
+            if (Input.GetMouseButtonUp(1))
+            {
+                knifeLowered = false;
 
 
-            knife.DOKill();
+                knife.DOKill();
 
 
-            knife.DOLocalRotate(
-                pickedUpRotation,
-                lowerRotateDuration)
-                .SetEase(Ease.OutSine);
+                knife.DOLocalRotate(
+                    pickedUpRotation,
+                    lowerRotateDuration)
+                    .SetEase(Ease.OutSine);
 
 
-            TryCut();
-        }
+                TryCut();
+            }
     }
 
 
