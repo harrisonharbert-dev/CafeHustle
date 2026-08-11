@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: bb38bc96cfaae934fab984094ab9ac3c
+guid: 4728c94c6b438a14bbc558ceecb86538
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,13 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: m-base-1
-    second: {fileID: 2100000, guid: 6a05791f0d63efb4b987a4dffc36845e, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m-rooftile
-    second: {fileID: 2100000, guid: dd82153142d0bd24ea2b7a82ef0e2f49, type: 2}
+      name: m_wood_floor
+    second: {fileID: 2100000, guid: 51c6af8f1489b154e955f404cfc8a065, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -45,7 +40,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1

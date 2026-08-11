@@ -48,8 +48,8 @@ public class updateRoofState : MonoBehaviour
         foreach (var entry in obstructions)
         {
             if (entry.roofPiece == null) continue;
-            entry.roofPiece.DOMoveY(moveHeight + entry.originalPosition, transitionDuration);        }
-
+            entry.roofPiece.DOMoveY(moveHeight + entry.originalPosition, transitionDuration);
+        }
         foreach (var entry in walls)
         {
             if (entry.skinnedMesh == null) continue;
@@ -67,8 +67,8 @@ public class updateRoofState : MonoBehaviour
         {
             if (entry.roofPiece == null) continue;
 
-            entry.roofPiece.DOMoveY(entry.originalPosition, transitionDuration);        }
-
+            entry.roofPiece.DOMoveY(entry.originalPosition, transitionDuration);
+        }
         foreach (var entry in walls)
         {
             if (entry.skinnedMesh == null) continue;

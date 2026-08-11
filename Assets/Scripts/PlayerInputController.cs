@@ -125,7 +125,10 @@ public class PlayerInputController : MonoBehaviour
         lockMovement = option;
 
         if (isinDialogue)
-        { lockMovement = true; }
+        {
+            lockMovement = true;
+        }
+                
 
         Debug.Log("Lock set to" + option + "by" + this);
 
@@ -142,11 +145,19 @@ public class PlayerInputController : MonoBehaviour
 
         moveInput = new Vector2(0f, 0f);
 
-        if (currentInteractable != null && currentInteractable.useDialogueCamera && currentInteractable.isInRange)
-        {
-            int value = option ? 1 : -1;
-            dialogueCamera.Priority = value;
-        }
+    }
+
+
+    public void onDialogueCamera(GameObject target)
+    {
+        dialogueCamera.Priority = 1;
+        if (!target) return;
+        LookAt(target);
+    }
+
+    public void offDialogueCamera()
+    {
+        dialogueCamera.Priority = -1;
     }
 
     [YarnCommand("player_look_at")]
@@ -237,7 +248,7 @@ public class PlayerInputController : MonoBehaviour
     }
     void clearHeldItem()
     {
-        
+
         playerState = playState.none;
         currentCarryItemID = null;
         InteractPrompt.instance.Refresh();

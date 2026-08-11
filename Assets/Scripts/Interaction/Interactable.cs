@@ -65,7 +65,8 @@ public class Interactable : MonoBehaviour
     [Header("Interaction Prompt")]
     [SerializeField] private PromptText promptText;
     [SerializeField] private PromptKey promptKey;
-
+    [SerializeField] private bool isInteractable = true;
+    [SerializeField] private interactableZoneIndicator zoneIndicator;
 
 
     public void Start()
@@ -90,20 +91,40 @@ public class Interactable : MonoBehaviour
                 useDialogueCamera = true;
                 break;
         }
+
+        if (zoneIndicator != null && isInteractable)
+        {
+            zoneIndicator.changeIndicatorVisibility(true);
+        }
     }
 
-
+    public void setInteractable(bool option)
+    {
+        isInteractable = option;
+    }
 
 
     public void InvokeEvent()
     {
-        if (interactType == interactableType.none) return;
+        if (interactType == interactableType.none && zoneIndicator != null)
+        {
+            zoneIndicator.changeIndicatorVisibility(false);
+            return;
+        }
+        ;
         //
         played = true;
+
+
 
         if (dialogueName != null)
         {
             dialogueRunner.StartDialogue(dialogueName);
+
+            if (useDialogueCamera)
+            {
+                PlayerInputController.instance.onDialogueCamera(gameObject);
+            }
         }
         if (interactAction != null)
         {
@@ -115,10 +136,11 @@ public class Interactable : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!isInteractable) return;
         if (other.gameObject.CompareTag("Player"))
         {
-            if(played && playOnce) return;
-            
+            if (played && playOnce) return;
+
             Debug.Log("Trigger Entered");
 
             isInRange = true;
@@ -132,7 +154,7 @@ public class Interactable : MonoBehaviour
                 case interactableType.interactableWithTrigger:
                     InteractPrompt.instance.Refresh();
                     InvokeEvent();
-                break;
+                    break;
 
                 case interactableType.interactableWithInput:
                     InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
@@ -148,6 +170,7 @@ public class Interactable : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (!isInteractable) return;
         if (other.gameObject.CompareTag("Player"))
         {
             isInRange = false;
