@@ -59,70 +59,74 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     void Update()
     {
-        // Move while holding
-        if (dragging)
+        if (CameraController.transitioning == false)
         {
-            Vector3 mousePos =
-                Input.mousePosition;
 
-            mousePos.z = carryDistance;
+            // Move while holding
+            if (dragging)
+            {
+                Vector3 mousePos =
+                    Input.mousePosition;
 
-
-            Vector3 target =
-                cam.ScreenToWorldPoint(mousePos);
-
-
-            transform.position =
-                Vector3.Lerp(
-                    transform.position,
-                    target,
-                    moveSpeed * Time.deltaTime);
-        }
+                mousePos.z = carryDistance;
 
 
+                Vector3 target =
+                    cam.ScreenToWorldPoint(mousePos);
 
-        // Rotate ONLY local Z while holding
-        if (dragging &&
-            Input.GetMouseButton(1) &&
-            isFood)
-        {
-            transform.Rotate(
-                0f,
-                0f,
-                rotationSpeed * Time.deltaTime,
-                Space.Self);
-        }
+
+                transform.position =
+                    Vector3.Lerp(
+                        transform.position,
+                        target,
+                        moveSpeed * Time.deltaTime);
+            }
 
 
 
-        if (!dragging &&
-          Input.GetMouseButtonDown(1) &&
-          isFood &&
-          CanBeFlipped)
-        {
-            CheckForFlipClick();
-        }
+            // Rotate ONLY local Z while holding
+            if (dragging &&
+                Input.GetMouseButton(1) &&
+                isFood)
+            {
+                transform.Rotate(
+                    0f,
+                    0f,
+                    rotationSpeed * Time.deltaTime,
+                    Space.Self);
+            }
 
 
 
-        // Drop
-        if (dragging &&
-            Input.GetMouseButtonUp(0))
-        {
-            MeshCollider mesh =
-                GetComponent<MeshCollider>();
-
-            if (mesh != null)
-                mesh.enabled = true;
+            if (!dragging &&
+              Input.GetMouseButtonDown(1) &&
+              isFood &&
+              CanBeFlipped)
+            {
+                CheckForFlipClick();
+            }
 
 
-            dragging = false;
 
-            rb.useGravity = true;
+            // Drop
+            if (dragging &&
+                Input.GetMouseButtonUp(0))
+            {
+                MeshCollider mesh =
+                    GetComponent<MeshCollider>();
+
+                if (mesh != null)
+                    mesh.enabled = true;
 
 
-            if (foodStatsScript != null)
-                foodStatsScript.StopCooking();
+                dragging = false;
+
+                rb.useGravity = true;
+
+
+                if (foodStatsScript != null)
+                    foodStatsScript.StopCooking();
+            }
         }
     }
 

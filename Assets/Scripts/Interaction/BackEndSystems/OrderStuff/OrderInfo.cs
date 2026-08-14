@@ -23,7 +23,7 @@ public class OrderInfo : MonoBehaviour
 
         StringBuilder sb = new StringBuilder();
 
-        sb.AppendLine("CURRENT ORDER");
+        sb.AppendLine("INGREDIENTS");
         sb.AppendLine();
 
         foreach (OrderItem item in currentOrder.requiredItems)
@@ -32,7 +32,6 @@ public class OrderInfo : MonoBehaviour
         }
 
         sb.AppendLine();
-        sb.AppendLine($"Potential reward: ${currentOrder.baseReward}");
 
         orderText.text = sb.ToString();
     }

@@ -7,36 +7,41 @@ public class GameManager : MonoBehaviour
     public Order currentOrder;
     public PlateScorer plate;
 
-    public PerformanceScreen endGameUI;
-
     private void Awake()
     {
         Instance = this;
 
-        //set cursor to on
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
     public void ServeFood()
     {
-        float score = plate.ScorePlate();
+        if (plate == null)
+        {
+            Debug.LogError("No PlateScorer assigned to GameManager!");
+            return;
+        }
 
-        string grade = CalculateGrade(score);
+        if (currentOrder == null)
+        {
+            Debug.LogError("There is no current order!");
+            return;
+        }
 
-        endGameUI.ShowResults(currentOrder, plate, score, grade);
-    }
-    private string CalculateGrade(float score)
-    {
-        if (score >= 95f)
-            return "S";
-        else if (score >= 85f)
-            return "A";
-        else if (score >= 70f)
-            return "B";
-        else if (score >= 50f)
-            return "C";
-        else
-            return "F";
+        // Check if the plate contains exactly what the order requires.
+        bool orderComplete = plate.CheckPlate();
+
+        if (orderComplete)
+        {
+            Debug.Log("Order complete! Food can be served.");
+
+            // Put whatever should happen after successfully serving
+            // the food here.
+
+            return;
+        }
+
+        Debug.Log("Order is not complete! Missing or incorrect food.");
     }
 }

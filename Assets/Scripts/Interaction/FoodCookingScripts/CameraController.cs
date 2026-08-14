@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     //UIStuff
     public GameObject FoodHotBar;
     public FoodCuttable[] CuttableFoods;
+    public static bool transitioning;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

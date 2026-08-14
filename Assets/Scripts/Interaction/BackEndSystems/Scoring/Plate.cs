@@ -1,16 +1,13 @@
-﻿using DG.Tweening.Core.Easing;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlateScorer : MonoBehaviour
 {
     public List<FoodStats> foodsOnPlate = new List<FoodStats>();
-    public GameObject PerformanceUI;
-    [SerializeField] private PerformanceScreen endGameUI;
-    public void Start()
-    {
-        PerformanceUI.SetActive(false);
-    }
+
+    private bool orderCompleted = false;
+
     private void OnTriggerEnter(Collider other)
     {
         FoodStats food = other.GetComponent<FoodStats>();
@@ -18,6 +15,8 @@ public class PlateScorer : MonoBehaviour
         if (food != null && !foodsOnPlate.Contains(food))
         {
             foodsOnPlate.Add(food);
+
+            CheckPlate();
         }
     }
 
@@ -29,53 +28,100 @@ public class PlateScorer : MonoBehaviour
         {
             foodsOnPlate.Remove(food);
 
+            CheckPlate();
         }
     }
 
-    public float ScorePlate()
+    public bool CheckPlate()
     {
+        if (GameManager.Instance == null)
+            return false;
+
         Order order = GameManager.Instance.currentOrder;
 
-        if (order == null || foodsOnPlate.Count == 0)
-            return 0f;
+        if (order == null)
+            return false;
 
-        float score = order.baseReward;
+        if (foodsOnPlate.Count == 0)
+        {
+            orderCompleted = false;
+            return false;
+        }
 
-        Dictionary<FoodStats.FoodType, int> plateCounts = new();
-
-        float cookPenalty = 0f;
+        // Count all food currently on the plate.
+        Dictionary<FoodStats.FoodType, int> plateCounts =
+            new Dictionary<FoodStats.FoodType, int>();
 
         foreach (FoodStats food in foodsOnPlate)
         {
+            if (food == null)
+                continue;
+
             if (!plateCounts.ContainsKey(food.foodType))
-                plateCounts[food.foodType] = 0;
+            {
+                plateCounts.Add(food.foodType, 0);
+            }
 
             plateCounts[food.foodType]++;
-
-            cookPenalty += Mathf.Abs(food.CookRatio - 1f);
         }
 
-        score -= cookPenalty * 40f;
+        // Count everything required by the order.
+        Dictionary<FoodStats.FoodType, int> requiredCounts =
+            new Dictionary<FoodStats.FoodType, int>();
 
-        foreach (OrderItem req in order.requiredItems)
+        foreach (OrderItem item in order.requiredItems)
         {
-            int found = plateCounts.ContainsKey(req.type) ? plateCounts[req.type] : 0;
+            if (!requiredCounts.ContainsKey(item.type))
+            {
+                requiredCounts.Add(item.type, 0);
+            }
 
-            int diff = found - req.amount;
-
-            if (diff < 0)
-                score -= Mathf.Abs(diff) * 30f;
-            else if (diff > 0)
-                score -= diff * 15f;
-
-            plateCounts.Remove(req.type);
+            requiredCounts[item.type] += item.amount;
         }
 
-        foreach (var extra in plateCounts)
+        // Check that every required food has the correct quantity.
+        foreach (KeyValuePair<FoodStats.FoodType, int> required in requiredCounts)
         {
-            score -= extra.Value * 20f;
+            int plateAmount = 0;
+
+            if (plateCounts.ContainsKey(required.Key))
+            {
+                plateAmount = plateCounts[required.Key];
+            }
+
+            // Missing food.
+            if (plateAmount < required.Value)
+            {
+                orderCompleted = false;
+                return false;
+            }
+
+            // Too much food.
+            if (plateAmount > required.Value)
+            {
+                orderCompleted = false;
+                return false;
+            }
         }
 
-        return Mathf.Max(0, score);
+        // Check for food that isn't part of the order.
+        foreach (KeyValuePair<FoodStats.FoodType, int> plateFood in plateCounts)
+        {
+            if (!requiredCounts.ContainsKey(plateFood.Key))
+            {
+                orderCompleted = false;
+                return false;
+            }
+        }
+
+        // Everything matches the order.
+        orderCompleted = true;
+        SceneManager.LoadScene("Prototype_environment");
+        return true;
+    }
+
+    public bool IsOrderComplete()
+    {
+        return orderCompleted;
     }
 }

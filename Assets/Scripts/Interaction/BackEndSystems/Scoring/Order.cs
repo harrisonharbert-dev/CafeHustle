@@ -11,5 +11,4 @@ public class OrderItem
 public class Order : MonoBehaviour
 {
     public List<OrderItem> requiredItems = new List<OrderItem>();
-    public float baseReward = 100f;
 }
