@@ -2710,6 +2710,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5252946027398247222, guid: 06353ee0d5cb23943b3f832ae7be31d7, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 876544692}
+    - target: {fileID: 5252946027398247222, guid: 06353ee0d5cb23943b3f832ae7be31d7, type: 3}
       propertyPath: transitionType
       value: 1
       objectReference: {fileID: 0}
@@ -2718,6 +2722,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06353ee0d5cb23943b3f832ae7be31d7, type: 3}
+--- !u!95 &876544692 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1137359769121827563, guid: 06353ee0d5cb23943b3f832ae7be31d7, type: 3}
+  m_PrefabInstance: {fileID: 876544691}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &885196717 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4a2a757c59b76634192ced2dbfd34429, type: 3}
