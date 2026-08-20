@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using Unity.VisualScripting;
@@ -13,7 +15,11 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 {
 
     [SerializeField] private GameObject objectToAnimate;
-    
+
+    [Header("Wait For")]
+    [Tooltip("If set, this UITweener will wait for the referenced UITweener to finish any running tweens before firing its OnEnable event.")]
+    [SerializeField] private UITweener WaitFor;
+
      public enum tweenIn
     {
         none,
@@ -83,6 +89,8 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     private RectTransform rect;
     private Vector3 scale;
     private Vector3 startingPos;
+    private readonly List<Tween> activeTweens = new List<Tween>();
+    private bool isWaitingForDependency = false;
 
     [SerializeField] private UnityEvent onVisibleEvent;
     [SerializeField] private UnityEvent onDisableEvent;
@@ -113,7 +121,72 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     void OnEnable()
     {
+        if (WaitFor != null)
+        {
+            StartCoroutine(WaitForThenInvokeVisible());
+        }
+        else
+        {
+            onVisibleEvent?.Invoke();
+        }
+    }
+
+    private IEnumerator WaitForThenInvokeVisible()
+    {
+        // Mark that we're waiting on a dependency so anything waiting on US
+        // (nested WaitFor chains) knows to keep waiting too.
+        isWaitingForDependency = true;
+
+        // Wait a frame so the WaitFor tweener (if it is also enabling right now) has a chance to start its tweens
+        yield return null;
+
+        // IsBusy() checks both the WaitFor tweener's own tweens AND whether IT
+        // is waiting on a further nested WaitFor, so chains of any length resolve correctly.
+        while (WaitFor != null && WaitFor.IsBusy())
+        {
+            yield return null;
+        }
+
+        isWaitingForDependency = false;
         onVisibleEvent?.Invoke();
+    }
+
+    /// <summary>
+    /// Returns true if this UITweener currently has any running (active and playing) tweens.
+    /// </summary>
+    public bool IsAnimating()
+    {
+        for (int i = activeTweens.Count - 1; i >= 0; i--)
+        {
+            Tween t = activeTweens[i];
+            if (t == null || !t.IsActive())
+            {
+                activeTweens.RemoveAt(i);
+                continue;
+            }
+
+            if (t.IsPlaying())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Returns true if this UITweener is either currently animating, or is itself
+    /// still waiting on a (possibly nested) WaitFor dependency. Anything waiting on
+    /// this UITweener should treat this as "still busy".
+    /// </summary>
+    public bool IsBusy()
+    {
+        return isWaitingForDependency || IsAnimating();
+    }
+
+    private void TrackTween(Tween tween)
+    {
+        activeTweens.Add(tween);
     }
 
     void OnDisable() {
@@ -136,7 +209,7 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         float start = option ? 0f : 1f;
 
         group.alpha = start;
-        group.DOFade(target, fadeSettings.duration);
+        TrackTween(group.DOFade(target, fadeSettings.duration));
     }
 
     public void Scale(bool option)
@@ -153,9 +226,9 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
         rect.localScale = new Vector3 (startx,starty,startz);
 
-        rect.DOScaleX(targetx, scaleSettings.duration);
-        rect.DOScaleY(targety, scaleSettings.duration);
-        rect.DOScaleZ(targetz, scaleSettings.duration);
+        TrackTween(rect.DOScaleX(targetx, scaleSettings.duration));
+        TrackTween(rect.DOScaleY(targety, scaleSettings.duration));
+        TrackTween(rect.DOScaleZ(targetz, scaleSettings.duration));
     }
 
     public void Slide(bool option)
@@ -172,22 +245,22 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
         rect.position = new Vector3(startx,starty,startz);
 
-        rect.DOMove(new Vector3(targetx,targety,targetz), slideSettings.duration);
+        TrackTween(rect.DOMove(new Vector3(targetx,targety,targetz), slideSettings.duration));
     }
 
     public void Punch()
     {
-        rect.DOPunchScale(punchSettings.Punch, punchSettings.duration, punchSettings.vibrato, punchSettings.elasticity);
+        TrackTween(rect.DOPunchScale(punchSettings.Punch, punchSettings.duration, punchSettings.vibrato, punchSettings.elasticity));
     }
 
     public void ShakeScale()
     {
-        rect.DOShakeScale(shakeSettings.duration, shakeSettings.shake,shakeSettings.vibrato,shakeSettings.randomness,shakeSettings.fadeOut,shakeSettings.randomnessMode);
+        TrackTween(rect.DOShakeScale(shakeSettings.duration, shakeSettings.shake,shakeSettings.vibrato,shakeSettings.randomness,shakeSettings.fadeOut,shakeSettings.randomnessMode));
     }
 
     public void ShakeRotation()
     {
-        rect.DOShakeRotation(shakeSettings.duration, shakeSettings.shake,shakeSettings.vibrato,shakeSettings.randomness,shakeSettings.fadeOut,shakeSettings.randomnessMode);
+        TrackTween(rect.DOShakeRotation(shakeSettings.duration, shakeSettings.shake,shakeSettings.vibrato,shakeSettings.randomness,shakeSettings.fadeOut,shakeSettings.randomnessMode));
     }
 
 }

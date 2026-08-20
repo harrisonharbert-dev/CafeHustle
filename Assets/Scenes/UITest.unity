@@ -256,6 +256,136 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 329893850}
   m_CullTransparentMesh: 1
+--- !u!1 &410031393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 410031394}
+  - component: {fileID: 410031396}
+  - component: {fileID: 410031395}
+  m_Layer: 0
+  m_Name: Tweener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &410031394
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410031393}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -163.2206}
+  m_LocalScale: {x: 2.6536462, y: 2.6536462, z: 2.6536462}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1286424491}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -322.35275, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &410031395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410031393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c810a09d16b91004bacac0644e979ba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UITweener
+  objectToAnimate: {fileID: 1286424490}
+  WaitFor: {fileID: 449080107}
+  fadeSettings:
+    duration: 0.3
+  scaleSettings:
+    duration: 0.3
+  punchSettings:
+    Punch: {x: 0.15, y: 0.15, z: 0.15}
+    duration: 0.3
+    vibrato: 10
+    elasticity: 1
+  shakeSettings:
+    shake: {x: 0, y: 0, z: 0}
+    duration: 0
+    vibrato: 0
+    randomness: 0
+    fadeOut: 0
+    randomnessMode: 0
+  slideSettings:
+    distance: {x: 0.1, y: 0, z: 0}
+    duration: 0
+  onVisibleEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 410031395}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Fade
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 410031395}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Scale
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  onDisableEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 410031395}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Fade
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onHoverEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onLeaveEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!225 &410031396
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410031393}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &449080105
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,6 +436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UITweener
   objectToAnimate: {fileID: 1621899552}
+  WaitFor: {fileID: 1284264812}
   fadeSettings:
     duration: 0.3
   scaleSettings:
@@ -464,6 +595,225 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1284264811
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1284264814}
+  - component: {fileID: 1284264813}
+  - component: {fileID: 1284264812}
+  m_Layer: 0
+  m_Name: Tweener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1284264812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284264811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c810a09d16b91004bacac0644e979ba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UITweener
+  objectToAnimate: {fileID: 1586429264}
+  WaitFor: {fileID: 0}
+  fadeSettings:
+    duration: 0.3
+  scaleSettings:
+    duration: 0.3
+  punchSettings:
+    Punch: {x: 0.15, y: 0.15, z: 0.15}
+    duration: 0.3
+    vibrato: 10
+    elasticity: 1
+  shakeSettings:
+    shake: {x: 0, y: 0, z: 0}
+    duration: 0
+    vibrato: 0
+    randomness: 0
+    fadeOut: 0
+    randomnessMode: 0
+  slideSettings:
+    distance: {x: 0.1, y: 0, z: 0}
+    duration: 0
+  onVisibleEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1284264812}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Fade
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1284264812}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Scale
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  onDisableEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1284264812}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Fade
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onHoverEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onLeaveEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!225 &1284264813
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284264811}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!224 &1284264814
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284264811}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -163.2206}
+  m_LocalScale: {x: 2.6536462, y: 2.6536462, z: 2.6536462}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1586429268}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -322.35275, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1286424490
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1286424491}
+  - component: {fileID: 1286424494}
+  - component: {fileID: 1286424493}
+  - component: {fileID: 1286424492}
+  m_Layer: 5
+  m_Name: last
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1286424491
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286424490}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.37684, y: 0.37684, z: 0.37684}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 410031394}
+  m_Father: {fileID: 2055724891}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 587.4935, y: 0}
+  m_SizeDelta: {x: 1928, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1286424492
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286424490}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &1286424493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286424490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 659fb2492f8b203428dbb2c14854bb4e, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1286424494
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286424490}
+  m_CullTransparentMesh: 1
 --- !u!1 &1473208413
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,6 +868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UITweener
   objectToAnimate: {fileID: 0}
+  WaitFor: {fileID: 1499139918}
   fadeSettings:
     duration: 0
   scaleSettings:
@@ -539,7 +890,19 @@ MonoBehaviour:
     duration: 0.1
   onVisibleEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1473208415}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Fade
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onDisableEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -629,7 +992,31 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 1284264812}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
       - m_Target: {fileID: 449080107}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 410031395}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
         m_MethodName: set_enabled
         m_Mode: 6
@@ -839,6 +1226,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UITweener
   objectToAnimate: {fileID: 0}
+  WaitFor: {fileID: 0}
   fadeSettings:
     duration: 0
   scaleSettings:
@@ -860,7 +1248,19 @@ MonoBehaviour:
     duration: 0.1
   onVisibleEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1499139918}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Fade
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onDisableEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -960,6 +1360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UITweener
   objectToAnimate: {fileID: 0}
+  WaitFor: {fileID: 1473208415}
   fadeSettings:
     duration: 0
   scaleSettings:
@@ -981,7 +1382,19 @@ MonoBehaviour:
     duration: 0.1
   onVisibleEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1499551977}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Fade
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onDisableEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1072,6 +1485,30 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 449080107}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1284264812}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 410031395}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
         m_MethodName: set_enabled
         m_Mode: 6
@@ -1258,6 +1695,95 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1541285262}
   m_CullTransparentMesh: 1
+--- !u!1 &1586429264
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1586429268}
+  - component: {fileID: 1586429267}
+  - component: {fileID: 1586429266}
+  - component: {fileID: 1586429265}
+  m_Layer: 5
+  m_Name: first
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!225 &1586429265
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586429264}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &1586429266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586429264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 659fb2492f8b203428dbb2c14854bb4e, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1586429267
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586429264}
+  m_CullTransparentMesh: 1
+--- !u!224 &1586429268
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586429264}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.37684, y: 0.37684, z: 0.37684}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1284264814}
+  m_Father: {fileID: 2055724891}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -601.0598, y: 0}
+  m_SizeDelta: {x: 1928, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1621899552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1271,7 +1797,7 @@ GameObject:
   - component: {fileID: 1621899555}
   - component: {fileID: 1621899557}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: mid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1798,6 +2324,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1286424491}
+  - {fileID: 1586429268}
   - {fileID: 1621899553}
   - {fileID: 1499139914}
   - {fileID: 1473208414}
