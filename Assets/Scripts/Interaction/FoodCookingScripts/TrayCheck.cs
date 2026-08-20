@@ -16,9 +16,7 @@ public class TrayCheck : MonoBehaviour
     [SerializeField] private Ease moveEase = Ease.InOutQuad;
 
     [Header("Cook Tolerance")]
-    [Tooltip("Target ratio is 1.0. Lower/Upper bounds define acceptable cooking perfection.")]
     [SerializeField] private float minCookRatio = 0.8f;
-
     [SerializeField] private float maxCookRatio = 1.2f;
 
     [Header("Emotes")]
@@ -28,7 +26,10 @@ public class TrayCheck : MonoBehaviour
 
     private bool hasSucceeded = false;
     private bool isMovingTray = false;
+
     public CameraController CameraController;
+
+
     private void Start()
     {
         if (NextSectionUI != null)
@@ -40,8 +41,10 @@ public class TrayCheck : MonoBehaviour
         {
             EmoteResponse = FindAnyObjectByType<TextResponse>();
         }
+
         CameraController = FindAnyObjectByType<CameraController>();
     }
+
 
     private void Update()
     {
@@ -58,6 +61,7 @@ public class TrayCheck : MonoBehaviour
         }
     }
 
+
     private void OnTriggerEnter(Collider other)
     {
         FoodStats food = other.GetComponent<FoodStats>();
@@ -72,6 +76,7 @@ public class TrayCheck : MonoBehaviour
         }
     }
 
+
     private void OnTriggerExit(Collider other)
     {
         FoodStats food = other.GetComponent<FoodStats>();
@@ -84,19 +89,16 @@ public class TrayCheck : MonoBehaviour
         }
     }
 
+
     public bool IsTrayValid()
     {
         if (GameManager.Instance == null)
-        {
             return false;
-        }
 
         Order order = GameManager.Instance.currentOrder;
 
         if (order == null)
-        {
             return false;
-        }
 
         if (foodsOnTray.Count == 0)
         {
@@ -104,8 +106,10 @@ public class TrayCheck : MonoBehaviour
             return false;
         }
 
+
         Dictionary<FoodStats.FoodType, int> trayCounts =
             new Dictionary<FoodStats.FoodType, int>();
+
 
         foreach (FoodStats food in foodsOnTray)
         {
@@ -130,6 +134,7 @@ public class TrayCheck : MonoBehaviour
                 return false;
             }
 
+
             if (!trayCounts.ContainsKey(food.foodType))
             {
                 trayCounts.Add(food.foodType, 0);
@@ -138,8 +143,10 @@ public class TrayCheck : MonoBehaviour
             trayCounts[food.foodType]++;
         }
 
+
         Dictionary<FoodStats.FoodType, int> requiredCounts =
             new Dictionary<FoodStats.FoodType, int>();
+
 
         foreach (OrderItem req in order.requiredItems)
         {
@@ -150,6 +157,7 @@ public class TrayCheck : MonoBehaviour
 
             requiredCounts[req.type] += req.amount;
         }
+
 
         foreach (KeyValuePair<FoodStats.FoodType, int> required in requiredCounts)
         {
@@ -173,6 +181,7 @@ public class TrayCheck : MonoBehaviour
             }
         }
 
+
         foreach (KeyValuePair<FoodStats.FoodType, int> trayFood in trayCounts)
         {
             if (!requiredCounts.ContainsKey(trayFood.Key))
@@ -182,10 +191,12 @@ public class TrayCheck : MonoBehaviour
             }
         }
 
+
         SetEmote("");
 
         return true;
     }
+
 
     private bool IsFoodCookedProperly(FoodStats food)
     {
@@ -211,11 +222,10 @@ public class TrayCheck : MonoBehaviour
             return sideOneValid && sideTwoValid;
         }
 
-        float cookRatio = food.CookRatio;
-
-        return cookRatio >= minCookRatio &&
-               cookRatio <= maxCookRatio;
+        return food.CookRatio >= minCookRatio &&
+               food.CookRatio <= maxCookRatio;
     }
+
 
     private float GetSideOneRatio(FoodStats food)
     {
@@ -235,6 +245,7 @@ public class TrayCheck : MonoBehaviour
         return 0f;
     }
 
+
     private float GetSideTwoRatio(FoodStats food)
     {
         var field = typeof(FoodStats).GetField(
@@ -253,18 +264,18 @@ public class TrayCheck : MonoBehaviour
         return 0f;
     }
 
+
     public void CheckTrayRequirements()
     {
         if (hasSucceeded || isMovingTray)
             return;
 
-        bool valid = IsTrayValid();
-
-        if (valid)
+        if (IsTrayValid())
         {
             TriggerNextSection();
         }
     }
+
 
     private void SetEmote(string message)
     {
@@ -273,6 +284,7 @@ public class TrayCheck : MonoBehaviour
             EmoteResponse.SetText(message);
         }
     }
+
 
     private void TriggerNextSection()
     {
@@ -290,77 +302,208 @@ public class TrayCheck : MonoBehaviour
         StartCoroutine(EnterNextStage());
     }
 
+
     public IEnumerator EnterNextStage()
     {
         Debug.Log("EnterNextStage started.");
 
+        List<FoodStats> foodToMove =
+            new List<FoodStats>(foodsOnTray);
 
-        // Parent all food to the tray.
-        List<FoodStats> foodToMove = new List<FoodStats>(foodsOnTray);
+
+        // --------------------------------------------------
+        // STOP ALL FOOD ANIMATIONS / PHYSICS
+        // --------------------------------------------------
 
         foreach (FoodStats food in foodToMove)
         {
-
             if (food == null)
                 continue;
-            Vector3 CurrentScale = food.transform.localScale;
-            Vector3 worldPosition = food.transform.position;
-            Quaternion worldRotation = food.transform.rotation;
 
-            food.transform.SetParent(transform);
+            DraggingScript dragging =
+                food.GetComponent<DraggingScript>();
 
-            food.transform.position = worldPosition;
-            food.transform.rotation = worldRotation;
-            
-            food.GetComponent<DraggingScript>().Interactable = false;
-            //food.transform.localScale = CurrentScale;
-            Rigidbody rb = food.GetComponent<Rigidbody>();
+            if (dragging != null)
+            {
+                dragging.Interactable = false;
+            }
+
+            // Kill any DOTween animations on the food.
+            food.transform.DOKill();
+
+            Rigidbody rb =
+                food.GetComponent<Rigidbody>();
 
             if (rb != null)
             {
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
                 rb.isKinematic = true;
-                
             }
         }
 
-        // Make sure a target has been assigned.
+
+        // --------------------------------------------------
+        // SAVE FOOD WORLD TRANSFORMS
+        // --------------------------------------------------
+
+        List<Vector3> positions =
+            new List<Vector3>();
+
+        List<Quaternion> rotations =
+            new List<Quaternion>();
+
+        List<Vector3> scales =
+            new List<Vector3>();
+
+
+        foreach (FoodStats food in foodToMove)
+        {
+            if (food == null)
+            {
+                positions.Add(Vector3.zero);
+                rotations.Add(Quaternion.identity);
+                scales.Add(Vector3.one);
+                continue;
+            }
+
+            positions.Add(food.transform.position);
+            rotations.Add(food.transform.rotation);
+
+            // Save LOCAL scale.
+            // We never change it.
+            scales.Add(food.transform.localScale);
+        }
+
+
+        // --------------------------------------------------
+        // MOVE TRAY
+        // --------------------------------------------------
+
         if (trayTargetPoint == null)
         {
-            Debug.LogError("Tray Target Point has not been assigned!");
+            Debug.LogError(
+                "Tray Target Point has not been assigned!"
+            );
 
             CameraController.transitioning = false;
+
             yield break;
         }
 
+
         isMovingTray = true;
+
 
         transform.DOKill();
 
-        // Move directly to the target point.
-        Tween trayTween = transform.DOMove(
-            trayTargetPoint.position,
-            moveDuration
-        ).SetEase(moveEase);
 
-        yield return trayTween.WaitForCompletion();
+        Vector3 trayStartPosition =
+            transform.position;
+
+        Vector3 trayEndPosition =
+            trayTargetPoint.position;
+
+
+        Tween trayTween =
+            transform.DOMove(
+                trayEndPosition,
+                moveDuration
+            )
+            .SetEase(moveEase);
+
+
+        // --------------------------------------------------
+        // MOVE FOOD WITH THE TRAY WITHOUT PARENTING
+        // --------------------------------------------------
+
+        while (trayTween.IsActive() && trayTween.IsPlaying())
+        {
+            Vector3 trayOffset =
+                transform.position - trayStartPosition;
+
+
+            for (int i = 0; i < foodToMove.Count; i++)
+            {
+                FoodStats food = foodToMove[i];
+
+                if (food == null)
+                    continue;
+
+                food.transform.position =
+                    positions[i] + trayOffset;
+
+                food.transform.rotation =
+                    rotations[i];
+
+                // Explicitly keep the original scale.
+                food.transform.localScale =
+                    scales[i];
+            }
+
+
+            yield return null;
+        }
+
+
+        // Make sure the final position is exact.
+        Vector3 finalOffset =
+            trayEndPosition - trayStartPosition;
+
+
+        for (int i = 0; i < foodToMove.Count; i++)
+        {
+            FoodStats food = foodToMove[i];
+
+            if (food == null)
+                continue;
+
+            food.transform.position =
+                positions[i] + finalOffset;
+
+            food.transform.rotation =
+                rotations[i];
+
+            food.transform.localScale =
+                scales[i];
+        }
+
 
         isMovingTray = false;
 
+
         CameraController.NextStage(2);
+
         CameraController.transitioning = false;
+
+
         foreach (FoodStats food in foodToMove)
         {
-            Rigidbody rb = food.GetComponent<Rigidbody>();
+            if (food == null)
+                continue;
+
+            Rigidbody rb =
+                food.GetComponent<Rigidbody>();
+
             if (rb != null)
             {
-                rb.constraints = RigidbodyConstraints.None;
+                rb.constraints =
+                    RigidbodyConstraints.None;
             }
 
             yield return new WaitForSeconds(1f);
-            food.GetComponent<DraggingScript>().Interactable = true;
+
+
+            DraggingScript dragging =
+                food.GetComponent<DraggingScript>();
+
+            if (dragging != null)
+            {
+                dragging.Interactable = true;
+            }
         }
+
+
         Debug.Log("Tray reached target point.");
     }
 }

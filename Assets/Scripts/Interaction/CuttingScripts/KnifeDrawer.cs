@@ -284,6 +284,7 @@ public class KnifeDrawer : MonoBehaviour
 
 
                 food.CheckCut(
+                    bladeTip.position,
                     bladeDirection.forward);
 
 

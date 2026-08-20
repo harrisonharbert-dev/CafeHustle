@@ -49,8 +49,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
         foodStatsScript = GetComponent<FoodStats>();
 
-        // If no drag plane is assigned,
-        // create one automatically at the food's current height.
         if (dragPlane == null)
         {
             GameObject planeObject = new GameObject(
@@ -68,7 +66,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         if (CameraController.transitioning == false && Interactable == true)
         {
-            // Move while holding
             if (dragging)
             {
                 Vector3 target;
@@ -84,7 +81,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             }
 
 
-            // Rotate ONLY local Z while holding
             if (dragging &&
                 Input.GetMouseButton(1) &&
                 isFood)
@@ -98,7 +94,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             }
 
 
-            // Flip when right clicking food
             if (!dragging &&
                 Input.GetMouseButtonDown(1) &&
                 isFood &&
@@ -108,7 +103,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             }
 
 
-            // Drop
             if (dragging &&
                 Input.GetMouseButtonUp(0))
             {
@@ -122,11 +116,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        /*
-         * The drag plane is horizontal.
-         *
-         * Its position determines the height of the food.
-         */
         Plane plane = new Plane(
             Vector3.up,
             dragPlane.position
@@ -136,20 +125,9 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             Vector3 hitPoint = ray.GetPoint(distance);
 
-            /*
-             * carryDistance offsets the food away from the camera.
-             *
-             * This is applied along the camera's forward direction,
-             * but the final position is projected back onto the
-             * drag plane so the food stays at the correct height.
-             */
+            hitPoint.y = dragPlane.position.y;
 
-            Vector3 adjustedPoint = hitPoint;
-
-            // Keep the food locked to the drag plane height.
-            adjustedPoint.y = dragPlane.position.y;
-
-            worldPosition = adjustedPoint;
+            worldPosition = hitPoint;
 
             return true;
         }
@@ -184,7 +162,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
         isFlipping = true;
 
-        // Kill only THIS food's tweens
         transform.DOKill();
 
         Vector3 targetRotation = transform.localEulerAngles;
@@ -201,7 +178,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             isFlipping = false;
 
-            // Tell only this food its side changed
             foodStatsScript.FlipFood();
         });
     }
@@ -214,16 +190,14 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         if (mesh != null)
             mesh.enabled = false;
 
+        // Kill any previous animation on this food.
+        transform.DOKill();
 
-        transform.DOShakeScale(
-            jiggleDuration,
-            jiggleStrength,
-            jiggleVibrato,
-            jiggleRandomness,
-            true,
-            ShakeRandomnessMode.Harmonic
-        );
+        // IMPORTANT:
+        // Do NOT use DOShakeScale.
+        // Scale is never modified.
 
+        Jiggle();
 
         dragging = true;
 
@@ -262,16 +236,11 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         if (mesh != null)
             mesh.enabled = true;
 
+        // Kill any existing jiggle.
+        transform.DOKill();
 
-        transform.DOShakeScale(
-            jiggleDuration,
-            jiggleStrength,
-            jiggleVibrato,
-            jiggleRandomness,
-            true,
-            ShakeRandomnessMode.Harmonic
-        );
-
+        // Jiggle without touching scale.
+        Jiggle();
 
         dragging = false;
 
@@ -279,5 +248,17 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
         if (foodStatsScript != null)
             foodStatsScript.StopCooking();
+    }
+
+
+    private void Jiggle()
+    {
+        // Small rotation jiggle instead of scale jiggle.
+        transform.DOPunchRotation(
+            Random.insideUnitSphere * jiggleStrength * 15f,
+            jiggleDuration,
+            jiggleVibrato,
+            jiggleRandomness
+        );
     }
 }
