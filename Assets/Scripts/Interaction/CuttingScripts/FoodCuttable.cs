@@ -28,6 +28,9 @@ public class FoodCuttable : MonoBehaviour
 
     public UnityEvent onCutSuccess;
     public UnityEvent onCutFail;
+
+    //MeshChanges
+    public Material cutMaterial;
     void Start()
     {
         SetupCutGuide();
@@ -149,7 +152,8 @@ public class FoodCuttable : MonoBehaviour
         lower.transform.rotation = transform.rotation;
         lower.transform.localScale = transform.localScale;
 
-
+        lower.GetComponent<MeshRenderer>().material = cutMaterial;
+        upper.GetComponent<MeshRenderer>().material = cutMaterial;
 
         SetupSlicePhysics(upper);
         SetupSlicePhysics(lower);
@@ -184,7 +188,6 @@ public class FoodCuttable : MonoBehaviour
             ForceMode.Impulse);
 
         Success();
-
         Destroy(gameObject);
         
         Debug.Log("Cut successful event invoked");

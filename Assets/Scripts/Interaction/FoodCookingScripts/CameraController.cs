@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.Events;    
 public class CameraController : MonoBehaviour
 {
     public GameObject[] Cameras;
@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
     public GameObject FoodHotBar;
     public FoodCuttable[] CuttableFoods;
     public static bool transitioning;
+    public UnityEvent onStageComplete;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -50,6 +51,7 @@ public class CameraController : MonoBehaviour
         }
 
         // If we got here, every food has been cut successfully.
+        onStageComplete?.Invoke();
         StartCoroutine(DelayedStage(nextCam));
     }
 

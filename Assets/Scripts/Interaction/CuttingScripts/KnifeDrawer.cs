@@ -1,4 +1,4 @@
-using UnityEngine;
+        using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using DG.Tweening;
@@ -62,6 +62,8 @@ public class KnifeDrawer : MonoBehaviour
 
         originalLocalRotation =
             knife.localRotation;
+        HandlePickup();
+        holdingKnife = true;
     }
 
 
@@ -78,7 +80,7 @@ public class KnifeDrawer : MonoBehaviour
         }
 
 
-        HandlePickup();
+        //HandlePickup();
 
 
         if (!holdingKnife)
@@ -288,5 +290,23 @@ public class KnifeDrawer : MonoBehaviour
                 return;
             }
         }
+    }
+
+
+    public void KnifeSuccess()
+    {
+        holdingKnife = false;
+
+        knifeLowered = false;
+        cutting = false;
+
+
+        knife.DOKill();
+
+
+        knife.DOLocalRotate(
+            originalLocalRotation.eulerAngles,
+            pickupRotateDuration)
+            .SetEase(Ease.OutSine);
     }
 }

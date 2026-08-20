@@ -6,23 +6,20 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 {
     private Camera cam;
 
-    [Header("Carry Settings")]
-    public float carryDistance = 2f;
     public float moveSpeed = 15f;
 
+    [Tooltip("The height/plane that the food will move across while being dragged.")]
+    public Transform dragPlane;
 
     [Header("Food Rotation")]
     public float rotationSpeed = 120f;
-
 
     [Header("Flip Animation")]
     public float flipDuration = 0.5f;
     public Ease flipEase = Ease.InOutSine;
 
-
     [Header("Food")]
     public bool isFood = true;
-
 
     [Header("Reactivity")]
     [SerializeField] private float jiggleDuration = 0.3f;
@@ -30,20 +27,18 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     [SerializeField] private int jiggleVibrato = 10;
     [SerializeField][Range(0f, 180f)] private float jiggleRandomness = 90f;
 
-
-
     private Rigidbody rb;
 
     [HideInInspector]
     public bool dragging;
 
-
     private bool isFlipping;
 
     public bool CanBeFlipped;
+    public bool Interactable;
+
     [HideInInspector]
     public FoodStats foodStatsScript;
-
 
 
     void Start()
@@ -53,35 +48,40 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         rb = GetComponent<Rigidbody>();
 
         foodStatsScript = GetComponent<FoodStats>();
-    }
 
+        // If no drag plane is assigned,
+        // create one automatically at the food's current height.
+        if (dragPlane == null)
+        {
+            GameObject planeObject = new GameObject(
+                gameObject.name + "_DragPlane"
+            );
+
+            planeObject.transform.position = transform.position;
+
+            dragPlane = planeObject.transform;
+        }
+    }
 
 
     void Update()
     {
-        if (CameraController.transitioning == false)
+        if (CameraController.transitioning == false && Interactable == true)
         {
-
             // Move while holding
             if (dragging)
             {
-                Vector3 mousePos =
-                    Input.mousePosition;
+                Vector3 target;
 
-                mousePos.z = carryDistance;
-
-
-                Vector3 target =
-                    cam.ScreenToWorldPoint(mousePos);
-
-
-                transform.position =
-                    Vector3.Lerp(
+                if (GetMouseWorldPosition(out target))
+                {
+                    transform.position = Vector3.Lerp(
                         transform.position,
                         target,
-                        moveSpeed * Time.deltaTime);
+                        moveSpeed * Time.deltaTime
+                    );
+                }
             }
-
 
 
             // Rotate ONLY local Z while holding
@@ -93,41 +93,70 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
                     0f,
                     0f,
                     rotationSpeed * Time.deltaTime,
-                    Space.Self);
+                    Space.Self
+                );
             }
 
 
-
+            // Flip when right clicking food
             if (!dragging &&
-              Input.GetMouseButtonDown(1) &&
-              isFood &&
-              CanBeFlipped)
+                Input.GetMouseButtonDown(1) &&
+                isFood &&
+                CanBeFlipped)
             {
                 CheckForFlipClick();
             }
-
 
 
             // Drop
             if (dragging &&
                 Input.GetMouseButtonUp(0))
             {
-                MeshCollider mesh =
-                    GetComponent<MeshCollider>();
-
-                if (mesh != null)
-                    mesh.enabled = true;
-
-
-                dragging = false;
-
-                rb.useGravity = true;
-
-
-                if (foodStatsScript != null)
-                    foodStatsScript.StopCooking();
+                DropFood();
             }
         }
+    }
+
+
+    private bool GetMouseWorldPosition(out Vector3 worldPosition)
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+        /*
+         * The drag plane is horizontal.
+         *
+         * Its position determines the height of the food.
+         */
+        Plane plane = new Plane(
+            Vector3.up,
+            dragPlane.position
+        );
+
+        if (plane.Raycast(ray, out float distance))
+        {
+            Vector3 hitPoint = ray.GetPoint(distance);
+
+            /*
+             * carryDistance offsets the food away from the camera.
+             *
+             * This is applied along the camera's forward direction,
+             * but the final position is projected back onto the
+             * drag plane so the food stays at the correct height.
+             */
+
+            Vector3 adjustedPoint = hitPoint;
+
+            // Keep the food locked to the drag plane height.
+            adjustedPoint.y = dragPlane.position.y;
+
+            worldPosition = adjustedPoint;
+
+            return true;
+        }
+
+        worldPosition = transform.position;
+
+        return false;
     }
 
 
@@ -144,59 +173,46 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         }
     }
 
+
     private void FlipFood()
     {
         if (isFlipping)
             return;
 
-
         if (foodStatsScript == null)
             return;
 
-
         isFlipping = true;
-
 
         // Kill only THIS food's tweens
         transform.DOKill();
 
-
-
-        Vector3 targetRotation =
-            transform.localEulerAngles;
-
+        Vector3 targetRotation = transform.localEulerAngles;
 
         targetRotation.x += 180f;
-
-
 
         transform.DOLocalRotate(
             targetRotation,
             flipDuration,
-            RotateMode.FastBeyond360)
-            .SetEase(flipEase)
-            .OnComplete(() =>
-            {
-                isFlipping = false;
+            RotateMode.FastBeyond360
+        )
+        .SetEase(flipEase)
+        .OnComplete(() =>
+        {
+            isFlipping = false;
 
-
-                // Tell only this food its side changed
-                foodStatsScript.FlipFood();
-            });
+            // Tell only this food its side changed
+            foodStatsScript.FlipFood();
+        });
     }
-
-
-
 
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        MeshCollider mesh =
-            GetComponent<MeshCollider>();
+        MeshCollider mesh = GetComponent<MeshCollider>();
 
         if (mesh != null)
             mesh.enabled = false;
-
 
 
         transform.DOShakeScale(
@@ -205,57 +221,46 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             jiggleVibrato,
             jiggleRandomness,
             true,
-            ShakeRandomnessMode.Harmonic);
-
+            ShakeRandomnessMode.Harmonic
+        );
 
 
         dragging = true;
 
-
         rb.useGravity = false;
-
 
         if (foodStatsScript != null)
             foodStatsScript.StopCooking();
     }
 
 
-
-
-
     public void OnDrag(PointerEventData eventData)
     {
-        Vector3 mousePos =
-            eventData.position;
+        Vector3 target;
 
-
-        mousePos.z = carryDistance;
-
-
-        Vector3 target =
-            cam.ScreenToWorldPoint(mousePos);
-
-
-
-        transform.position =
-            Vector3.Lerp(
+        if (GetMouseWorldPosition(out target))
+        {
+            transform.position = Vector3.Lerp(
                 transform.position,
                 target,
-                moveSpeed * Time.deltaTime);
+                moveSpeed * Time.deltaTime
+            );
+        }
     }
-
-
-
 
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        MeshCollider mesh =
-            GetComponent<MeshCollider>();
+        DropFood();
+    }
+
+
+    private void DropFood()
+    {
+        MeshCollider mesh = GetComponent<MeshCollider>();
 
         if (mesh != null)
             mesh.enabled = true;
-
 
 
         transform.DOShakeScale(
@@ -264,16 +269,13 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             jiggleVibrato,
             jiggleRandomness,
             true,
-            ShakeRandomnessMode.Harmonic);
-
+            ShakeRandomnessMode.Harmonic
+        );
 
 
         dragging = false;
 
-
         rb.useGravity = true;
-
-
 
         if (foodStatsScript != null)
             foodStatsScript.StopCooking();

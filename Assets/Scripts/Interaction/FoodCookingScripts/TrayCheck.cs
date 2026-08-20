@@ -294,16 +294,16 @@ public class TrayCheck : MonoBehaviour
     {
         Debug.Log("EnterNextStage started.");
 
-        yield return new WaitForSeconds(2f);
 
         // Parent all food to the tray.
         List<FoodStats> foodToMove = new List<FoodStats>(foodsOnTray);
 
         foreach (FoodStats food in foodToMove)
         {
+
             if (food == null)
                 continue;
-
+            Vector3 CurrentScale = food.transform.localScale;
             Vector3 worldPosition = food.transform.position;
             Quaternion worldRotation = food.transform.rotation;
 
@@ -311,7 +311,9 @@ public class TrayCheck : MonoBehaviour
 
             food.transform.position = worldPosition;
             food.transform.rotation = worldRotation;
-
+            
+            food.GetComponent<DraggingScript>().Interactable = false;
+            //food.transform.localScale = CurrentScale;
             Rigidbody rb = food.GetComponent<Rigidbody>();
 
             if (rb != null)
@@ -319,6 +321,7 @@ public class TrayCheck : MonoBehaviour
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
                 rb.isKinematic = true;
+                
             }
         }
 
@@ -347,7 +350,17 @@ public class TrayCheck : MonoBehaviour
 
         CameraController.NextStage(2);
         CameraController.transitioning = false;
+        foreach (FoodStats food in foodToMove)
+        {
+            Rigidbody rb = food.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.constraints = RigidbodyConstraints.None;
+            }
 
+            yield return new WaitForSeconds(1f);
+            food.GetComponent<DraggingScript>().Interactable = true;
+        }
         Debug.Log("Tray reached target point.");
     }
 }
