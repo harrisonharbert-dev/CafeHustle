@@ -5,6 +5,7 @@ using TMPro;
 using CsvHelper.Configuration.Attributes;
 using Unity.VisualScripting;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 
 
@@ -19,7 +20,7 @@ public class InteractPrompt : MonoBehaviour
     private CanvasGroup canvasGroup;
     private RectTransform rectTransform;
     [SerializeField] private float fadeDuration;
-
+    [SerializeField] private UITweener tweener;
 
     [Header("UI")]
     [Space(10)]
@@ -94,10 +95,10 @@ public class InteractPrompt : MonoBehaviour
 
     public void SetPromptVisibility(bool value)
     {
-        float target = value ? 1f : 0f;
-        if (target == canvasGroup.alpha) return;
-        canvasGroup.DOFade(target, fadeDuration);
-
+        foreach (Transform child in gameObject.transform)
+        {
+            child.gameObject.SetActive(value);
+        }
     }
 
     public void Refresh()
@@ -147,10 +148,10 @@ public class InteractPrompt : MonoBehaviour
                     SetPromptVisibility(false);
                     return;
                 }
-                    SetPromptVisibility(true);
-                    if (isInDeliveryZone)
+                SetPromptVisibility(true);
+                if (isInDeliveryZone)
                     UpdateUIInfo(Interactable.PromptText.Deliver, Interactable.PromptKey.F);
-            
+
 
                 break;
         }

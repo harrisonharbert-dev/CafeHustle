@@ -141,12 +141,7 @@ public class Interactable : MonoBehaviour
         {
             if (played && playOnce) return;
 
-            Debug.Log("Trigger Entered");
-
             isInRange = true;
-
-            Debug.Log("Player is in range to interact with " + gameObject.name);
-
 
 
             switch (interactType)

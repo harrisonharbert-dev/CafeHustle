@@ -1,21 +1,16 @@
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class currentTaskManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private TextMeshProUGUI textTask;
-    [SerializeField] private RectTransform rectTransform;
-    [SerializeField] private CanvasGroup group;
+    [SerializeField] private GameObject container;
 
-    [Header("Animation Properties")]
-    [SerializeField] private Vector3 punchScale = new Vector3(.1f,.1f,.1f);
-    [SerializeField] private float punchDuration = 1f;
-    [SerializeField] private int vibrato = 10;
-    [SerializeField] private float elasticity = 1f;
-    [Space(15)]
-    [SerializeField] private float fadeDuration;
+
+    [SerializeField] private UnityEvent onUpdateTask;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
 
@@ -23,13 +18,15 @@ public class currentTaskManager : MonoBehaviour
     public void updateTask(string text)
     {
         textTask.text = text;
-        rectTransform.DOPunchScale(punchScale,punchDuration,vibrato,elasticity);
+        onUpdateTask?.Invoke();
     }
 
     public void onTaskVisibility(bool option)
     {
-        float targetAlpha = option ? 1f : 0f;
-        group.DOFade(targetAlpha,fadeDuration);
+        foreach (Transform child in container.transform)
+        {
+            child.gameObject.SetActive(option);
+        }
         
     }
 }

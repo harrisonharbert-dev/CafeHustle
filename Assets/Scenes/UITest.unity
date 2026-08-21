@@ -317,14 +317,17 @@ MonoBehaviour:
     vibrato: 10
     elasticity: 1
   shakeSettings:
-    shake: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    randomness: 0
+    shake: {x: 5, y: 5, z: 5}
+    duration: 0.6
+    vibrato: 10
+    randomness: 1
     fadeOut: 0
     randomnessMode: 0
   slideSettings:
-    distance: {x: 0.1, y: 0, z: 0}
+    distance: {x: 0, y: 0.1, z: 0}
+    duration: 0.3
+  colorSettings:
+    targetColor: {r: 0, g: 0, b: 0, a: 0}
     duration: 0
   onVisibleEvent:
     m_PersistentCalls:
@@ -344,6 +347,18 @@ MonoBehaviour:
       - m_Target: {fileID: 410031395}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
         m_MethodName: Scale
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 410031395}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Slide
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -447,14 +462,17 @@ MonoBehaviour:
     vibrato: 10
     elasticity: 1
   shakeSettings:
-    shake: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    randomness: 0
+    shake: {x: 5, y: 5, z: 5}
+    duration: 0.6
+    vibrato: 10
+    randomness: 1
     fadeOut: 0
     randomnessMode: 0
   slideSettings:
-    distance: {x: 0.1, y: 0, z: 0}
+    distance: {x: 0, y: 0.1, z: 0}
+    duration: 0.3
+  colorSettings:
+    targetColor: {r: 0, g: 0, b: 0, a: 0}
     duration: 0
   onVisibleEvent:
     m_PersistentCalls:
@@ -474,6 +492,18 @@ MonoBehaviour:
       - m_Target: {fileID: 449080107}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
         m_MethodName: Scale
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 449080107}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Slide
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -637,14 +667,17 @@ MonoBehaviour:
     vibrato: 10
     elasticity: 1
   shakeSettings:
-    shake: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    randomness: 0
+    shake: {x: 5, y: 5, z: 5}
+    duration: 0.6
+    vibrato: 10
+    randomness: 1
     fadeOut: 0
     randomnessMode: 0
   slideSettings:
-    distance: {x: 0.1, y: 0, z: 0}
+    distance: {x: 9, y: 0.1, z: 0}
+    duration: 0.3
+  colorSettings:
+    targetColor: {r: 0, g: 0, b: 0, a: 0}
     duration: 0
   onVisibleEvent:
     m_PersistentCalls:
@@ -664,6 +697,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1284264812}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
         m_MethodName: Scale
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1284264812}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Slide
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -888,6 +933,9 @@ MonoBehaviour:
   slideSettings:
     distance: {x: 0, y: 5, z: 0}
     duration: 0.1
+  colorSettings:
+    targetColor: {r: 0, g: 0, b: 0, a: 0}
+    duration: 0
   onVisibleEvent:
     m_PersistentCalls:
       m_Calls:
@@ -1246,6 +1294,9 @@ MonoBehaviour:
   slideSettings:
     distance: {x: 0, y: 15, z: 0}
     duration: 0.1
+  colorSettings:
+    targetColor: {r: 0, g: 0, b: 0, a: 0}
+    duration: 0
   onVisibleEvent:
     m_PersistentCalls:
       m_Calls:
@@ -1380,6 +1431,9 @@ MonoBehaviour:
   slideSettings:
     distance: {x: 0, y: 5, z: 0}
     duration: 0.1
+  colorSettings:
+    targetColor: {r: 0, g: 0, b: 0, a: 0}
+    duration: 0
   onVisibleEvent:
     m_PersistentCalls:
       m_Calls:
