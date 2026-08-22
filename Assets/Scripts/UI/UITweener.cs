@@ -7,6 +7,8 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using Yarn.Unity.Attributes;
+using System;
 
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(CanvasGroup))]
@@ -15,70 +17,65 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     [SerializeField] private GameObject objectToAnimate;
 
-    [Header("Wait For")]
-    [Tooltip("If set, this UITweener will wait for the referenced UITweener to finish any running tweens before firing its OnEnable event.")]
-    [SerializeField] private UITweener WaitFor;
 
-    public enum tweenIn
-    {
-        none,
-        fadeIn,
-        scaleIn,
-        fadeAndScaleIn,
-        fadeAndSlideIn,
-    }
 
     [System.Serializable]
-    public struct FadeSettings
+    public class FadeSettings
     {
-        public float duration;
+        public float duration = 0.3f;
+        public float delay = 0f;
     }
 
 
 
     [System.Serializable]
-    public struct ScaleSettings
+    public class ScaleSettings
     {
-        public float duration;
+        public float duration = 0.3f;
+        public float delay = 0f;
     }
 
 
     [System.Serializable]
-    public struct PunchSettings
+    public class PunchSettings
     {
-        public Vector3 Punch;
-        public float duration;
-        public int vibrato;
-        public float elasticity;
+        public Vector3 Punch = new Vector3(0.15f, 0.15f, 0.15f);
+        public float duration = 0.3f;
+        public int vibrato = 10;
+        public float elasticity = 1f;
+        public float delay = 0f;
     }
 
     [System.Serializable]
-    public struct ShakeSettings
+    public class ShakeSettings
     {
-        public Vector3 shake;
-        public float duration;
-        public int vibrato;
-        public float randomness;
-        public bool fadeOut;
-        public ShakeRandomnessMode randomnessMode;
+        public Vector3 shake = new Vector3(0.15f, 0.15f, 0.15f);
+        public float duration = 0.3f;
+        public int vibrato = 10;
+        public float randomness = 90f;
+        public bool fadeOut = true;
+        public ShakeRandomnessMode randomnessMode = ShakeRandomnessMode.Full;
 
+        public float delay;
+    }
+
+    [System.Serializable]
+    public class SlideSettings
+    {
+        public Vector3 distance = new Vector3(0f, -15f, 0f);
+        public float duration = 0.3f;
+
+        public float delay = 0f;
 
     }
 
     [System.Serializable]
-    public struct SlideSettings
+    public class ColorSettings
     {
-        public Vector3 distance;
-        public float duration;
+        public Color targetColor = new Vector4(1f, 1f, 1f);
+        public float duration = 0.3f;
 
-
-    }
-
-    [System.Serializable]
-    public struct ColorSettings
-    {
-        public Color targetColor;
-        public float duration;
+        public float delay = 0f;
     }
 
 
@@ -94,7 +91,7 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     private CanvasGroup group;
     private RectTransform rect;
     private Vector3 scale;
-    private Vector3 startingPos;
+    private Vector2 startingPos;
     private Image image;
     private Color startingCol;
     private bool isWaitingForDependency = false;
@@ -103,8 +100,8 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [SerializeField] private UnityEvent onDisableEvent;
     [SerializeField] private UnityEvent onHoverEvent;
     [SerializeField] private UnityEvent onLeaveEvent;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    // Awake runs before OnEnable, ensuring fields are initialized
+    private void Awake()
     {
         if (objectToAnimate == null)
         {
@@ -112,20 +109,23 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             group = GetComponent<CanvasGroup>();
             rect = GetComponent<RectTransform>();
             scale = transform.localScale;
-            startingPos = rect.position;
+            startingPos = rect.anchoredPosition;
             image = GetComponent<Image>();
             if (image != null)
-            {startingCol = image.color;}
+            {
+                startingCol = image.color;
+            }
         }
         else
         {
             group = objectToAnimate.GetComponent<CanvasGroup>();
             rect = objectToAnimate.GetComponent<RectTransform>();
             scale = objectToAnimate.transform.localScale;
-            startingPos = objectToAnimate.transform.position;
+            startingPos = rect.anchoredPosition;
             image = objectToAnimate.GetComponent<Image>();
-            if (image != null) {
-            startingCol = image.color;
+            if (image != null)
+            {
+                startingCol = image.color;
             }
         }
     }
@@ -133,30 +133,22 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     void OnEnable()
     {
-        StartCoroutine(WaitForTweens());
-    }
-
-    private IEnumerator WaitForTweens()
-    {
-        while (WaitFor != null && (WaitFor.checkForActiveTweens() || WaitFor.isWaitingForDependency))
-        {
-            isWaitingForDependency = true;
-            yield return null;
-        }
-
-        isWaitingForDependency = false;
         onVisibleEvent?.Invoke();
-    }
-    public bool checkForActiveTweens()
-    {
-        bool isTweening = DOTween.IsTweening(rect, true) || DOTween.IsTweening(group, true) || DOTween.IsTweening(image, true);
-        return isTweening;
+
     }
 
     void OnDisable()
     {
         onDisableEvent?.Invoke();
     }
+
+
+    public bool checkForActiveTweens()
+    {
+        bool isTweening = DOTween.IsTweening(rect, true) || DOTween.IsTweening(group, true) || DOTween.IsTweening(image, true);
+        return isTweening;
+    }
+
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -173,8 +165,9 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         float target = option ? 1f : 0f;
         float start = option ? 0f : 1f;
 
+        if (group == null) return;
         group.alpha = start;
-        group.DOFade(target, fadeSettings.duration);
+        group.DOFade(target, fadeSettings.duration).SetDelay(fadeSettings.delay);
     }
 
     public void Scale(bool option)
@@ -189,50 +182,60 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         float starty = option ? 0f : scale.y;
         float startz = option ? 0f : scale.z;
 
+        if (rect == null) return;
         rect.localScale = new Vector3(startx, starty, startz);
 
-        rect.DOScaleX(targetx, scaleSettings.duration);
-        rect.DOScaleY(targety, scaleSettings.duration);
-        rect.DOScaleZ(targetz, scaleSettings.duration);
+        rect.DOScaleX(targetx, scaleSettings.duration).SetDelay(scaleSettings.delay);
+        rect.DOScaleY(targety, scaleSettings.duration).SetDelay(scaleSettings.delay);
+        rect.DOScaleZ(targetz, scaleSettings.duration).SetDelay(scaleSettings.delay);
     }
 
     public void Slide(bool option)
     {
+
         //Set target to scale to
         float targetx = option ? startingPos.x : startingPos.x + slideSettings.distance.x;
         float targety = option ? startingPos.y : startingPos.y + slideSettings.distance.y;
-        float targetz = option ? startingPos.z : startingPos.z + slideSettings.distance.z;
-
         //Set the scale to opposite of target when starting
         float startx = option ? startingPos.x + slideSettings.distance.x : startingPos.x;
         float starty = option ? startingPos.y + slideSettings.distance.y : startingPos.y;
-        float startz = option ? startingPos.z + slideSettings.distance.z : startingPos.z;
 
-        rect.position = new Vector3(startx, starty, startz);
+        if (rect == null) return;
+        rect.anchoredPosition = new Vector2(startx, starty);
 
-        rect.DOMove(new Vector3(targetx, targety, targetz), slideSettings.duration);
+        rect.DOAnchorPos(new Vector3(targetx, targety), slideSettings.duration).SetDelay(slideSettings.delay);
     }
 
     public void Punch()
     {
-        rect.DOPunchScale(punchSettings.Punch, punchSettings.duration, punchSettings.vibrato, punchSettings.elasticity);
+        rect.DOPunchScale(punchSettings.Punch, punchSettings.duration, punchSettings.vibrato, punchSettings.elasticity).SetDelay(punchSettings.delay);
     }
 
     public void ShakeScale()
     {
-        rect.DOShakeScale(shakeSettings.duration, shakeSettings.shake, shakeSettings.vibrato, shakeSettings.randomness, shakeSettings.fadeOut, shakeSettings.randomnessMode);
+        rect.DOShakeScale(shakeSettings.duration, shakeSettings.shake, shakeSettings.vibrato, shakeSettings.randomness, shakeSettings.fadeOut, shakeSettings.randomnessMode).SetDelay(shakeSettings.delay);
     }
 
     public void ShakeRotation()
     {
-        rect.DOShakeRotation(shakeSettings.duration, shakeSettings.shake, shakeSettings.vibrato, shakeSettings.randomness, shakeSettings.fadeOut, shakeSettings.randomnessMode);
+        rect.DOShakeRotation(shakeSettings.duration, shakeSettings.shake, shakeSettings.vibrato, shakeSettings.randomness, shakeSettings.fadeOut, shakeSettings.randomnessMode).SetDelay(shakeSettings.delay);
     }
 
     public void Color()
     {
-        image.DOColor(colorSettings.targetColor, colorSettings.duration);
+        image.DOColor(colorSettings.targetColor, colorSettings.duration).SetDelay(colorSettings.delay);
     }
 
+    public void FadeAndScale(bool option)
+    {
+        Fade(option);
+        Scale(option);
+    }
 
+    public void FadeAndSlide(bool option)
+    {
+        Fade(option);
+        Slide(option);
+    }
 
 }

@@ -11,9 +11,14 @@ public class currentTaskManager : MonoBehaviour
 
 
     [SerializeField] private UnityEvent onUpdateTask;
+
+    private UITweener[] tweeners;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-
+    void Awake()
+    {
+        tweeners = GetComponentsInChildren<UITweener>(true);
+    }
     // Update is called once per frame
     public void updateTask(string text)
     {
@@ -23,9 +28,9 @@ public class currentTaskManager : MonoBehaviour
 
     public void onTaskVisibility(bool option)
     {
-        foreach (Transform child in container.transform)
+        foreach (UITweener tweens in tweeners)
         {
-            child.gameObject.SetActive(option);
+            tweens.enabled = option;
         }
         
     }

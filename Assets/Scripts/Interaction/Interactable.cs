@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Yarn.Unity;
+using Yarn.Unity.Attributes;
 
 
 public class Interactable : MonoBehaviour
@@ -36,13 +37,16 @@ public class Interactable : MonoBehaviour
 
     [Header("Dialogue")]
     [Space(15)]
+    
 
     [SerializeField] private dialogueType dialogueOption;
+    
     [HideInInspector] public bool useDialogue;
 
 
 
     [HideInInspector] public bool useDialogueCamera;
+    
 
     [SerializeField] private string dialogueName;
 

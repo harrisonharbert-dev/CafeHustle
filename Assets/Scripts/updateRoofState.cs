@@ -49,6 +49,7 @@ public class updateRoofState : MonoBehaviour
         {
             if (entry.roofPiece == null) continue;
             entry.roofPiece.DOMoveY(moveHeight + entry.originalPosition, transitionDuration);
+            entry.roofPiece.DOScale(0f,transitionDuration);
         }
         foreach (var entry in walls)
         {
@@ -68,6 +69,7 @@ public class updateRoofState : MonoBehaviour
             if (entry.roofPiece == null) continue;
 
             entry.roofPiece.DOMoveY(entry.originalPosition, transitionDuration);
+            entry.roofPiece.DOScale(1f,transitionDuration);
         }
         foreach (var entry in walls)
         {
