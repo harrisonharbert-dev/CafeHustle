@@ -19,14 +19,14 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [Tooltip("If set, this UITweener will wait for the referenced UITweener to finish any running tweens before firing its OnEnable event.")]
     [SerializeField] private UITweener WaitFor;
 
-    public enum waitForType
+    public enum tweenIn
     {
-        both,
-        onEnableOnly,
-        onDisableOnly,
+        none,
+        fadeIn,
+        scaleIn,
+        fadeAndScaleIn,
+        fadeAndSlideIn,
     }
-
-    public waitForType waitForOption;
 
     [System.Serializable]
     public struct FadeSettings
@@ -133,17 +133,10 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     void OnEnable()
     {
-        switch(waitForOption) {
-            case waitForType.onEnabledOnly or waitForType.both:
-                StartCoroutine(WaitForTweens(onVisibleEvent));
-                break;
-            case waitForType.onDisableOnly:
-                onVisibleEvent?.Invoke();
-                break;
-        }
+        StartCoroutine(WaitForTweens());
     }
 
-    private IEnumerator WaitForTweens(UnityEvent event)
+    private IEnumerator WaitForTweens()
     {
         while (WaitFor != null && (WaitFor.checkForActiveTweens() || WaitFor.isWaitingForDependency))
         {
@@ -152,7 +145,7 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
 
         isWaitingForDependency = false;
-        event?.Invoke();
+        onVisibleEvent?.Invoke();
     }
     public bool checkForActiveTweens()
     {
@@ -162,14 +155,7 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     void OnDisable()
     {
-        switch(waitForOption) {
-            case waitForType.onDisableOnly or waitForType.both:
-                StartCoroutine(WaitForTweens(onDisableEvent));
-                break;
-            case waitForType.onEnableOnly:
-                onDisableEvent?.Invoke();
-                break;
-        }
+        onDisableEvent?.Invoke();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
