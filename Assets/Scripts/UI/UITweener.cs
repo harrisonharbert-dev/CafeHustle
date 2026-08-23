@@ -78,6 +78,15 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         public float delay = 0f;
     }
 
+    [System.Serializable]
+    public class TextSettings
+    {
+        public TextMeshProUGUI text;
+        public float duration;
+        public float delay;
+
+    }
+
 
     [Header("Animation Settings")]
     [SerializeField] private FadeSettings fadeSettings;
@@ -86,6 +95,7 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [SerializeField] private ShakeSettings shakeSettings;
     [SerializeField] private SlideSettings slideSettings;
     [SerializeField] private ColorSettings colorSettings;
+    [SerializeField] private TextSettings textSettings;
 
     //private references
     private CanvasGroup group;
@@ -226,6 +236,17 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         image.DOColor(colorSettings.targetColor, colorSettings.duration).SetDelay(colorSettings.delay);
     }
 
+    public void Text(bool option)
+    {
+        if (textSettings.text == null) return;
+        Debug.Log("Text ran");
+        int targetCharacters = option ? textSettings.text.textInfo.characterCount : 0;
+
+        //set to inverse of target
+        textSettings.text.maxVisibleCharacters = option ? 0 : textSettings.text.textInfo.characterCount;
+        DOTween.To(() => textSettings.text.maxVisibleCharacters, x => textSettings.text.maxVisibleCharacters = x, targetCharacters, textSettings.duration).SetDelay(textSettings.delay);
+    }
+
     public void FadeAndScale(bool option)
     {
         Fade(option);
@@ -237,5 +258,4 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         Fade(option);
         Slide(option);
     }
-
 }

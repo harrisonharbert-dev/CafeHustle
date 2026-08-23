@@ -12,8 +12,10 @@ Narrator: I love beans.
 
 title: Intro
 ---
+<<set_voice DialogueAudio narrator>>
 The cabin rattles as the wheels glide along the tracks.
 The train screeches to a stop.
+<<set_voice DialogueAudio default>>
 Dawn: Village Name. Finally, a new start.
 Dawn: Grandma’s house should be somewhere around here. I was told it would be near the station.
 -> Lets go!
@@ -65,6 +67,7 @@ HotRod: Bye!
 
 title: ApproachingHouse
 ---
+<<set_voice DialogueAudio default>>
 Dawn: No wonder Grams never told me about this place.
 Dawn: I wonder if she ever even lived here.
 Dawn: Well, I pretty sure this is what she left me in the will. It’s gonna be a fixer upper, though.
@@ -74,10 +77,13 @@ title: FirstSpiritIntro
 ---
 
 <<play_cutscene CutsceneAnimator character_scared>>
+<<set_voice DialogueAudio default>>
+<<play_emote player_emote exclaimation>>
 Dawn: It that a… ghost?!
 
 Dawn: Nup, nope, I’m out of here. Sorry Grams. This is just too much.
 
+<<set_voice DialogueAudio spirit>>
 Spirit: Wait, wait!
 
 Spirit: Wow, it’s been a long time since I’ve seen a human here.
@@ -86,8 +92,10 @@ Spirit: Are you… wait, I know you. Or at least I think I do…
 
 Spirit: Anne, is that you? You’ve gotten younger. And leaner.
 
+<<set_voice DialogueAudio default>>
 Dawn: That’s my Grandma you’re talking about. My name is Dawn.
 
+<<set_voice DialogueAudio spirit>>
 Spirit: Grandma? I didn’t think it had been that long.
 
 Spirit: It’s nice to meet you Dawn.
@@ -100,6 +108,8 @@ Spirit: Now it’s just me. I don’t get why she would just leave us. This plac
 
 Spirit: But now you’re here, maybe you can help!
 
+
+<<set_voice DialogueAudio default>>
 Dawn: You’re a spirit?
 ===
 

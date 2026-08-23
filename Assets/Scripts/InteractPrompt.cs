@@ -97,11 +97,7 @@ public class InteractPrompt : MonoBehaviour
     {
         foreach (Transform child in gameObject.transform)
         {
-            UITweener tweener = child.GetComponent<UITweener>();
-            if (tweener != null)
-            {
-                tweener.enabled = value;
-            }
+            child.gameObject.SetActive(value);
         }
     }
 

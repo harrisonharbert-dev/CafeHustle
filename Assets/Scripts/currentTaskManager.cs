@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.Events;
+using System.Collections;
 
 public class currentTaskManager : MonoBehaviour
 {
@@ -22,7 +23,11 @@ public class currentTaskManager : MonoBehaviour
     // Update is called once per frame
     public void updateTask(string text)
     {
+        int target = textTask.textInfo.characterCount;
+        textTask.maxVisibleCharacters = 0;
         textTask.text = text;
+        DOTween.To(() => textTask.maxVisibleCharacters, x => textTask.maxVisibleCharacters = x, target, 1f);
+
         onUpdateTask?.Invoke();
     }
 

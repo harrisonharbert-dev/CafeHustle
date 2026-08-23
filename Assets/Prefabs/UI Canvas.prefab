@@ -432,6 +432,10 @@ MonoBehaviour:
     targetColor: {r: 0, g: 0, b: 0, a: 0}
     duration: 0
     delay: 0
+  textSettings:
+    text: {fileID: 0}
+    duration: 0
+    delay: 0
   onVisibleEvent:
     m_PersistentCalls:
       m_Calls:
@@ -623,24 +627,16 @@ MonoBehaviour:
     targetColor: {r: 0, g: 0, b: 0, a: 0}
     duration: 0
     delay: 0
+  textSettings:
+    text: {fileID: 0}
+    duration: 0
+    delay: 0
   onVisibleEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8430093213554560563}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Fade
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 8430093213554560563}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Slide
+        m_MethodName: FadeAndSlide
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -655,19 +651,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8430093213554560563}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Fade
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 8430093213554560563}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Slide
+        m_MethodName: FadeAndSlide
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -805,6 +789,10 @@ MonoBehaviour:
     delay: 0
   colorSettings:
     targetColor: {r: 0, g: 0, b: 0, a: 0}
+    duration: 0
+    delay: 0
+  textSettings:
+    text: {fileID: 0}
     duration: 0
     delay: 0
   onVisibleEvent:
@@ -1008,6 +996,10 @@ MonoBehaviour:
   colorSettings:
     targetColor: {r: 1, g: 1, b: 1, a: 0}
     duration: 0.3
+    delay: 0
+  textSettings:
+    text: {fileID: 0}
+    duration: 0
     delay: 0
   onVisibleEvent:
     m_PersistentCalls:
@@ -1235,6 +1227,10 @@ MonoBehaviour:
     delay: 0
   colorSettings:
     targetColor: {r: 0, g: 0, b: 0, a: 0}
+    duration: 0
+    delay: 0
+  textSettings:
+    text: {fileID: 0}
     duration: 0
     delay: 0
   onVisibleEvent:
@@ -1517,11 +1513,15 @@ MonoBehaviour:
     randomnessMode: 0
     delay: 0
   slideSettings:
-    distance: {x: 0, y: -45, z: 0}
+    distance: {x: 0, y: -100, z: 0}
     duration: 0.3
     delay: 0.6
   colorSettings:
     targetColor: {r: 0, g: 0, b: 0, a: 0}
+    duration: 0
+    delay: 0
+  textSettings:
+    text: {fileID: 0}
     duration: 0
     delay: 0
   onVisibleEvent:
@@ -1752,12 +1752,16 @@ MonoBehaviour:
     targetColor: {r: 0, g: 0, b: 0, a: 0}
     duration: 0
     delay: 0
+  textSettings:
+    text: {fileID: 1320849561954831906}
+    duration: 0.6
+    delay: 1.2
   onVisibleEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5440574681384747658}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Fade
+        m_MethodName: FadeAndSlide
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1769,7 +1773,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 5440574681384747658}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Slide
+        m_MethodName: Text
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1784,7 +1788,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5440574681384747658}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Slide
+        m_MethodName: FadeAndSlide
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1796,7 +1800,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 5440574681384747658}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Fade
+        m_MethodName: Text
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1941,6 +1945,10 @@ MonoBehaviour:
   colorSettings:
     targetColor: {r: 1, g: 1, b: 1, a: 0}
     duration: 0.3
+    delay: 0
+  textSettings:
+    text: {fileID: 0}
+    duration: 0
     delay: 0
   onVisibleEvent:
     m_PersistentCalls:

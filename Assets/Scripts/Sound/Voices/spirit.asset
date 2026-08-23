@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a288f6438df4abe45818aa3843bbaca6, type: 3}
+  m_Name: spirit
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueVoiceProfile
+  profileID: spirit
+  audioClips:
+  - {fileID: 8300000, guid: 00beddf8e5dbad94485781ae74aff743, type: 3}
+  - {fileID: 8300000, guid: b0639d1e831d95b4ab59599df101ec40, type: 3}
+  - {fileID: 8300000, guid: ca6a378f1d2684847ba51981129c4c68, type: 3}
+  - {fileID: 8300000, guid: 6a5195e5b07263c44967bd6f40e57012, type: 3}
+  - {fileID: 8300000, guid: 3ce64429c5ca91742868b85a735d0597, type: 3}
+  - {fileID: 8300000, guid: cbc7fd00579580244928fdbc6dd8a68b, type: 3}
+  - {fileID: 8300000, guid: b0ca8fd2fc910344babc72dd8140168a, type: 3}
+  pitchMin: 0.95
+  pitchMax: 1.05
+  playEveryNCharacters: 4

@@ -25,7 +25,7 @@ public class FryingMinigame : MonoBehaviour
     private bool popUpActive = false;
     private float popUpDuration = 3f;
     private float uiTransitionDuration = 0.3f;
-    [SerializeField] private CanvasGroup popUpUI;
+    [SerializeField] private GameObject popUpUI;
     [SerializeField] private Image uiCounter;
 
 
@@ -34,7 +34,7 @@ public class FryingMinigame : MonoBehaviour
 
     void Start()
     {
-        popUpUI.alpha = 0f;
+        popUpUI.SetActive(false);
     }
     void Update()
     {
@@ -50,7 +50,7 @@ public class FryingMinigame : MonoBehaviour
         DOTween.Clear();
         //show UI
         uiCounter.fillAmount = 1f;
-        popUpUI.DOFade(1f, uiTransitionDuration);
+        popUpUI.SetActive(true);
 
         popUpActive = true;
 
@@ -59,7 +59,7 @@ public class FryingMinigame : MonoBehaviour
         uiCounter.DOFillAmount(0f, popUpDuration).SetEase(Ease.Linear)
         .OnComplete(() =>
         {
-            popUpUI.DOFade(0f, uiTransitionDuration);
+            popUpUI.SetActive(false);
             popUpActive = false;
             onFailEvent?.Invoke();
         });
@@ -77,7 +77,7 @@ public class FryingMinigame : MonoBehaviour
 
     void popUpHide()
     {
-        popUpUI.DOFade(0f, uiTransitionDuration);
+        popUpUI.SetActive(false);
         popUpActive = false;
     }
     public void onPlayerInteract(InputAction.CallbackContext context)
@@ -85,7 +85,7 @@ public class FryingMinigame : MonoBehaviour
         if (context.performed && popUpActive)
         {
             DOTween.Clear();
-            popUpUI.DOFade(0f, uiTransitionDuration);
+            popUpUI.SetActive(false);
             popUpActive = false;
             onFlipFood(cookingFoodPrefab);
             onWinEvent?.Invoke();

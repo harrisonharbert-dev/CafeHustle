@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a288f6438df4abe45818aa3843bbaca6, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueVoiceProfile
+  profileID: default
+  audioClips:
+  - {fileID: 8300000, guid: 3e94c44d9a28bb9498fd1aed77228140, type: 3}
+  - {fileID: 8300000, guid: b94ae5b2ab5fa1244802380c13c39c6a, type: 3}
+  - {fileID: 8300000, guid: d179e17f05cdf994e83c23b6c99f6ff1, type: 3}
+  - {fileID: 8300000, guid: 2a7661eacddfe924495c516057b9650c, type: 3}
+  - {fileID: 8300000, guid: 5a5d6650d94549e4abdf74f2ae20c49d, type: 3}
+  - {fileID: 8300000, guid: cbc7fd00579580244928fdbc6dd8a68b, type: 3}
+  - {fileID: 8300000, guid: 8b0a4fa6bd83cab4c88214621b4078b7, type: 3}
+  pitchMin: 1.3
+  pitchMax: 1.4
+  playEveryNCharacters: 4
