@@ -33,6 +33,8 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         public float duration = 0.3f;
         public float delay = 0f;
+
+        public float scaleUpSize = 0.1f;
     }
 
 
@@ -257,5 +259,11 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         Fade(option);
         Slide(option);
+    }
+
+    public void ScaleUp(bool option)
+    {
+        Vector3 target = option ? scale + new Vector3(scaleSettings.scaleUpSize,scaleSettings.scaleUpSize,scaleSettings.scaleUpSize) : scale; 
+        rect.DOScale(target,scaleSettings.duration).SetDelay(scaleSettings.delay);
     }
 }
