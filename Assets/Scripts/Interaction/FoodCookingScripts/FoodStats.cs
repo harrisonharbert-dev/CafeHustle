@@ -123,98 +123,101 @@ public class FoodStats : MonoBehaviour
 
     void Update()
     {
-        if (canFlip == true && requiresTwoSides == true)
+        if (CookingBar != null)
         {
-            // Right click flip
-            if (IsHovering &&
-                Input.GetMouseButtonDown(1) &&
-                isFlipping == false)
+            if (canFlip == true && requiresTwoSides == true)
             {
-                FlipFood();
-            }
-        }
-
-
-        if (isCooking)
-        {
-            if (requiresTwoSides)
-            {
-                if (currentSide == 1)
+                // Right click flip
+                if (IsHovering &&
+                    Input.GetMouseButtonDown(1) &&
+                    isFlipping == false)
                 {
-                    sideOneProgress += Time.deltaTime;
-                    cookingProgress = sideOneProgress;
+                    FlipFood();
+                }
+            }
+
+
+            if (isCooking)
+            {
+                if (requiresTwoSides)
+                {
+                    if (currentSide == 1)
+                    {
+                        sideOneProgress += Time.deltaTime;
+                        cookingProgress = sideOneProgress;
+                    }
+                    else
+                    {
+                        sideTwoProgress += Time.deltaTime;
+                        cookingProgress = sideTwoProgress;
+                    }
                 }
                 else
                 {
-                    sideTwoProgress += Time.deltaTime;
-                    cookingProgress = sideTwoProgress;
+                    cookingProgress += Time.deltaTime;
+                }
+
+
+                UpdateCookingStatus();
+
+
+                if (cookingStatusScript != null)
+                {
+                    cookingStatusScript.UpdateShaderStatus(
+                        cookingProgress / cookingTime
+                    );
                 }
             }
-            else
+
+
+
+            if (IsHovering &&
+                draggingScript != null &&
+                !draggingScript.dragging)
             {
-                cookingProgress += Time.deltaTime;
+                if (CookingBar != null)
+                {
+                    CookingBar.fillAmount =
+                        cookingProgress / cookingTime;
+                }
+
+
+                if (cookingStatusScript.progress < 1.3f)
+                {
+                    CookingBar.color = Color.green;
+                }
+                else if (cookingStatusScript.progress < 1.5f)
+                {
+                    CookingBar.color = Color.yellow;
+                }
+                else
+                {
+                    CookingBar.color = Color.red;
+                }
+
+
+                if (cookingStatusScript.progress >= 1.1f && isCooking == true)
+                {
+                    FlickerAnimation.SetBool(
+                        "IsFlickering",
+                        true);
+                }
+                else
+                {
+                    FlickerAnimation.SetBool(
+                        "IsFlickering",
+                        false);
+                }
             }
 
 
-            UpdateCookingStatus();
 
-
-            if (cookingStatusScript != null)
+            if (CameraController.isMoving ||
+                (draggingScript != null &&
+                 draggingScript.dragging))
             {
-                cookingStatusScript.UpdateShaderStatus(
-                    cookingProgress / cookingTime
-                );
+                CookingUI.SetActive(false);
             }
-        }
-
-
-
-        if (IsHovering &&
-            draggingScript != null &&
-            !draggingScript.dragging)
-        {
-            if (CookingBar != null)
-            {
-                CookingBar.fillAmount =
-                    cookingProgress / cookingTime;
-            }
-
-
-            if (cookingStatusScript.progress < 1.3f)
-            {
-                CookingBar.color = Color.green;
-            }
-            else if (cookingStatusScript.progress < 1.5f)
-            {
-                CookingBar.color = Color.yellow;
-            }
-            else
-            {
-                CookingBar.color = Color.red;
-            }
-
-
-            if (cookingStatusScript.progress >= 1.1f && isCooking == true)
-            {
-                FlickerAnimation.SetBool(
-                    "IsFlickering",
-                    true);
-            }
-            else
-            {
-                FlickerAnimation.SetBool(
-                    "IsFlickering",
-                    false);
-            }
-        }
-
-
-
-        if (CameraController.isMoving ||
-            (draggingScript != null &&
-             draggingScript.dragging))
-        {
-            CookingUI.SetActive(false);
         }
     }
 

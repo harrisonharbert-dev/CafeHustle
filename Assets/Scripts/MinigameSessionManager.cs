@@ -26,7 +26,7 @@ public class MinigameSessionManager : MonoBehaviour
     public float Progress { get; private set; }
     private bool playing;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void StartPlay()
+    void Start()
     {
         if (playing)
             return;
@@ -81,4 +81,5 @@ public class MinigameSessionManager : MonoBehaviour
 
     Progress = 1f;
 }
+
 }

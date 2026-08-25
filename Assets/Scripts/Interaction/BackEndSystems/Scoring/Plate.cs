@@ -116,12 +116,21 @@ public class PlateScorer : MonoBehaviour
 
         // Everything matches the order.
         orderCompleted = true;
-        SceneManager.LoadScene("Prototype_environment");
+       
         return true;
     }
 
     public bool IsOrderComplete()
     {
         return orderCompleted;
+    }
+
+
+    public void NextStage()
+    {
+        if (orderCompleted == true)
+        {
+            SceneManager.LoadScene("Prototype_environment");
+        }
     }
 }
