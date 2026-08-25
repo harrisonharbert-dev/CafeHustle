@@ -1,4 +1,4 @@
-﻿title: Start
+title: Start
 ---
 <<play_emote emote2 heart>>
 Narrator: I love cheeese.
@@ -16,7 +16,7 @@ title: Intro
 The cabin rattles as the wheels glide along the tracks.
 The train screeches to a stop.
 <<set_voice DialogueAudio default>>
-Dawn: Village Name. Finally, a new start.
+Dawn: Villageton. Finally, a new start.
 Dawn: Grandma’s house should be somewhere around here. I was told it would be near the station.
 -> Lets go!
     Dawn: Yeah!
@@ -114,20 +114,3 @@ Dawn: You’re a spirit?
 ===
 
 
-
-
-title: Steve
----
-Steve: Hi!
-<<play_cutscene CutsceneAnimator character_wave>>
-Steve: I am gay.
-<<play_emote player_emote faceSad>>
-    -> You suck
-        <<play_cutscene CutsceneAnimator character_throw>>
-        Kean: You suck. It sucks to be gay.
-        Steve: Well you got one bit right.
-    -> You should kys
-        Kean: By the way, KYS stands for Keep Yourself Safe.
-        Steve: Thanks buddy.
-Steve: Okay, bye lad.
-===

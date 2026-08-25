@@ -6,8 +6,9 @@ using Yarn.Unity;
 using Yarn.Unity.Attributes;
 using TMPro;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
-public class DialogueAudioController : ActionMarkupHandler       
+public class DialogueAudioController : ActionMarkupHandler
 {
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private bool skipWhitespaceAndPunctuation = true;
@@ -16,6 +17,17 @@ public class DialogueAudioController : ActionMarkupHandler
     [SerializeField] private DialogueVoiceProfile defaultProfile;
     [SerializeField] private UnityEvent onNewLineEvent;
 
+    [System.Serializable]
+    public class colors
+    {
+        public Sprite pink;
+        public Sprite blue;
+        public Sprite yellow;
+        public Sprite green;
+    }
+
+    public colors dialogueNameColors;
+    public Image dialogueNameImage;
     private DialogueVoiceProfile currentProfile;
 
     int characterCounter = 0;
@@ -23,6 +35,32 @@ public class DialogueAudioController : ActionMarkupHandler
     void Awake()
     {
         currentProfile = defaultProfile;
+        UpdateDialogueNameColor();
+    }
+
+    private void UpdateDialogueNameColor()
+    {
+        if (currentProfile == null || dialogueNameColors == null)
+        {
+            dialogueNameImage = null;
+            return;
+        }
+
+        switch (currentProfile.dialogueNameColour)
+        {
+            case DialogueVoiceProfile.colors.pink:
+                dialogueNameImage.sprite = dialogueNameColors.pink;
+                break;
+            case DialogueVoiceProfile.colors.blue:
+                dialogueNameImage.sprite = dialogueNameColors.blue;
+                break;
+            case DialogueVoiceProfile.colors.yellow:
+                dialogueNameImage.sprite = dialogueNameColors.yellow;
+                break;
+            case DialogueVoiceProfile.colors.green:
+                dialogueNameImage.sprite = dialogueNameColors.green;
+                break;
+        }
     }
 
     [YarnCommand("set_voice")]
@@ -34,6 +72,7 @@ public class DialogueAudioController : ActionMarkupHandler
         {
             currentProfile = match;
             characterCounter = 0;
+            UpdateDialogueNameColor();
         }
         else
         {
@@ -46,6 +85,7 @@ public class DialogueAudioController : ActionMarkupHandler
     {
         currentProfile = defaultProfile;
         characterCounter = 0;
+        UpdateDialogueNameColor();
     }
 
     public override void OnPrepareForLine(MarkupParseResult line, TMP_Text text)
@@ -82,6 +122,11 @@ public class DialogueAudioController : ActionMarkupHandler
             return YarnTask.CompletedTask;
 
         char c = line.Text[currentCharacterIndex];
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return YarnTask.CompletedTask;
+        }
 
         if (skipWhitespaceAndPunctuation && (char.IsWhiteSpace(c) || char.IsPunctuation(c)))
         {

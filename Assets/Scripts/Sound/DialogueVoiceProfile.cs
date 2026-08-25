@@ -15,5 +15,16 @@ public class DialogueVoiceProfile : ScriptableObject
 
     [Header("Rhythm")]
     [Min(1)] public int playEveryNCharacters = 1;
+
+
+    public enum colors
+    {
+        pink,
+        blue,
+        yellow,
+        green
+    }
+    [Header("Name Colour")]
+    public colors dialogueNameColour;
     
 }

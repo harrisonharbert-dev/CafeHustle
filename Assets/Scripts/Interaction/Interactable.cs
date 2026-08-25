@@ -20,6 +20,7 @@ public class Interactable : MonoBehaviour
     }
     public interactableType interactType;
     [SerializeField] private bool playOnce;
+
     private bool played;
 
     [HideInInspector] public bool isInRange = false; // Is the player in range to interact with this object? // Has the player already interacted with this object?
@@ -179,7 +180,6 @@ public class Interactable : MonoBehaviour
         }
 
     }
-
 
 
 }
