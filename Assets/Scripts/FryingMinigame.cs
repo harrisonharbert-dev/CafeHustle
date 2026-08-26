@@ -38,10 +38,11 @@ public class FryingMinigame : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(1))
+        /*if (Input.GetMouseButtonDown(1))
         {
             unityEvent.Invoke();
         }
+        */
     }
 
 
@@ -66,7 +67,7 @@ public class FryingMinigame : MonoBehaviour
     }
 
 
-    // Update is called once per frame
+    // Update is called once per frame      
     public void onFlipFood(GameObject food)
     {
         

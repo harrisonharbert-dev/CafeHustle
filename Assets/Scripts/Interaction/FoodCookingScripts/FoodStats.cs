@@ -15,6 +15,8 @@ public class FoodStats : MonoBehaviour
         Egg,
         Tomato,
         Sausage,
+        Bread,
+
     }
 
 

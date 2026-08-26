@@ -5,7 +5,7 @@ public class cookingStatus : MonoBehaviour
 
     [SerializeField] private string sliderPropertyName = "_Cooking_Stage";
     public float progress;
-    [SerializeField] private float failBonus;
+    [SerializeField] public float failBonus;
 
     private Renderer objectRenderer;
     private MaterialPropertyBlock propBlock;

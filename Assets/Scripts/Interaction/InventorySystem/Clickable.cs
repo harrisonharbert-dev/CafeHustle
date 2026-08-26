@@ -8,6 +8,7 @@ public class Clickable : MonoBehaviour
     [SerializeField] private TextMeshProUGUI Description;
     [SerializeField] public string DescriptionText;
     [SerializeField] private bool HasText;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
