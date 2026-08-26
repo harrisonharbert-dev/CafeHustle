@@ -40,7 +40,7 @@ public class SoundManager : MonoBehaviour
         float newPitch = 1 - Random.Range(-randomPitch,randomPitch);
         sfx2DSource.pitch = newPitch;
         
-        sfx2DSource.PlayOneShot(sfxLibrary.GetClipFromName(soundName));
+        sfx2DSource.PlayOneShot(sfxLibrary.GetClipFromName(soundName),sfxLibrary.GetVolume(soundName));
     }
     
 
