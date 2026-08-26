@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class PlateScorer : MonoBehaviour
 {
     public List<FoodStats> foodsOnPlate = new List<FoodStats>();
-
-    private bool orderCompleted = false;
+    public UnityEvent onOrderCompleted;
+    [SerializeField] private bool orderCompleted = false;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -130,7 +131,7 @@ public class PlateScorer : MonoBehaviour
     {
         if (orderCompleted == true)
         {
-            SceneManager.LoadScene("Prototype_environment");
+            onOrderCompleted.Invoke();
         }
     }
 }

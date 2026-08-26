@@ -25,6 +25,9 @@ public class MinigameSessionManager : MonoBehaviour
 
     public float Progress { get; private set; }
     private bool playing;
+
+    public UnityEvent onMinigameComplete;
+    public UnityEvent onMinigameFail;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,9 +36,6 @@ public class MinigameSessionManager : MonoBehaviour
         playStartTime = Time.time;
         StartCoroutine(PlayRoutine());
     }
-
-
-
     // play session
     private IEnumerator PlayRoutine()
     {
@@ -68,18 +68,38 @@ public class MinigameSessionManager : MonoBehaviour
 
     private IEnumerator UpdateProgress()
 {
-    float elapsed = 0f;
+        Debug.Log($"Progress: {Progress}");
+        float elapsed = 0f;
 
     while (elapsed < playDuration)
     {
         elapsed += Time.deltaTime;
-        Progress = Mathf.Clamp01(elapsed / playDuration);
+        Progress = elapsed / playDuration;
         item.UpdateShaderStatus(Progress);
+
 
         yield return null;
     }
 
     Progress = 1f;
 }
+    public void EndOfMiniGame()
+    {
+        StartCoroutine(EndDelay());
+    }
 
+    IEnumerator EndDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        if (Progress + item.failBonus <= 1.2f)
+        {
+            onMinigameComplete?.Invoke();
+            Debug.Log("Minigame completed successfully");
+        }
+        else
+        {
+            Debug.Log("Minigame failed");
+            onMinigameFail?.Invoke();
+        }
+    }
 }
