@@ -9,6 +9,10 @@ public class PlateScorer : MonoBehaviour
     public UnityEvent onOrderCompleted;
     [SerializeField] private bool orderCompleted = false;
 
+    public void Start()
+    {
+        GetComponent<BoxCollider>().enabled = false;
+    }
     private void OnTriggerEnter(Collider other)
     {
         FoodStats food = other.GetComponent<FoodStats>();
@@ -129,6 +133,7 @@ public class PlateScorer : MonoBehaviour
 
     public void NextStage()
     {
+        GetComponent<BoxCollider>().enabled = true;
         if (orderCompleted == true)
         {
             onOrderCompleted.Invoke();

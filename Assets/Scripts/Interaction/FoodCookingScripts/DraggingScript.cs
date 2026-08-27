@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private Camera cam;
+   [SerializeField] private Camera cam;
 
     public float moveSpeed = 15f;
 
@@ -41,9 +41,16 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public FoodStats foodStatsScript;
 
 
+    private void Awake()
+    {
+        if (cam == null)
+        {
+            cam = FindAnyObjectByType<Camera>();
+        }
+    }
+
     void Start()
     {
-        cam = Camera.main;
 
         rb = GetComponent<Rigidbody>();
 

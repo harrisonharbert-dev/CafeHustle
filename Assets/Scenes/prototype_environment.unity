@@ -5427,6 +5427,70 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1681195960}
   m_SourcePrefab: {fileID: 100100000, guid: 2d45a1ae8f2c32c438845bda0d36da72, type: 3}
+--- !u!1 &445488498 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 40c092f8fbab1b4448cd9c15027ea689, type: 3}
+  m_PrefabInstance: {fileID: 1067517412}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &445488499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445488498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ae2b00ac96aee3469a3bb60411498e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interactable
+  interactType: 2
+  playOnce: 0
+  isInRange: 0
+  interactAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2047684181}
+        m_TargetAssemblyTypeName: LevelLoader, Assembly-CSharp
+        m_MethodName: LoadNamedScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: FlippingStage
+          m_BoolArgument: 0
+        m_CallState: 2
+  dialogueOption: 0
+  useDialogue: 0
+  useDialogueCamera: 0
+  dialogueName: 
+  promptText: 0
+  promptKey: 0
+  isInteractable: 1
+  zoneIndicator: {fileID: 0}
+--- !u!135 &445488500
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445488498}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.1763254
+  m_Center: {x: -0.48936784, y: 0.00000023841858, z: 0.6605116}
 --- !u!4 &446527854 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2e8a45dcee4c0f94d899dab7ccb09147, type: 3}
@@ -11459,7 +11523,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 40c092f8fbab1b4448cd9c15027ea689, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 445488500}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 40c092f8fbab1b4448cd9c15027ea689, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 445488499}
   m_SourcePrefab: {fileID: 100100000, guid: 40c092f8fbab1b4448cd9c15027ea689, type: 3}
 --- !u!1001 &1072947087
 PrefabInstance:
