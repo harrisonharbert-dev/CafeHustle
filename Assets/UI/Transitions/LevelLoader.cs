@@ -19,10 +19,9 @@ public class LevelLoader : MonoBehaviour
 
     private bool isLoading = false;
 
-
     private void OnEnable()
     {
-     ResetTransition();    
+        ResetTransition();
     }
     private void Start()
     {

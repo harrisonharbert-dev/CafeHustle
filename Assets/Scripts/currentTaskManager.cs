@@ -6,6 +6,8 @@ using System.Collections;
 
 public class currentTaskManager : MonoBehaviour
 {
+    public static currentTaskManager instance { get; private set; }
+
     [Header("References")]
     [SerializeField] private TextMeshProUGUI textTask;
     [SerializeField] private GameObject container;
@@ -15,9 +17,16 @@ public class currentTaskManager : MonoBehaviour
 
     private UITweener[] tweeners;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-
+    
     void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
         tweeners = GetComponentsInChildren<UITweener>(true);
     }
     // Update is called once per frame

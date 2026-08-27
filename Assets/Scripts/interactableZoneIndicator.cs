@@ -16,7 +16,13 @@ public class interactableZoneIndicator : MonoBehaviour
     // Update is called once per frame
     public void changeIndicatorVisibility(bool option)
     {
-        float value = option ? defaultAlpha : -defaultAlpha;
-        mat.SetFloat("_Alpha",value);
+        float value = option ? defaultAlpha : 0f;
+        DOTween.Kill(mat);
+        DOTween.To(
+            () => mat.GetFloat("_Alpha"),
+            alpha => mat.SetFloat("_Alpha", alpha),
+            value,
+            transitionDuration)
+            .SetTarget(mat);
     }
 }

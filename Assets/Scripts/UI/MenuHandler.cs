@@ -1,6 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using DG.Tweening;
+using GLTFast.Schema;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using Yarn.Unity;
 
@@ -18,7 +23,8 @@ public class MenuHandler : MonoBehaviour
     }
 
     [System.Serializable]
-    public class menuContent {
+    public class menuContent
+    {
         public GameObject leftPage;
         public GameObject rightPage;
     }
@@ -28,8 +34,11 @@ public class MenuHandler : MonoBehaviour
 
     [SerializeField] private GameObject menu;
 
+    [SerializeField] private CanvasGroup BG;
+    [SerializeField] private float BGFadeDuration = 0.3f;
 
-    public SerializableDictionary<string,menuContent> menuPages;
+
+    public SerializableDictionary<string, menuContent> menuPages;
 
 
 
@@ -40,6 +49,7 @@ public class MenuHandler : MonoBehaviour
     void Awake()
     {
         menu.SetActive(false);
+        BG.alpha = 0f;
     }
 
     void playAnimation(PlayableAsset asset)
@@ -47,11 +57,16 @@ public class MenuHandler : MonoBehaviour
         director.playableAsset = asset;
         director.Play();
     }
-    
+
     public void onOpen()
     {
         if (!isMenuOpen)
         {
+            PlayerInputController.instance.SetMovementLock(true);
+            currentTaskManager.instance.onTaskVisibility(false);
+
+            BG.DOFade(1f, BGFadeDuration);
+
             playAnimation(menuAnimations.openAnimation);
             isMenuOpen = true;
         }
@@ -59,11 +74,16 @@ public class MenuHandler : MonoBehaviour
 
     public void onOpenToPage(string id)
     {
-        if(!isMenuOpen)
+        if (!isMenuOpen)
         {
+            PlayerInputController.instance.SetMovementLock(true);
+            currentTaskManager.instance.onTaskVisibility(false);
+
+            BG.DOFade(1f, BGFadeDuration);
+
             playAnimation(menuAnimations.openAnimation);
             isMenuOpen = true;
-            StartCoroutine(id,0f);
+            StartCoroutine(id, 0f);
         }
     }
 
@@ -71,6 +91,11 @@ public class MenuHandler : MonoBehaviour
     {
         if (isMenuOpen)
         {
+            PlayerInputController.instance.SetMovementLock(false);
+            currentTaskManager.instance.onTaskVisibility(true);
+
+            BG.DOFade(0f,BGFadeDuration);
+
             playAnimation(menuAnimations.closeAnimation);
             isMenuOpen = false;
         }
@@ -78,17 +103,17 @@ public class MenuHandler : MonoBehaviour
 
     public void onNewPage(string id)
     {
-        if(isMenuOpen)
+        if (isMenuOpen)
         {
             playAnimation(menuAnimations.newPageAnimation);
             StartCoroutine(LoadNewPageContent(id, 0.33f));
         }
     }
 
-    private IEnumerator LoadNewPageContent(string id,float pageDelay)
+    private IEnumerator LoadNewPageContent(string id, float pageDelay)
     {
         if (menuPages == null) yield break;
- 
+
 
         yield return new WaitForSeconds(pageDelay);
         // Activate left/right GameObjects for the target page and deactivate others
@@ -104,6 +129,17 @@ public class MenuHandler : MonoBehaviour
 
             if (content.rightPage != null)
                 content.rightPage.SetActive(isTarget);
+        }
+    }
+
+
+    public void closeMenu(InputAction.CallbackContext context)
+    {
+        if (context.performed && isMenuOpen)
+        {
+            onClose();
+
+
         }
     }
 }

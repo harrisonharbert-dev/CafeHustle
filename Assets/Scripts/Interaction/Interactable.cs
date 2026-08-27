@@ -38,16 +38,16 @@ public class Interactable : MonoBehaviour
 
     [Header("Dialogue")]
     [Space(15)]
-    
+
 
     [SerializeField] private dialogueType dialogueOption;
-    
+
     [HideInInspector] public bool useDialogue;
 
 
 
     [HideInInspector] public bool useDialogueCamera;
-    
+
 
     [SerializeField] private string dialogueName;
 
@@ -105,12 +105,18 @@ public class Interactable : MonoBehaviour
 
     public void setInteractable(bool option)
     {
+        Debug.Log($"[{this}] interactable set to: {option}");
         isInteractable = option;
+        if (zoneIndicator != null) {
+        zoneIndicator.changeIndicatorVisibility(option);
+        }
     }
 
 
     public void InvokeEvent()
     {
+        
+
         if (interactType == interactableType.none && zoneIndicator != null)
         {
             zoneIndicator.changeIndicatorVisibility(false);
@@ -119,6 +125,11 @@ public class Interactable : MonoBehaviour
         ;
         //
         played = true;
+
+        if (playOnce)
+        {
+            setInteractable(false);
+        }
 
 
 
@@ -171,7 +182,7 @@ public class Interactable : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (!isInteractable) return;
-        if (other.gameObject.CompareTag("Player") && PlayerInputController.instance.currentInteractable==this)
+        if (other.gameObject.CompareTag("Player") && PlayerInputController.instance.currentInteractable == this)
         {
             isInRange = false;
             PlayerInputController.instance.SetCurrentInteractable(null);
