@@ -1,8 +1,11 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Yarn.Unity;
+using DG.Tweening;
+using Unity.VisualScripting;
 
 public class CharacterEmote : MonoBehaviour
 {
@@ -11,19 +14,24 @@ public class CharacterEmote : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private Image emoteImage;
+    [SerializeField] private Image bubbleImage;
 
     [Header("Transition Frames")]
     [SerializeField] private List<Sprite> transitionFrames = new();
 
     [Header("Timing")]
-    [SerializeField] private float frameDuration = 0.08f;
+    [SerializeField] private float transitionDuration = 1f;
     [SerializeField] private float emoteDuration = 2f;
+
+    private Tween transitionTween;
+    private int currentIndex;
 
 
     private void Awake()
     {
-        //Set default
+        //Set default to empty sprite
         emoteImage.sprite = transitionFrames[0];
+        bubbleImage.sprite = transitionFrames[0];
     }
 
     public Sprite GetEmote(string name)
@@ -35,44 +43,50 @@ public class CharacterEmote : MonoBehaviour
     [YarnCommand("play_emote")]
     public void PlayEmote(string name)
     {
-        StartCoroutine(RunEmote(name));
+        PlayIn(name);
     }
 
-    public IEnumerator RunEmote(string name)
+    void PlayIn(string name) 
     {
-        Sprite emoteSprite = GetEmote(name);
+        transitionTween?.Kill();
 
-        if (emoteSprite == null)
-        {
-            Debug.LogWarning($"Emote '{name}' not found.");
-            yield break;
-        }
+        int start =0;
+        int end = transitionFrames.Count - 1;
 
-        if (transitionFrames == null || transitionFrames.Count == 0)
-        {
-            emoteImage.sprite = emoteSprite;
-            yield return new WaitForSeconds(emoteDuration);
-            yield break;
-        }
+        transitionTween = DOVirtual.Int(start, end, transitionDuration,OnTweenUpdate)
+            .SetEase(Ease.Linear)
+            .OnComplete(() => showEmote(name));
+    }
 
-        // ▶ TRANSITION IN 
-        for (int i = 0; i < transitionFrames.Count; i++)
-        {
-            emoteImage.sprite = transitionFrames[i];
-            yield return new WaitForSeconds(frameDuration);
-        }
+    void PlayOut() 
+    {
+        int start = transitionFrames.Count - 1;
+        int end = 0;
 
-        //  SHOW EMOTE
-        emoteImage.sprite = emoteSprite;
+        transitionTween = DOVirtual.Int(start, end, transitionDuration, OnTweenUpdate)
+            .SetEase(Ease.Linear);
+    }
+
+    void OnTweenUpdate(int value)
+    {
+        bubbleImage.sprite = transitionFrames[value];
+    }
+
+    public void showEmote(string name)
+    {
+        StartCoroutine(showEmoteRoutine(name));
+    }
+
+    private IEnumerator showEmoteRoutine(string name)
+    {
+        
+        emoteImage.sprite = GetEmote(name);
 
         yield return new WaitForSeconds(emoteDuration);
 
-        
-        for (int i = transitionFrames.Count - 1; i >= 0; i--)
-        {
-            emoteImage.sprite = transitionFrames[i];
-            yield return new WaitForSeconds(frameDuration);
-        }
+        //Set to empty sprite
+        PlayOut();
+        emoteImage.sprite = transitionFrames[0];
     }
 }
     

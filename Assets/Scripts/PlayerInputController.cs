@@ -277,6 +277,9 @@ public class PlayerInputController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        Shader.SetGlobalVector("_PlayerPosition",transform.position+Vector3.up);
+
+
         Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, transform.up).normalized;
         Vector3 cameraRight = Vector3.ProjectOnPlane(cameraTransform.right, transform.up).normalized;
 

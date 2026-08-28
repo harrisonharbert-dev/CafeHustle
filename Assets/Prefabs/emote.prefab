@@ -1,5 +1,105 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3252221164861889502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2451302665039464076}
+  - component: {fileID: 8508618417031449897}
+  - component: {fileID: 2357394706029512258}
+  - component: {fileID: 1439937245682041048}
+  m_Layer: 5
+  m_Name: Bubble
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2451302665039464076
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3252221164861889502}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 5.0785074, y: 5.0785074, z: 5.0785074}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4541944844237349197}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &8508618417031449897
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3252221164861889502}
+  m_CullTransparentMesh: 1
+--- !u!114 &2357394706029512258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3252221164861889502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: f462a637bb9117845a7ec7fab1b4985a, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!223 &1439937245682041048
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3252221164861889502}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &4680278858584588600
 GameObject:
   m_ObjectHideFlags: 0
@@ -35,7 +135,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 51}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1925002536598635700
@@ -66,9 +166,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 514788ae80b648741baeb27b23278c54, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 638441b631110f344b8208b989fad599, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -90,7 +190,7 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
+  m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
@@ -98,7 +198,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!1 &8394501808725649746
 GameObject:
@@ -136,6 +236,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7669270252649098899}
+  - {fileID: 2451302665039464076}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -189,7 +290,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &4026920176035076217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,73 +322,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   emoteDictionary:
     m_keys:
-    - alert
-    - anger
-    - bars
-    - cash
-    - circle
-    - cloud
-    - cross
-    - dots1
-    - dots2
-    - dots3
+    - waffle
     - drop
-    - drops
-    - exclaimation
-    - exclaimations
-    - faceAngry
-    - faceHappy
-    - faceSad
     - heart
-    - heartBroken
-    - hearts
-    - idea
-    - laugh
-    - music
-    - question
-    - sleep
-    - sleeps
-    - star
-    - stars
-    - swirl
+    - knife
+    - spatula
     m_values:
-    - {fileID: 21300000, guid: ea409224bb26d7747a0ac52a84f55231, type: 3}
-    - {fileID: 21300000, guid: 85925363e5422c34fa81e5c481dab101, type: 3}
-    - {fileID: 21300000, guid: 1a4c51baebcab1f4f8f6211372b4b3d6, type: 3}
-    - {fileID: 21300000, guid: 61317dbe43707ee42a992ff8fa765344, type: 3}
-    - {fileID: 21300000, guid: c15e741a2d5c45b499c25e929132e4bd, type: 3}
-    - {fileID: 21300000, guid: 96dcbedf7bbe6ee43aa3b3788d95780b, type: 3}
-    - {fileID: 21300000, guid: e6ecd93d2128fe24fad317d1a006c48d, type: 3}
-    - {fileID: 21300000, guid: 24837918fec4bb64cb8090a179e88562, type: 3}
-    - {fileID: 21300000, guid: 360ab1d56aed3364cb2609ff6fc52f4a, type: 3}
-    - {fileID: 21300000, guid: b0aa903affd1d9e4ba691b92d90da337, type: 3}
-    - {fileID: 21300000, guid: fa3fbee1091e92d4fa6503b6f4dade99, type: 3}
-    - {fileID: 21300000, guid: 5538b2f0931131843b60e57cb05f09c8, type: 3}
-    - {fileID: 21300000, guid: 514788ae80b648741baeb27b23278c54, type: 3}
-    - {fileID: 21300000, guid: b0ed18063c0a21e4a9b68af7117759f1, type: 3}
-    - {fileID: 21300000, guid: 158d4ea8458c06b4689f2e79ab17bafa, type: 3}
-    - {fileID: 21300000, guid: 3fb1874bb5b9ab648b09ad7b33e4e91c, type: 3}
-    - {fileID: 21300000, guid: 733e4c405e2d3384ba9ddc86205c0744, type: 3}
-    - {fileID: 21300000, guid: 306c8c04750801d419b67008ca3600c9, type: 3}
-    - {fileID: 21300000, guid: 59fdfb85dfa8da5409be223fe3083209, type: 3}
-    - {fileID: 21300000, guid: 26a0ffb4aff42c74aa89eef07acb18cd, type: 3}
-    - {fileID: 21300000, guid: a3f7c5631d999114abcf19c4f4dc4e05, type: 3}
-    - {fileID: 21300000, guid: 46eb5d5c0a857fc4ea1a9b5738207262, type: 3}
-    - {fileID: 21300000, guid: 8daadfd1fa2549e4fb1bcb90346de42f, type: 3}
-    - {fileID: 21300000, guid: 7efca24c37667df438fb5c388c931b9b, type: 3}
-    - {fileID: 21300000, guid: 77146f494c4e3154a82164e57e26cbdc, type: 3}
-    - {fileID: 21300000, guid: a648db625684c424e90d04cd94192748, type: 3}
-    - {fileID: 21300000, guid: 83fc9d3df402bb74580b76e7a474aa65, type: 3}
-    - {fileID: 21300000, guid: 0a4c58218628b7a45839f7044cd4a641, type: 3}
-    - {fileID: 21300000, guid: fe85a9925204c3b469beda1b00daf2c8, type: 3}
+    - {fileID: 21300000, guid: 659fb2492f8b203428dbb2c14854bb4e, type: 3}
+    - {fileID: 21300000, guid: 638441b631110f344b8208b989fad599, type: 3}
+    - {fileID: 21300000, guid: 09997276da64bd04c9bc1ab5a2908fe2, type: 3}
+    - {fileID: 21300000, guid: e38d5c9073171b940a76c7f5764c5060, type: 3}
+    - {fileID: 21300000, guid: 06ae019c620cc344baed4eb294447ad6, type: 3}
   emoteImage: {fileID: 4504808933610524846}
+  bubbleImage: {fileID: 2357394706029512258}
   transitionFrames:
   - {fileID: 21300000, guid: 0ff3bc0a238ebca4da153d7b13514a58, type: 3}
-  - {fileID: 21300000, guid: b469d89f4ada9da45a6b2d40f6fb285a, type: 3}
-  - {fileID: 21300000, guid: ee85e2d5504516949a8fb9e668fad1b0, type: 3}
-  - {fileID: 21300000, guid: 357bff3aa7e80bb4a9c9b7630f1ce724, type: 3}
-  - {fileID: 21300000, guid: 60d07623e9076fe4fb59e08aebf50d97, type: 3}
-  frameDuration: 0.08
+  - {fileID: 21300000, guid: 919e93deaa42ea1459cc5634e218808d, type: 3}
+  - {fileID: 21300000, guid: f7f1ca8ee5933e94da8483a19c9c33a8, type: 3}
+  - {fileID: 21300000, guid: ecaf0caa540da5b4686734d973bbcc76, type: 3}
+  - {fileID: 21300000, guid: f462a637bb9117845a7ec7fab1b4985a, type: 3}
+  transitionDuration: 0.333
   emoteDuration: 2
 --- !u!114 &1099645516604397316
 MonoBehaviour:
