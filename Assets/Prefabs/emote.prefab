@@ -290,7 +290,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &4026920176035076217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,12 +327,14 @@ MonoBehaviour:
     - heart
     - knife
     - spatula
+    - sad
     m_values:
     - {fileID: 21300000, guid: 659fb2492f8b203428dbb2c14854bb4e, type: 3}
     - {fileID: 21300000, guid: 638441b631110f344b8208b989fad599, type: 3}
     - {fileID: 21300000, guid: 09997276da64bd04c9bc1ab5a2908fe2, type: 3}
     - {fileID: 21300000, guid: e38d5c9073171b940a76c7f5764c5060, type: 3}
     - {fileID: 21300000, guid: 06ae019c620cc344baed4eb294447ad6, type: 3}
+    - {fileID: 21300000, guid: 733e4c405e2d3384ba9ddc86205c0744, type: 3}
   emoteImage: {fileID: 4504808933610524846}
   bubbleImage: {fileID: 2357394706029512258}
   transitionFrames:

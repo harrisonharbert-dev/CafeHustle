@@ -1,8 +1,7 @@
 using DG.Tweening;
 using System.Collections;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class FoodStats : MonoBehaviour
 {
@@ -16,7 +15,6 @@ public class FoodStats : MonoBehaviour
         Tomato,
         Sausage,
         Bread,
-
     }
 
 
@@ -35,6 +33,7 @@ public class FoodStats : MonoBehaviour
     public int currentSide = 1;
 
 
+    [Header("Cooking State")]
     public bool isCooking;
     public bool IsHovering;
 
@@ -42,19 +41,18 @@ public class FoodStats : MonoBehaviour
     [Header("Burn")]
     [SerializeField] private float burnThreshold = 1.5f;
 
-
-    [Header("References")]
-    public GameObject CookingUI;
-    public Image CookingBar;
     public Material BurntMaterial;
 
     private Material baseMaterial;
 
-    public Animator FlickerAnimation;
-    public DraggingScript draggingScript;
 
-    [HideInInspector]
+    [Header("Cooking Status")]
     public cookingStatus cookingStatusScript;
+
+
+    [Header("Food Model")]
+    [Tooltip("The CHILD model. Only this object will visually flip.")]
+    public Transform foodModel;
 
 
     [Header("Flip Animation")]
@@ -63,14 +61,37 @@ public class FoodStats : MonoBehaviour
 
     public bool isFlipping;
 
-    public Transform foodModel;
-
 
     [Header("Flip Settings")]
     public float flipCooldown = 0.7f;
 
     public bool canFlip = true;
 
+
+    [Header("Food Events")]
+    [Tooltip("Triggered once when the first side reaches 100% cooking.")]
+    public UnityEvent FoodFlip;
+
+    [Tooltip("Triggered once when both sides are fully cooked.")]
+    public UnityEvent FoodCooked;
+
+    [Tooltip("Triggered once when the food reaches the burn threshold.")]
+    public UnityEvent FoodBurnt;
+
+
+    // ============================================================
+    // EVENT LOCKS
+    // ============================================================
+
+    [SerializeField] private bool foodFlipEventTriggered = false;
+
+    [SerializeField] private bool foodCookedEventTriggered = false;
+
+    [SerializeField] private bool foodBurntEventTriggered = false;
+
+    // ============================================================
+    // COOKING PROPERTIES
+    // ============================================================
 
     public bool SideOneCooked =>
         sideOneProgress >= cookingTime;
@@ -80,267 +101,472 @@ public class FoodStats : MonoBehaviour
         sideTwoProgress >= cookingTime;
 
 
-
     public bool FullyCooked
     {
         get
         {
             if (requiresTwoSides)
-                return SideOneCooked && SideTwoCooked;
+            {
+                return SideOneCooked &&
+                       SideTwoCooked;
+            }
 
             return cookingProgress >= cookingTime;
         }
     }
 
 
+    public bool IsBurnt =>
+        cookingProgress >= burnThreshold;
+
 
     public float CookRatio
     {
         get
         {
+            if (cookingTime <= 0f)
+                return 0f;
+
             return cookingProgress / cookingTime;
         }
     }
 
 
+    // ============================================================
+    // START
+    // ============================================================
 
     void Start()
     {
-        draggingScript = GetComponent<DraggingScript>();
+        // Get the cookingStatus component from the parent.
 
-        cookingStatusScript =
-            GetComponent<cookingStatus>();
-
-
-        if (CookingBar != null)
-            FlickerAnimation =
-                CookingBar.GetComponent<Animator>();
+        cookingStatusScript = foodModel.GetComponent<cookingStatus>();
 
 
-        baseMaterial =
-            GetComponent<Renderer>().material;
+
+        // Get the renderer.
+        //
+        // With the new hierarchy, the renderer will normally
+        // be on the child foodModel.
+        Renderer renderer = null;
+
+
+        if (foodModel != null)
+        {
+            renderer =
+                foodModel.GetComponent<Renderer>();
+        }
+
+
+        // Fallback if renderer is on the parent.
+        if (renderer == null)
+        {
+            renderer =
+                GetComponent<Renderer>();
+        }
+
+
+        if (renderer != null)
+        {
+            baseMaterial =
+                renderer.material;
+        }
+
+
+        // Safety check.
+        if (foodModel == null)
+        {
+            Debug.LogError(
+                $"FoodStats on {gameObject.name} has no Food Model assigned!",
+                this);
+        }
+        else if (foodModel == transform)
+        {
+            Debug.LogError(
+                $"FoodStats on {gameObject.name}: " +
+                $"Food Model cannot be the parent. " +
+                $"Assign the CHILD model instead.",
+                this);
+        }
     }
 
 
+    // ============================================================
+    // UPDATE
+    // ============================================================
 
     void Update()
     {
-        if (CookingBar != null)
+        // --------------------------------------------------------
+        // RIGHT CLICK FLIP
+        // --------------------------------------------------------
+
+        if (canFlip &&
+            requiresTwoSides &&
+            IsHovering &&
+            Input.GetMouseButtonDown(1) &&
+            !isFlipping)
         {
-            if (canFlip == true && requiresTwoSides == true)
+            FlipFood();
+        }
+
+
+        // --------------------------------------------------------
+        // COOKING
+        // --------------------------------------------------------
+
+        if (isCooking)
+        {
+            CookFood();
+
+
+            // Update the cooking shader/look.
+            UpdateCookingStatus();
+
+
+            // Check cooked events.
+            CheckCookingEvents();
+
+
+            // Check burnt event.
+            CheckBurning();
+        }
+    }
+
+
+    // ============================================================
+    // COOK FOOD
+    // ============================================================
+
+    private void CookFood()
+    {
+        if (requiresTwoSides)
+        {
+            if (currentSide == 1)
             {
-                // Right click flip
-                if (IsHovering &&
-                    Input.GetMouseButtonDown(1) &&
-                    isFlipping == false)
+                sideOneProgress +=
+                    Time.deltaTime;
+
+                cookingProgress =
+                    sideOneProgress;
+            }
+            else
+            {
+                sideTwoProgress +=
+                    Time.deltaTime;
+
+                cookingProgress =
+                    sideTwoProgress;
+            }
+        }
+        else
+        {
+            cookingProgress +=
+                Time.deltaTime;
+        }
+    }
+
+
+    // ============================================================
+    // UPDATE COOKING STATUS / SHADER
+    // ============================================================
+
+    private void UpdateCookingStatus()
+    {
+        if (cookingStatusScript == null)
+            return;
+
+
+        // This is the value used by cookingStatus
+        // to change the appearance of the food.
+        cookingStatusScript.progress =
+            cookingProgress / cookingTime;
+
+
+        // Update the actual shader/material appearance.
+        cookingStatusScript.UpdateShaderStatus(
+            cookingProgress / cookingTime
+        );
+    }
+
+
+    // ============================================================
+    // COOKING EVENTS
+    // ============================================================
+
+    private void CheckCookingEvents()
+    {
+        // ========================================================
+        // TWO-SIDED FOOD
+        // ========================================================
+
+        if (requiresTwoSides)
+        {
+            // ----------------------------------------------------
+            // SIDE ONE COOKED
+            // ----------------------------------------------------
+
+            if (currentSide == 1 &&
+                SideOneCooked &&
+                !foodFlipEventTriggered)
+            {
+                foodFlipEventTriggered = true;
+
+
+                // IMPORTANT:
+                // We DO NOT stop cooking.
+                //
+                // This means cookingStatus continues increasing
+                // and the food can become burnt.
+
+                if (FoodFlip != null)
                 {
-                    FlipFood();
+                    FoodFlip.Invoke();
                 }
             }
 
 
-            if (isCooking)
+            // ----------------------------------------------------
+            // BOTH SIDES COOKED
+            // ----------------------------------------------------
+
+            if (SideOneCooked &&
+                SideTwoCooked &&
+                !foodCookedEventTriggered)
             {
-                if (requiresTwoSides)
+                foodCookedEventTriggered = true;
+
+
+                // Again, DO NOT stop cooking.
+                //
+                // The food can continue into the burn state.
+
+                if (FoodCooked != null)
                 {
-                    if (currentSide == 1)
-                    {
-                        sideOneProgress += Time.deltaTime;
-                        cookingProgress = sideOneProgress;
-                    }
-                    else
-                    {
-                        sideTwoProgress += Time.deltaTime;
-                        cookingProgress = sideTwoProgress;
-                    }
-                }
-                else
-                {
-                    cookingProgress += Time.deltaTime;
-                }
-
-
-                UpdateCookingStatus();
-
-
-                if (cookingStatusScript != null)
-                {
-                    cookingStatusScript.UpdateShaderStatus(
-                        cookingProgress / cookingTime
-                    );
+                    FoodCooked.Invoke();
                 }
             }
+        }
 
 
+        // ========================================================
+        // ONE-SIDED FOOD
+        // ========================================================
 
-            if (IsHovering &&
-                draggingScript != null &&
-                !draggingScript.dragging)
+        else
+        {
+            if (cookingProgress >= cookingTime &&
+                !foodCookedEventTriggered)
             {
-                if (CookingBar != null)
-                {
-                    CookingBar.fillAmount =
-                        cookingProgress / cookingTime;
-                }
+                foodCookedEventTriggered = true;
 
 
-                if (cookingStatusScript.progress < 1.3f)
+                if (FoodCooked != null)
                 {
-                    CookingBar.color = Color.green;
-                }
-                else if (cookingStatusScript.progress < 1.5f)
-                {
-                    CookingBar.color = Color.yellow;
-                }
-                else
-                {
-                    CookingBar.color = Color.red;
-                }
-
-
-                if (cookingStatusScript.progress >= 1.1f && isCooking == true)
-                {
-                    FlickerAnimation.SetBool(
-                        "IsFlickering",
-                        true);
-                }
-                else
-                {
-                    FlickerAnimation.SetBool(
-                        "IsFlickering",
-                        false);
+                    FoodCooked.Invoke();
                 }
             }
+        }
+    }
 
 
+    // ============================================================
+    // BURNING
+    // ============================================================
 
-            if (CameraController.isMoving ||
-                (draggingScript != null &&
-                 draggingScript.dragging))
+    private void CheckBurning()
+    {
+        if (foodBurntEventTriggered)
+            return;
+
+
+        if (cookingProgress >= burnThreshold)
+        {
+            foodBurntEventTriggered = true;
+
+            if (FoodBurnt != null)
             {
-                CookingUI.SetActive(false);
+                FoodBurnt.Invoke();
             }
         }
     }
 
 
 
-    void UpdateCookingStatus()
-    {
-        cookingStatusScript.progress =
-            cookingProgress / cookingTime;
-    }
-
-
+    // ============================================================
+    // START COOKING
+    // ============================================================
 
     public void StartCooking()
     {
         isCooking = true;
 
-        baseMaterial.EnableKeyword("_ISCOOKING");
+
+        if (baseMaterial != null)
+        {
+            baseMaterial.EnableKeyword(
+                "_ISCOOKING");
+        }
     }
 
 
+    // ============================================================
+    // STOP COOKING
+    // ============================================================
 
     public void StopCooking()
     {
         isCooking = false;
 
-        baseMaterial.DisableKeyword("_ISCOOKING");
+
+        if (baseMaterial != null)
+        {
+            baseMaterial.DisableKeyword(
+                "_ISCOOKING");
+        }
     }
 
 
+    // ============================================================
+    // FLIP FOOD
+    // ============================================================
 
     public void FlipFood()
     {
-        // Only meat has two sides
-        if (!requiresTwoSides ||
-            isFlipping ||
-            !canFlip)
+        if (!requiresTwoSides)
             return;
 
 
-        StopCooking();
+        if (isFlipping)
+            return;
+
+
+        if (!canFlip)
+            return;
+
+
+        // Don't flip if second side is already cooked.
+        if (currentSide == 2 &&
+            SideTwoCooked)
+            return;
+
+
+        // Make sure model exists.
+        if (foodModel == null)
+        {
+            Debug.LogError(
+                $"Cannot flip {gameObject.name}: " +
+                $"Food Model is not assigned.",
+                this);
+
+            return;
+        }
+
+
+        // Make absolutely sure we aren't flipping
+        // the parent object.
+        if (foodModel == transform)
+        {
+            Debug.LogError(
+                $"Cannot flip {gameObject.name}: " +
+                $"Food Model is assigned to the PARENT. " +
+                $"Assign the child model.",
+                this);
+
+            return;
+        }
 
 
         isFlipping = true;
+
         canFlip = false;
 
 
-        Transform target =
-            foodModel != null
-            ? foodModel
-            : transform;
+        // Kill only model tweens.
+        foodModel.DOKill();
 
 
-
+        // Store model local position.
         Vector3 startPosition =
-            target.position;
+            foodModel.localPosition;
 
 
+        // Store model local rotation.
         Vector3 startRotation =
-            target.eulerAngles;
-
+            foodModel.localEulerAngles;
 
 
         Sequence flip =
             DOTween.Sequence();
 
 
+        // --------------------------------------------------------
+        // MODEL UP
+        // --------------------------------------------------------
 
         flip.Append(
-            target.DOMoveY(
-                startPosition.y + flipHeight,
-                flipDuration / 2f)
+            foodModel.DOLocalMoveY(
+                startPosition.y +
+                flipHeight,
+                flipDuration / 2f
+            )
             .SetEase(Ease.OutQuad)
         );
 
 
+        // --------------------------------------------------------
+        // MODEL ROTATE 180
+        // --------------------------------------------------------
 
         flip.Join(
-            target.DORotate(
+            foodModel.DOLocalRotate(
                 startRotation +
-                new Vector3(180f, 0, 0),
-                flipDuration)
+                new Vector3(
+                    180f,
+                    0f,
+                    0f
+                ),
+                flipDuration
+            )
             .SetEase(Ease.InOutSine)
         );
 
 
+        // --------------------------------------------------------
+        // MODEL DOWN
+        // --------------------------------------------------------
 
         flip.Append(
-            target.DOMoveY(
+            foodModel.DOLocalMoveY(
                 startPosition.y,
-                flipDuration / 2f)
+                flipDuration / 2f
+            )
             .SetEase(Ease.InQuad)
         );
 
 
+        // --------------------------------------------------------
+        // FLIP COMPLETE
+        // --------------------------------------------------------
 
         flip.OnComplete(() =>
         {
+            // Change cooking side.
             currentSide =
                 currentSide == 1
                 ? 2
                 : 1;
 
 
-
+            // Load progress from new side.
             cookingProgress =
                 currentSide == 1
                 ? sideOneProgress
                 : sideTwoProgress;
 
 
-
+            // Update shader immediately after flip.
             UpdateCookingStatus();
-
-
-            if (cookingStatusScript != null)
-            {
-                cookingStatusScript.UpdateShaderStatus(
-                    cookingProgress / cookingTime);
-            }
-
 
 
             isFlipping = false;
@@ -352,16 +578,23 @@ public class FoodStats : MonoBehaviour
     }
 
 
+    // ============================================================
+    // FLIP COOLDOWN
+    // ============================================================
 
     IEnumerator FlipCooldown()
     {
         yield return new WaitForSeconds(
             flipCooldown);
 
+
         canFlip = true;
     }
 
 
+    // ============================================================
+    // FOOD READY
+    // ============================================================
 
     public bool IsFoodReady()
     {
@@ -369,46 +602,22 @@ public class FoodStats : MonoBehaviour
     }
 
 
+    // ============================================================
+    // MOUSE ENTER
+    // ============================================================
 
     public void OnMouseEnter()
     {
         IsHovering = true;
-
-
-        if (CookingUI != null)
-            CookingUI.SetActive(true);
-
-
-
-        if (CookingUI != null)
-        {
-            Vector3 screenPos =
-                Camera.main.WorldToScreenPoint(
-                    transform.position);
-
-
-            CookingUI.transform.position =
-                screenPos +
-                new Vector3(0, 50f, 0);
-        }
     }
 
 
+    // ============================================================
+    // MOUSE EXIT
+    // ============================================================
 
     public void OnMouseExit()
     {
         IsHovering = false;
-
-
-        if (CookingUI != null)
-            CookingUI.SetActive(false);
-
-
-        if (FlickerAnimation != null)
-        {
-            FlickerAnimation.SetBool(
-                "IsFlickering",
-                false);
-        }
     }
 }

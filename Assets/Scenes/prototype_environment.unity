@@ -1516,7 +1516,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 16c1f0a5cb190e14197df705e6289584, type: 3}
       propertyPath: m_Name
-      value: model_stove (1)
+      value: StoveTrigger
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13422,7 +13422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactType: 2
-  playOnce: 0
+  playOnce: 1
   isInRange: 0
   interactAction:
     m_PersistentCalls:

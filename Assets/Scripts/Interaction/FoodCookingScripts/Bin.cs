@@ -18,7 +18,6 @@ public class Bin : MonoBehaviour
     {
         if (other.CompareTag("Ingredient"))
         {
-            other.GetComponent<FoodStats>().CookingUI.SetActive(false);
             Destroy(other.gameObject);
         }
     }

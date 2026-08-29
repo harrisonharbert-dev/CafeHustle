@@ -30,7 +30,6 @@ public class FoodCuttable : MonoBehaviour
 
     [Header("Mesh Changes")]
     public Material cutMaterial;
-
     private void Start()
     {
         SetupCutGuide();
