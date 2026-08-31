@@ -11,5 +11,21 @@
     "baseLanguage": "en",
     "compilerOptions": {
         "diagnosticsSeverity": {}
-    }
+    },
+    "editorOptions": {
+        "yarnScriptEditor": {
+            "characters": [
+                {
+                    "name": "Boy",
+                    "colour": "#48fbfe"
+                },
+                {
+                    "name": "Dawn",
+                    "colour": "#cdb956"
+                }
+            ],
+            "startNode": "Intro"
+        }
+    },
+    "projectName": "Yarn"
 }

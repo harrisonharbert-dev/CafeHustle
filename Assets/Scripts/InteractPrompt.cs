@@ -20,7 +20,7 @@ public class InteractPrompt : MonoBehaviour
     private CanvasGroup canvasGroup;
     private RectTransform rectTransform;
     [SerializeField] private float fadeDuration;
-    [SerializeField] private UITweener tweener;
+    public UITweener tweener;
 
     [Header("UI")]
     [Space(10)]
@@ -57,8 +57,6 @@ public class InteractPrompt : MonoBehaviour
 
         canvasGroup.alpha = 0f;
     }
-
-
 
 
     private string GetPromptText(Interactable.PromptText type)

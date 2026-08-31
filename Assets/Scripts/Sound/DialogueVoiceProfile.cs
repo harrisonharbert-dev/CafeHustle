@@ -24,7 +24,22 @@ public class DialogueVoiceProfile : ScriptableObject
         yellow,
         green
     }
-    [Header("Name Colour")]
+
+    public enum nameEffects
+    {
+        none,
+        bold,
+        wavy,
+        sketchy,
+        random,
+        jumpy,
+        rainbow,
+        shaky,
+
+
+    }
+    [Header("Name Tag Properties")]
     public colors dialogueNameColour;
+    public nameEffects nameEffect = nameEffects.none;
     
 }

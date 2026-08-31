@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Yarn.Unity;
-using DG.Tweening;
 using Unity.VisualScripting;
 
 public class CharacterEmote : MonoBehaviour
@@ -37,6 +36,10 @@ public class CharacterEmote : MonoBehaviour
     public Sprite GetEmote(string name)
     {
         emoteDictionary.TryGetValue(name, out Sprite sprite);
+        if(sprite == null)
+        {
+            Debug.LogWarning($"[Emote] Emote '{name}' on {this} is null, please replace.");
+        }
         return sprite;
     }
 
@@ -50,7 +53,8 @@ public class CharacterEmote : MonoBehaviour
     {
         transitionTween?.Kill();
 
-        int start =0;
+        //Sets start and end frame index
+        int start = 0;
         int end = transitionFrames.Count - 1;
 
         transitionTween = DOVirtual.Int(start, end, transitionDuration,OnTweenUpdate)
@@ -87,6 +91,23 @@ public class CharacterEmote : MonoBehaviour
         //Set to empty sprite
         PlayOut();
         emoteImage.sprite = transitionFrames[0];
+    }
+
+
+    [YarnCommand("play_emote_plain")]
+    public void PlayEmotePlain(string name)
+    {
+        StartCoroutine(showEmotePlainRoutine(name));
+    }
+
+    private IEnumerator showEmotePlainRoutine(string name)
+    {
+      emoteImage.sprite = GetEmote(name);
+
+      yield return new WaitForSeconds(emoteDuration);
+
+      //
+      emoteImage.sprite = transitionFrames[0];   
     }
 }
     

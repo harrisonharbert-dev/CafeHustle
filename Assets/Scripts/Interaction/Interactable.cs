@@ -125,6 +125,7 @@ public class Interactable : MonoBehaviour
         ;
         //
         played = true;
+        InteractPrompt.instance.tweener.Punch();
 
         if (playOnce)
         {

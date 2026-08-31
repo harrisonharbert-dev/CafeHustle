@@ -12,11 +12,9 @@ Narrator: I love beans.
 
 title: Intro
 ---
-<<set_voice DialogueAudio narrator>>
 The cabin rattles as the wheels glide along the tracks.
 The train screeches to a stop.
-<<set_voice DialogueAudio default>>
-Dawn: Villageton. Finally, a new start.
+Dawn: <wave>Littlelake</wave>. Finally, a new start.
 Dawn: Grandma’s house should be somewhere around here. I was told it would be near the station.
 -> Lets go!
     Dawn: Yeah!
@@ -26,6 +24,12 @@ Dawn: Grandma’s house should be somewhere around here. I was told it would be 
     Dawn: wahooooo!
 ===
 
+title: trainSign
+---
+Welcome to <wave>Littlelake</wave>.
+Stick around. Or Don't.
+<<play_emote player_emote heart>>
+===
 
 title: NPC
 ---
@@ -67,7 +71,8 @@ HotRod: Bye!
 
 title: ApproachingHouse
 ---
-<<set_voice DialogueAudio default>>
+<<play_emote player_emote drop>>
+
 Dawn: No wonder Grams never told me about this place.
 Dawn: I wonder if she ever even lived here.
 Dawn: Well, I pretty sure this is what she left me in the will. It’s gonna be a fixer upper, though.
@@ -76,14 +81,13 @@ Dawn: Well, I pretty sure this is what she left me in the will. It’s gonna be 
 title: FirstSpiritIntro
 ---
 
+
 <<play_cutscene CutsceneAnimator character_scared>>
-<<set_voice DialogueAudio default>>
-<<play_emote player_emote exclaimation>>
-Dawn: It that a… ghost?!
+<<play_emote_plain player_emote exclaim>>
+Dawn: It that a… <shake>ghost?!</shake>
 
-Dawn: Nup, nope, I’m out of here. Sorry Grams. This is just too much.
+Dawn: Nup, nope, I’m out of here. Sorry Grams. <sketchy><b>This is just too much.<sketchy></b>.
 
-<<set_voice DialogueAudio spirit>>
 Spirit: Wait, wait!
 
 Spirit: Wow, it’s been a long time since I’ve seen a human here.
@@ -92,16 +96,17 @@ Spirit: Are you… wait, I know you. Or at least I think I do…
 
 Spirit: Anne, is that you? You’ve gotten younger. And leaner.
 
-<<set_voice DialogueAudio default>>
 Dawn: That’s my Grandma you’re talking about. My name is Dawn.
 
-<<set_voice DialogueAudio spirit>>
 Spirit: Grandma? I didn’t think it had been that long.
 
 Spirit: It’s nice to meet you Dawn.
     -> Hi!
+        Dawn: Hi!
+        Spirit: Woob worb. Hi!
     -> It's nice to meet you too!
-
+        Dawn: Well it's a pleasure to meet you too... spirit guy?
+        Spirit: Blooop.
 Spirit: She. This place. It’s been left alone so long, that all my friends have left.
 
 Spirit: Now it’s just me. I don’t get why she would just leave us. This place broke down, and the spiritual energy with it.
@@ -109,8 +114,30 @@ Spirit: Now it’s just me. I don’t get why she would just leave us. This plac
 Spirit: But now you’re here, maybe you can help!
 
 
-<<set_voice DialogueAudio default>>
-Dawn: You’re a spirit?
+->You're a spirit?
+    <<detour spiritBackstory>>
+->What are you doing here?
+    <<detour spiritLocationBackstory>>
+
+Spirit: Back to the story huh chump.
 ===
 
+title: spiritBackstory
+---
+    Dawn: You’re a spirit?
+
+    Spirit: Well, yes. But I’m not a ghost, more a “spirit of nature”.
+
+    Dawn: If you’re a “spirit of nature”, what are you doing in Grams’ house?
+    <<jump spiritBackstory>>
+===
+
+title: spiritLocationBackstory
+---
+Spirit: I- well. This doesn’t look like a place a spirit would dwell. But long ago, this was a place of strong spiritual energy. And nothing gets the flames going like a little spiritual energy.
+Spirit: But this place is long past its glory days, and that’s why most of the spirits who lived here left. More mould and mildew, less spiritual buzz, y’know.
+Dawn: Ah, I don’t mean to sound rude, but do you have to live here? I was kind of on a mission for a life reset, and I don’t really want little spirits hovering around me while I try and put my life back together.
+Spirit: Spirits need these spaces. They remind us of who we are, and they help us connect with humans so we don’t become lost. And when we’re lost, we get… <wave>haunting</wave>.
+Spirit: But, we can make this a pleasant exchange! What were you planning to do here?
+===
 

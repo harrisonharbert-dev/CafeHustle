@@ -220,17 +220,40 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void Punch()
     {
-        rect.DOPunchScale(punchSettings.Punch, punchSettings.duration, punchSettings.vibrato, punchSettings.elasticity).SetDelay(punchSettings.delay);
+        rect.DOComplete();
+
+        rect.DOPunchScale(punchSettings.Punch,
+         punchSettings.duration,
+          punchSettings.vibrato,
+           punchSettings.elasticity).
+           SetDelay(punchSettings.delay);
     }
 
     public void ShakeScale()
     {
-        rect.DOShakeScale(shakeSettings.duration, shakeSettings.shake, shakeSettings.vibrato, shakeSettings.randomness, shakeSettings.fadeOut, shakeSettings.randomnessMode).SetDelay(shakeSettings.delay);
+        rect.DOComplete();
+
+
+        rect.DOShakeScale(shakeSettings.duration,
+        shakeSettings.shake,
+        shakeSettings.vibrato,
+        shakeSettings.randomness,
+        shakeSettings.fadeOut,
+        shakeSettings.randomnessMode)
+        .SetDelay(shakeSettings.delay);
     }
 
     public void ShakeRotation()
     {
-        rect.DOShakeRotation(shakeSettings.duration, shakeSettings.shake, shakeSettings.vibrato, shakeSettings.randomness, shakeSettings.fadeOut, shakeSettings.randomnessMode).SetDelay(shakeSettings.delay);
+        rect.DOComplete();
+
+        rect.DOShakeRotation(shakeSettings.duration,
+        shakeSettings.shake,
+         shakeSettings.vibrato,
+          shakeSettings.randomness,
+           shakeSettings.fadeOut,
+           shakeSettings.randomnessMode)
+           .SetDelay(shakeSettings.delay);
     }
 
     public void Color()
@@ -241,7 +264,6 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public void Text(bool option)
     {
         if (textSettings.text == null) return;
-        Debug.Log("Text ran");
         int targetCharacters = option ? textSettings.text.textInfo.characterCount : 0;
 
         //set to inverse of target
@@ -263,7 +285,7 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void ScaleUp(bool option)
     {
-        Vector3 target = option ? scale + new Vector3(scaleSettings.scaleUpSize,scaleSettings.scaleUpSize,scaleSettings.scaleUpSize) : scale; 
-        rect.DOScale(target,scaleSettings.duration).SetDelay(scaleSettings.delay);
+        Vector3 target = option ? scale + new Vector3(scaleSettings.scaleUpSize, scaleSettings.scaleUpSize, scaleSettings.scaleUpSize) : scale;
+        rect.DOScale(target, scaleSettings.duration).SetDelay(scaleSettings.delay);
     }
 }
