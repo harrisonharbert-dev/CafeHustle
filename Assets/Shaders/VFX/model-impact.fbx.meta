@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 59a1210775a00bd428a4285e594e6053
+guid: 5ba3fae81fe8f5b41a55c61faadd30aa
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,13 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: m-wall
-    second: {fileID: 2100000, guid: ab609858246c47643b922d08455a3ee0, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_woodtrimsheet
-    second: {fileID: 2100000, guid: e82c73095b6f11449802b47bd6fe1f1f, type: 2}
+      name: Material.004
+    second: {fileID: 2100000, guid: 154b899403fd74247a7a43b0c5d5408c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -45,7 +40,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1

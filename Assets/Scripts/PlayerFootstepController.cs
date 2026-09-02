@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using KinematicCharacterController;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class PlayerFootstepController : MonoBehaviour
 {
@@ -11,16 +12,19 @@ public class PlayerFootstepController : MonoBehaviour
     [SerializeField] private float rayDistance = 1.5f;
     [SerializeField] private LayerMask groundMask = ~0;
 
-    
+
     [Serializable]
     private class TerrainLayerSound
     {
         public int layerIndex;
         public string audioID;
+        public VisualEffect visualEffect;
     }
 
     [SerializeField] private List<TerrainLayerSound> terrainLayerSound = new List<TerrainLayerSound>();
 
+
+    
     private string defaultAudioID;
 
     void Awake()
@@ -56,15 +60,15 @@ public class PlayerFootstepController : MonoBehaviour
             //Get the texture blending for this pos
             float[,,] splatmap = data.GetAlphamaps(mapx, mapz, 1, 1);
 
-            int textureIndex=0;
-            float strongest=0f;
+            int textureIndex = 0;
+            float strongest = 0f;
 
             //Find strongest texture
             for (int i = 0; i < splatmap.GetLength(2); i++)
             {
                 if (splatmap[0, 0, i] > strongest)
                 {
-                    strongest = splatmap[0,0,i];
+                    strongest = splatmap[0, 0, i];
                     textureIndex = i;
                 }
             }
@@ -74,20 +78,24 @@ public class PlayerFootstepController : MonoBehaviour
             {
                 if (layerSound.layerIndex == textureIndex)
                 {
+                    if (layerSound.visualEffect != null)
+                    {
+                        layerSound.visualEffect.SendEvent("OnPlay");
+                    }
                     return layerSound.audioID;
                 }
             }
 
             return defaultAudioID;
-        } 
+        }
 
-            string hitTag = hit.collider.tag;
-            return hitTag;
+        string hitTag = hit.collider.tag;
+        return hitTag;
     }
 
     public void PlayFootstep()
     {
-        if(SoundManager.instance == null) return;
+        if (SoundManager.instance == null) return;
         SoundManager.instance.PlaySound2D(ResolveFootstep());
     }
 

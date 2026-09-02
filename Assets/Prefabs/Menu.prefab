@@ -551,6 +551,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3904634781140448753}
+        m_TargetAssemblyTypeName: MenuHandler, Assembly-CSharp
+        m_MethodName: onClose
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2170014819218350269
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,7 +752,6 @@ GameObject:
   - component: {fileID: 4437017177483532055}
   - component: {fileID: 3471964198980123693}
   - component: {fileID: 1710503682859506950}
-  - component: {fileID: 2855317271161723977}
   m_Layer: 5
   m_Name: BookMenu
   m_TagString: Untagged
@@ -833,18 +844,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!225 &2855317271161723977
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2289796618035152341}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &3737125904744419073
 GameObject:
   m_ObjectHideFlags: 0

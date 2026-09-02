@@ -138,7 +138,7 @@ public class DialogueAudioController : ActionMarkupHandler
 
     private void ApplyNameTextEffect()
     {
-        if (nameText == null || nameText.gameObject.activeInHierarchy)
+        if (nameText == null || !nameText.gameObject.activeInHierarchy)
         {
             return;
         }
