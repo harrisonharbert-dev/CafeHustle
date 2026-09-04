@@ -5,6 +5,7 @@ using DG.Tweening;
 using GLTFast.Schema;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using Yarn.Unity;
@@ -40,6 +41,10 @@ public class MenuHandler : MonoBehaviour
 
     public SerializableDictionary<string, menuContent> menuPages;
 
+    [SerializeField] private UnityEvent onOpenEvent;
+    [SerializeField] private UnityEvent onCloseEvent;
+    [SerializeField] private UnityEvent onNewPageEvent;
+
 
 
 
@@ -69,6 +74,7 @@ public class MenuHandler : MonoBehaviour
 
             playAnimation(menuAnimations.openAnimation);
             isMenuOpen = true;
+            onOpenEvent?.Invoke();
         }
     }
 
@@ -83,7 +89,8 @@ public class MenuHandler : MonoBehaviour
 
             playAnimation(menuAnimations.openAnimation);
             isMenuOpen = true;
-            StartCoroutine(id, 0f);
+            StartCoroutine(LoadNewPageContent(id, 0f));
+            onOpenEvent?.Invoke();
         }
     }
 
@@ -98,6 +105,7 @@ public class MenuHandler : MonoBehaviour
 
             playAnimation(menuAnimations.closeAnimation);
             isMenuOpen = false;
+            onCloseEvent?.Invoke();
         }
     }
 
@@ -107,6 +115,7 @@ public class MenuHandler : MonoBehaviour
         {
             playAnimation(menuAnimations.newPageAnimation);
             StartCoroutine(LoadNewPageContent(id, 0.33f));
+            onNewPageEvent?.Invoke();
         }
     }
 

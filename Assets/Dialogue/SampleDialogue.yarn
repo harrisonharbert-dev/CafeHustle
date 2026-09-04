@@ -102,9 +102,11 @@ Spirit: Grandma? I didn’t think it had been that long.
 
 Spirit: It’s nice to meet you Dawn.
     -> Hi!
+        <<play_cutscene CutsceneAnimator character_wave>>
         Dawn: Hi!
         Spirit: Woob worb. Hi!
     -> It's nice to meet you too!
+        <<play_cutscene CutsceneAnimator character_wave>>
         Dawn: Well it's a pleasure to meet you too... spirit guy?
         Spirit: Blooop.
 Spirit: She. This place. It’s been left alone so long, that all my friends have left.
@@ -113,31 +115,66 @@ Spirit: Now it’s just me. I don’t get why she would just leave us. This plac
 
 Spirit: But now you’re here, maybe you can help!
 
-
+//Go Through backstory and then come back
 ->You're a spirit?
     <<detour spiritBackstory>>
 ->What are you doing here?
     <<detour spiritLocationBackstory>>
+-> Help... how?
+    <<detour spiritHelp>>
 
-Spirit: Back to the story huh chump.
+//
+Spirit: Anyways, we can make this a pleasant exchange! What were you planning to do here?
+Dawn: I’ve been thinking I want to work in a cafe. I like cooking and making coffee, and I would like to meet some new people.
+Spirit: Why don't we set up the old abandoned Cafe up again?
+Spirit: And when more spirits come back, they can teach you some new recipes too! You see, we nature spirits kinda have a knack for these things.
+Dawn: Wait, there’s gonna be more of you? Can’t it just be you?
+Spirit: Don’t worry, they’re nice! Well, most. 
+Spirit: When we start cleaning up and drawing more people to this spot, more of us will come home.
+
+
+
+// Lead in to minigame
+Dawn: Great.
+Sprit: Now, let’s get to cooking! Your Grandma left a recipe book around here. I’ll grab it for you can I can teach you one of the recipes she loved to cook.
+Spirit: Well how about you show us your skills by whipping me up a delicious plate of <wave>Waffles</wave>?
+Dawn: You're kidding me right?
+Spirit: Haha. No.
 ===
 
 title: spiritBackstory
 ---
     Dawn: You’re a spirit?
-
     Spirit: Well, yes. But I’m not a ghost, more a “spirit of nature”.
-
-    Dawn: If you’re a “spirit of nature”, what are you doing in Grams’ house?
-    <<jump spiritBackstory>>
+    Dawn: A "spirit of nature"? What's that?
+    Spirit: We are mediators between people and nature! Well used to be...
+    
 ===
 
 title: spiritLocationBackstory
 ---
-Spirit: I- well. This doesn’t look like a place a spirit would dwell. But long ago, this was a place of strong spiritual energy. And nothing gets the flames going like a little spiritual energy.
-Spirit: But this place is long past its glory days, and that’s why most of the spirits who lived here left. More mould and mildew, less spiritual buzz, y’know.
-Dawn: Ah, I don’t mean to sound rude, but do you have to live here? I was kind of on a mission for a life reset, and I don’t really want little spirits hovering around me while I try and put my life back together.
+Dawn: What are you doing in Grams' house?
+Spirit: Well. I live here! Long ago, this town was a place of strong spiritual energy.
+Spirit: And nothing gets the flames going like a little spiritual energy.
+Spirit: But this place is long past its glory days, and that’s why the spirits who lived here left - more mould and mildew, less spiritual buzz, y’know.
+Dawn: Ah, I don’t mean to sound rude, but do you have to live here? I don’t want little spirits hovering around me whilst I try and put my life back together.
 Spirit: Spirits need these spaces. They remind us of who we are, and they help us connect with humans so we don’t become lost. And when we’re lost, we get… <wave>haunting</wave>.
-Spirit: But, we can make this a pleasant exchange! What were you planning to do here?
+
 ===
 
+title: spiritHelp
+---
+Dawn: You want my help? Why?
+Spirit: Long ago, this town was a place of strong spiritual energy.
+Spirit: We lived happily and Anne took care of us.
+Spirit: Over time, people just forgot about us...
+Dawn: Oh.
+Spirit: We need your help bringing spiritual energy back into this place - will you help us?
+Dawn: I'll consider it, little greenie.
+===
+
+title: finishedIntroMinigame
+---
+Spirit: Oh my! That looks <wave>delicious</wave>!
+Dawn: See? Easy.
+===

@@ -107,6 +107,10 @@ public class Interactable : MonoBehaviour
     {
         Debug.Log($"[{this}] interactable set to: {option}");
         isInteractable = option;
+        if(option== false)
+        {
+            PlayerInputController.instance.SetCurrentInteractable(null);
+        }
         if (zoneIndicator != null) {
         zoneIndicator.changeIndicatorVisibility(option);
         }
@@ -116,7 +120,7 @@ public class Interactable : MonoBehaviour
     public void InvokeEvent()
     {
         
-
+        if(isInteractable==false) return;
         if (interactType == interactableType.none && zoneIndicator != null)
         {
             zoneIndicator.changeIndicatorVisibility(false);

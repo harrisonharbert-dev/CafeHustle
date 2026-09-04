@@ -128,14 +128,14 @@ RectTransform:
   m_GameObject: {fileID: 4680278858584588600}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.3088176, y: 3.3088176, z: 3.3088176}
+  m_LocalScale: {x: 5.0634837, y: 5.0634837, z: 5.0634837}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4541944844237349197}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 51}
+  m_AnchoredPosition: {x: 0, y: 23}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1925002536598635700
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 638441b631110f344b8208b989fad599, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 492dcb8aebb6d5742b26ca7ecdd670f1, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -329,14 +329,18 @@ MonoBehaviour:
     - spatula
     - sad
     - exclaim
+    - heart-solo
+    - drop-solo
     m_values:
     - {fileID: 21300000, guid: 659fb2492f8b203428dbb2c14854bb4e, type: 3}
-    - {fileID: 21300000, guid: 638441b631110f344b8208b989fad599, type: 3}
-    - {fileID: 21300000, guid: 09997276da64bd04c9bc1ab5a2908fe2, type: 3}
+    - {fileID: 21300000, guid: 35d6a23b252c1284db671925a6a885f4, type: 3}
+    - {fileID: 21300000, guid: 492dcb8aebb6d5742b26ca7ecdd670f1, type: 3}
     - {fileID: 21300000, guid: e38d5c9073171b940a76c7f5764c5060, type: 3}
     - {fileID: 21300000, guid: 06ae019c620cc344baed4eb294447ad6, type: 3}
     - {fileID: 21300000, guid: 733e4c405e2d3384ba9ddc86205c0744, type: 3}
     - {fileID: 21300000, guid: adea68a7c72a9014093f729590d8062c, type: 3}
+    - {fileID: 21300000, guid: 09997276da64bd04c9bc1ab5a2908fe2, type: 3}
+    - {fileID: 21300000, guid: 638441b631110f344b8208b989fad599, type: 3}
   emoteImage: {fileID: 4504808933610524846}
   bubbleImage: {fileID: 2357394706029512258}
   transitionFrames:
