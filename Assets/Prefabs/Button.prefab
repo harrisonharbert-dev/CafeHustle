@@ -61,14 +61,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7a184148437294a7b8d96378a700727d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 138be6b087c0fcf4fa3a7b584ef7468c, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -176,19 +176,20 @@ MonoBehaviour:
     duration: 0.3
     delay: 0
   scaleSettings:
-    duration: 0
+    duration: 0.3
     delay: 0
+    scaleUpSize: 0.1
   punchSettings:
-    Punch: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    elasticity: 0
+    Punch: {x: 0.15, y: 0.15, z: 0.15}
+    duration: 0.3
+    vibrato: 10
+    elasticity: 1
     delay: 0
   shakeSettings:
-    shake: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    randomness: 0
+    shake: {x: 0, y: 0, z: 5}
+    duration: 0.3
+    vibrato: 10
+    randomness: 1
     fadeOut: 0
     randomnessMode: 0
     delay: 0
@@ -287,7 +288,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4036009876497522544
 RectTransform:
   m_ObjectHideFlags: 0
@@ -364,8 +365,8 @@ MonoBehaviour:
     sprite: {fileID: 0}
     colour: {r: 0, g: 0, b: 0, a: 1}
   selected:
-    sprite: {fileID: 21300000, guid: 7a184148437294a7b8d96378a700727d, type: 3}
-    colour: {r: 0, g: 0, b: 0, a: 1}
+    sprite: {fileID: 21300000, guid: 138be6b087c0fcf4fa3a7b584ef7468c, type: 3}
+    colour: {r: 1, g: 1, b: 1, a: 1}
   disabled:
     sprite: {fileID: 0}
     colour: {r: 0, g: 0, b: 0, a: 0.8509804}
@@ -491,6 +492,18 @@ MonoBehaviour:
   OnPointerEnterEvent:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: PlaySound2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: paper-crumple
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 5245871638740753736}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
         m_MethodName: ShakeRotation
@@ -500,15 +513,51 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: paper-crumple
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5388125597959360137}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: ScaleUp
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: paper-crumple
+          m_BoolArgument: 1
         m_CallState: 2
   OnPointerExitEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5388125597959360137}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: ScaleUp
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnPointerDownEvent:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: PlaySound2D
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: ui-click
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 5245871638740753736}
         m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
         m_MethodName: Punch
@@ -518,7 +567,19 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: ui-click
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5388125597959360137}
+        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
+        m_MethodName: Punch
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: ui-click
           m_BoolArgument: 0
         m_CallState: 2
   OnPointerUpEvent:
@@ -536,8 +597,8 @@ GameObject:
   - component: {fileID: 5255609628954873188}
   - component: {fileID: 4764162038155460136}
   - component: {fileID: 1339822508039022504}
-  - component: {fileID: 2553070799587153581}
   - component: {fileID: 5388125597959360137}
+  - component: {fileID: 4660403288660738761}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -559,10 +620,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4036009876497522544}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 450, y: -85}
+  m_SizeDelta: {x: 900, y: 170}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5255609628954873188
 CanvasRenderer:
@@ -684,18 +745,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!225 &2553070799587153581
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8036542705520614341}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &5388125597959360137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -715,11 +764,12 @@ MonoBehaviour:
   scaleSettings:
     duration: 0.3
     delay: 0
+    scaleUpSize: 0.1
   punchSettings:
-    Punch: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    elasticity: 0
+    Punch: {x: 0.15, y: 0.15, z: 0.15}
+    duration: 0.3
+    vibrato: 10
+    elasticity: 1
     delay: 0
   shakeSettings:
     shake: {x: 0, y: 0, z: 0}
@@ -801,3 +851,15 @@ MonoBehaviour:
   onLeaveEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &4660403288660738761
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8036542705520614341}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

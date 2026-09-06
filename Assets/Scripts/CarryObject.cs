@@ -24,6 +24,10 @@ public class CarryObject : MonoBehaviour
     [SerializeField] private Vector3 carryPosition;
 
 
+    [Header("Interaction Prompt")]
+    [SerializeField] private InteractPrompt3D prompt;
+    [SerializeField] private interactableZoneIndicator zoneIndicator;
+
     //Private References
 
 
@@ -33,6 +37,18 @@ public class CarryObject : MonoBehaviour
     private float throwDelay = 0.75f;
     [HideInInspector] public bool isInRange;
 
+    private void Start()
+    {
+        if (prompt == null)
+        {
+            Debug.LogWarning($"[CarryObject] Missing interact prompt UI on {this}");
+        }
+
+        if (zoneIndicator == null)
+        {
+            Debug.LogWarning($"[CarryObject] Missing zone indicator on {this}");
+        }
+    }
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created 
@@ -46,6 +62,18 @@ public class CarryObject : MonoBehaviour
 
         onPickUpEvent.Invoke();
 
+        if (prompt != null)
+        {
+            prompt.onUI(false);
+        }
+
+        if (zoneIndicator != null)
+        {
+            zoneIndicator.changeIndicatorVisibility(true);
+        }
+        
+
+
         CharacterAnimationController.instance.SetTrigger(carryingTag);
     }
 
@@ -56,6 +84,17 @@ public class CarryObject : MonoBehaviour
         transform.SetParent(null);
         //
         onDropEvent.Invoke();
+
+        if (prompt != null)
+        {
+            prompt.onUI(true);
+        }
+
+        if (zoneIndicator != null)
+        {
+            zoneIndicator.changeIndicatorVisibility(false);
+        }
+
 
         // Set Animator trigger
         CharacterAnimationController.instance.SetTrigger(carryingTag);
@@ -71,12 +110,21 @@ public class CarryObject : MonoBehaviour
         CharacterAnimationController.instance.SetTrigger(carryingTag);
         StartCoroutine(Throw(throwDelay));
 
+        if (prompt != null)
+        {
+            prompt.onUI(false);
+        }
+
+        if (zoneIndicator != null)
+        {
+            zoneIndicator.changeIndicatorVisibility(false);
+        }
+
     }
     public IEnumerator Throw(float delay)
     {
         yield return new WaitForSeconds(delay);
         onDeliverEvent.Invoke();
-        InteractPrompt.instance.Refresh();
 
 
         if (PlayerInputController.instance.deliveryZonePos != null)
@@ -88,7 +136,6 @@ public class CarryObject : MonoBehaviour
         transform.DOLocalJump(Vector3.zero, jumpPower, 1, transitionDuration).OnComplete(() =>
         {
             PlayerInputController.instance.SetCurrentCarry(null);
-            InteractPrompt.instance.SetPromptVisibility(false);
             if (!isPlaceObject)
             {
                 Destroy(gameObject);
@@ -113,8 +160,11 @@ public class CarryObject : MonoBehaviour
             if (PlayerInputController.instance.playerState == PlayerInputController.playState.none)
             {
                 PlayerInputController.instance.SetCurrentCarry(this);
+                if (prompt != null)
+                {
+                    prompt.onUI(true);
+                }
             }
-            InteractPrompt.instance.Refresh();
 
 
         }
@@ -128,8 +178,11 @@ public class CarryObject : MonoBehaviour
             if (PlayerInputController.instance.playerState == PlayerInputController.playState.none)
             {
                 PlayerInputController.instance.SetCurrentCarry(null);
+                if (prompt != null)
+                {
+                    prompt.onUI(false);
+                }
             }
-            InteractPrompt.instance.Refresh();
         }
     }
 }

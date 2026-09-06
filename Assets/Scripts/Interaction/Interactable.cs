@@ -51,25 +51,8 @@ public class Interactable : MonoBehaviour
 
     [SerializeField] private string dialogueName;
 
-    public enum PromptText
-    {
-        Use,
-        PickUp,
-        Talk,
-        Open,
-        Read,
-        Drop,
-        Deliver,
-    }
-
-    public enum PromptKey
-    {
-        E,
-        F
-    }
     [Header("Interaction Prompt")]
-    [SerializeField] private PromptText promptText;
-    [SerializeField] private PromptKey promptKey;
+    [SerializeField] private InteractPrompt3D prompt;
     [SerializeField] private bool isInteractable = true;
     [SerializeField] private interactableZoneIndicator zoneIndicator;
 
@@ -101,6 +84,11 @@ public class Interactable : MonoBehaviour
         {
             zoneIndicator.changeIndicatorVisibility(true);
         }
+
+        if (prompt == null)
+        {
+            Debug.LogWarning($"[Interactable] No interact prompt UI on {this}");
+        }
     }
 
     public void setInteractable(bool option)
@@ -129,7 +117,11 @@ public class Interactable : MonoBehaviour
         ;
         //
         played = true;
-        InteractPrompt.instance.tweener.Punch();
+
+        if (prompt != null)
+        {
+            prompt.onUI(false);
+        }
 
         if (playOnce)
         {
@@ -168,14 +160,15 @@ public class Interactable : MonoBehaviour
             switch (interactType)
             {
                 case interactableType.interactableWithTrigger:
-                    InteractPrompt.instance.Refresh();
                     InvokeEvent();
                     break;
 
                 case interactableType.interactableWithInput:
-                    InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
                     PlayerInputController.instance.SetCurrentInteractable(this);
-                    InteractPrompt.instance.Refresh();
+                    if (prompt != null)
+                    {
+                        prompt.onUI(true);
+                    }
                     break;
             }
 
@@ -191,8 +184,10 @@ public class Interactable : MonoBehaviour
         {
             isInRange = false;
             PlayerInputController.instance.SetCurrentInteractable(null);
-            InteractPrompt.instance.Refresh();
-
+            if (prompt != null)
+            {
+                prompt.onUI(false);
+            }
         }
 
     }

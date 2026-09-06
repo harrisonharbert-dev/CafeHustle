@@ -105,11 +105,9 @@ public class PlayerInputController : MonoBehaviour
         switch (playerState)
         {
             case playState.none:
-                InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
                 break;
 
             case playState.carryingObject:
-                InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
                 break;
 
         }
@@ -181,7 +179,6 @@ public class PlayerInputController : MonoBehaviour
     {
         if (currentInteractable.isInRange && !lockMovement && context.performed && currentInteractable != null && currentInteractable.interactType == Interactable.interactableType.interactableWithInput)
         {
-            InteractPrompt.instance.SetPromptVisibility(false);
             transform.DOLookAt(currentInteractable.transform.position, interactRotationDuration, AxisConstraint.Y).OnComplete(() =>
             {
                 currentInteractable.InvokeEvent();
@@ -219,7 +216,6 @@ public class PlayerInputController : MonoBehaviour
                     playerState = playState.carryingNonDroppable;
                 }
 
-                InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
                 currentCarryItemID = currentCarryObject.itemID;
                 break;
             case playState.carryingObject:
@@ -228,7 +224,6 @@ public class PlayerInputController : MonoBehaviour
                 if (!inCarryDeliveryZone)
                 {
                     currentCarryObject.SetDrop();
-                    InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
                     clearHeldItem();
                 }
                 else
@@ -252,12 +247,10 @@ public class PlayerInputController : MonoBehaviour
 
         playerState = playState.none;
         currentCarryItemID = null;
-        InteractPrompt.instance.Refresh();
     }
     public void useDrop()
     {
         currentCarryObject.SetDrop();
-        InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
         playerState = playState.none;
     }
     public void Run(InputAction.CallbackContext context)

@@ -11,6 +11,9 @@ public class DeliveryZone : MonoBehaviour
     [Header("Item Requirements")]
     [SerializeField] private string requiredItemID;
 
+    [Header("Interaction Prompt")]
+    [SerializeField] private InteractPrompt3D prompt;
+
 
 
 
@@ -22,8 +25,9 @@ public class DeliveryZone : MonoBehaviour
             Debug.Log("Entered Delivery Zone");
             PlayerInputController.instance.inCarryDeliveryZone = true;
             PlayerInputController.instance.deliveryZonePos = gameObject;
-            InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Deliver, Interactable.PromptKey.F);
-            InteractPrompt.instance.Refresh();
+
+            prompt.onUI(true);
+
         }
     }
 
@@ -33,14 +37,7 @@ public class DeliveryZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerInputController.instance.inCarryDeliveryZone = false;
-            InteractPrompt.instance.Refresh();
-            switch (PlayerInputController.instance.playerState)
-            {
-                case PlayerInputController.playState.carryingObject:
-                    InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Drop,Interactable.PromptKey.F);
-                    break;
-
-            }
+            prompt.onUI(false);
         }
     }
 }
