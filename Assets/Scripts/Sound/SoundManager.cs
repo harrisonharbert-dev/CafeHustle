@@ -20,6 +20,7 @@ public class SoundManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        if (SoundManager.instance == null) return;
     }
 
     public void PlaySound3D(AudioClip clip, Vector3 pos)

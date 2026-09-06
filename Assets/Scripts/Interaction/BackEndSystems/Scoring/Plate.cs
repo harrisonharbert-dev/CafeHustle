@@ -8,10 +8,11 @@ public class PlateScorer : MonoBehaviour
     public List<FoodStats> foodsOnPlate = new List<FoodStats>();
     public UnityEvent onOrderCompleted;
     [SerializeField] private bool orderCompleted = false;
-
+    public UnityEvent onOrderSucceed;
+    public UnityEvent onOrderFailed;
     public void Start()
     {
-        GetComponent<BoxCollider>().enabled = false;
+        // GetComponent<BoxCollider>().enabled = false;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -22,6 +23,7 @@ public class PlateScorer : MonoBehaviour
             foodsOnPlate.Add(food);
 
             CheckPlate();
+
         }
     }
 
@@ -98,12 +100,14 @@ public class PlateScorer : MonoBehaviour
             if (plateAmount < required.Value)
             {
                 orderCompleted = false;
+                Debug.Log("Missing food: " + required.Key + " (required: " + required.Value + ", on plate: " + plateAmount + ")");
                 return false;
             }
 
             // Too much food.
             if (plateAmount > required.Value)
             {
+                Debug.Log("Too much food: " + required.Key + " (required: " + required.Value + ", on plate: " + plateAmount + ")");
                 orderCompleted = false;
                 return false;
             }
@@ -115,13 +119,14 @@ public class PlateScorer : MonoBehaviour
             if (!requiredCounts.ContainsKey(plateFood.Key))
             {
                 orderCompleted = false;
+
                 return false;
             }
         }
 
         // Everything matches the order.
         orderCompleted = true;
-       
+        onOrderSucceed.Invoke();
         return true;
     }
 
@@ -133,10 +138,14 @@ public class PlateScorer : MonoBehaviour
 
     public void NextStage()
     {
-        GetComponent<BoxCollider>().enabled = true;
+        //GetComponent<BoxCollider>().enabled = true;
         if (orderCompleted == true)
         {
             onOrderCompleted.Invoke();
+        }
+        else
+        {
+            onOrderFailed.Invoke();
         }
     }
 }

@@ -2,24 +2,61 @@ using UnityEngine;
 
 public class Bin : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [Header("Inventory")]
+    [SerializeField] private HotbarSlot[] hotbarSlots;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Ingredient"))
+        if (!other.CompareTag("Ingredient"))
+            return;
+
+        FoodStats food = other.GetComponent<FoodStats>();
+
+        if (food == null)
         {
-            Destroy(other.gameObject);
+            Debug.LogWarning(
+                $"Ingredient {other.name} has no FoodStats component.",
+                other
+            );
+
+            return;
         }
+
+        ReturnIngredientToInventory(food.foodType);
+
+        Destroy(other.gameObject);
+    }
+
+
+    private void ReturnIngredientToInventory(FoodStats.FoodType foodType)
+    {
+        foreach (HotbarSlot slot in hotbarSlots)
+        {
+            if (slot == null)
+                continue;
+
+            GameObject prefab = slot.hotbar.GetPrefab(slot.slotIndex);
+
+            if (prefab == null)
+                continue;
+
+            FoodStats prefabFood = prefab.GetComponent<FoodStats>();
+
+            if (prefabFood == null)
+                continue;
+
+            if (prefabFood.foodType != foodType)
+                continue;
+
+            slot.AddOne();
+
+            return;
+        }
+
+        Debug.LogWarning(
+            $"Could not find a hotbar slot for ingredient type: {foodType}"
+        );
     }
 }
 
