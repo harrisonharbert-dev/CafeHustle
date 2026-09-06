@@ -11,8 +11,9 @@ public class InteractPrompt3D : MonoBehaviour
     [SerializeField] private GameObject UIContainer;
     [SerializeField] private CanvasGroup canvasGroup;
 
-    
-    [System.Serializable]  enum TextEffects
+
+    [System.Serializable]
+    enum TextEffects
     {
         None,
         Wavy,
@@ -31,14 +32,25 @@ public class InteractPrompt3D : MonoBehaviour
     [SerializeField] private Sprite f;
 
     [Header("Customization")]
+    [SerializeField] private string promptText;
     [SerializeField] private TextEffects textEffect;
     [SerializeField] private DisplayIcon displayIcon;
-     
+
     void Start()
     {
+        //Hide UI on start
         onUI(false);
         ApplyTextEffect();
-        
+
+
+        //Change text if exists
+        if (promptText != null)
+        {
+            text.text = promptText;
+        }
+
+
+        //Set interaction icon
         image.sprite = GetIcon(displayIcon);
 
         if (canvasGroup == null)
@@ -61,7 +73,7 @@ public class InteractPrompt3D : MonoBehaviour
 
     void ApplyTextEffect()
     {
-        if(text==null) return;
+        if (text == null) return;
 
         string oldText = text.text;
         string tag = GetTextEffect(textEffect);
@@ -103,12 +115,12 @@ public class InteractPrompt3D : MonoBehaviour
 
     public void onUI(bool option)
     {
-        if (UIContainer != null) 
+        if (UIContainer != null)
         {
-            foreach(Transform child in UIContainer.transform)
+            foreach (Transform child in UIContainer.transform)
             {
                 child.gameObject.SetActive(option);
-            }    
+            }
         }
 
     }

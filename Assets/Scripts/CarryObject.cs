@@ -26,6 +26,7 @@ public class CarryObject : MonoBehaviour
 
     [Header("Interaction Prompt")]
     [SerializeField] private InteractPrompt3D prompt;
+    [SerializeField] private InteractPrompt3D zonePrompt;
     [SerializeField] private interactableZoneIndicator zoneIndicator;
 
     //Private References
@@ -67,8 +68,9 @@ public class CarryObject : MonoBehaviour
             prompt.onUI(false);
         }
 
-        if (zoneIndicator != null)
+        if (zoneIndicator != null && zonePrompt != null)
         {
+            zonePrompt.onUI(false);
             zoneIndicator.changeIndicatorVisibility(true);
         }
         
@@ -85,13 +87,16 @@ public class CarryObject : MonoBehaviour
         //
         onDropEvent.Invoke();
 
+
         if (prompt != null)
         {
             prompt.onUI(true);
         }
 
-        if (zoneIndicator != null)
+        //Hide zone prompts
+        if (zoneIndicator != null && zonePrompt != null)
         {
+            zonePrompt.onUI(false);
             zoneIndicator.changeIndicatorVisibility(false);
         }
 
@@ -115,8 +120,9 @@ public class CarryObject : MonoBehaviour
             prompt.onUI(false);
         }
 
-        if (zoneIndicator != null)
+        if (zoneIndicator != null && zonePrompt != null)
         {
+            zonePrompt.onUI(false);
             zoneIndicator.changeIndicatorVisibility(false);
         }
 

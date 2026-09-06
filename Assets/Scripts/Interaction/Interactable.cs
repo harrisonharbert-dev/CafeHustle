@@ -95,10 +95,14 @@ public class Interactable : MonoBehaviour
     {
         Debug.Log($"[{this}] interactable set to: {option}");
         isInteractable = option;
-        if(option== false)
+
+        //Remove current interactable if set to false
+        if(option == false)
         {
             PlayerInputController.instance.SetCurrentInteractable(null);
         }
+
+        //Change zone indicator depending on interactable state
         if (zoneIndicator != null) {
         zoneIndicator.changeIndicatorVisibility(option);
         }
@@ -109,6 +113,8 @@ public class Interactable : MonoBehaviour
     {
         
         if(isInteractable==false) return;
+
+        //Hide zone indicator if its not interactable
         if (interactType == interactableType.none && zoneIndicator != null)
         {
             zoneIndicator.changeIndicatorVisibility(false);
@@ -118,6 +124,8 @@ public class Interactable : MonoBehaviour
         //
         played = true;
 
+
+        //Hide prompt
         if (prompt != null)
         {
             prompt.onUI(false);
@@ -139,6 +147,8 @@ public class Interactable : MonoBehaviour
                 PlayerInputController.instance.onDialogueCamera(gameObject);
             }
         }
+
+        //Invoke action
         if (interactAction != null)
         {
             interactAction.Invoke();
@@ -160,10 +170,12 @@ public class Interactable : MonoBehaviour
             switch (interactType)
             {
                 case interactableType.interactableWithTrigger:
+                //Invoke action immediately if its set with trigger
                     InvokeEvent();
                     break;
 
                 case interactableType.interactableWithInput:
+                //Enable prompt and set as current if input is needed
                     PlayerInputController.instance.SetCurrentInteractable(this);
                     if (prompt != null)
                     {

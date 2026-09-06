@@ -5,6 +5,7 @@ using Unity.Cinemachine;
 using NUnit.Framework;
 using Yarn.Unity;
 using UnityEngine.Events;
+using System.Collections;
 
 
 
@@ -116,6 +117,21 @@ public class PlayerInputController : MonoBehaviour
     public void setDialogue(bool option)
     {
         isinDialogue = option;
+
+        if (option == false && currentInteractable != null && currentInteractable.useDialogueCamera)
+        {
+            //Wait for camera transition back then re-enable movement. Change float time to match
+            StartCoroutine(waitLock(false, 0.9f));
+        }
+        else
+        {
+            SetMovementLock(option);
+        }
+    }
+
+    private IEnumerator waitLock(bool option, float time)
+    {
+        yield return new WaitForSeconds(time);
         SetMovementLock(option);
     }
     public void SetMovementLock(bool option)
@@ -126,7 +142,7 @@ public class PlayerInputController : MonoBehaviour
         {
             lockMovement = true;
         }
-                
+
 
         Debug.Log("Lock set to" + option);
 
@@ -270,7 +286,7 @@ public class PlayerInputController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Shader.SetGlobalVector("_PlayerPosition",transform.position+Vector3.up);
+        Shader.SetGlobalVector("_PlayerPosition", transform.position + Vector3.up);
 
 
         Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, transform.up).normalized;
