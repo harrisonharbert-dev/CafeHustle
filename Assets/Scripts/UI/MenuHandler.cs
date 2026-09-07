@@ -67,8 +67,11 @@ public class MenuHandler : MonoBehaviour
     {
         if (!isMenuOpen)
         {
-            PlayerInputController.instance.SetMovementLock(true);
-            currentTaskManager.instance.onTaskVisibility(false);
+            if (PlayerInputController.instance != null && currentTaskManager.instance != null)
+            {
+                PlayerInputController.instance.SetMovementLock(true);
+                currentTaskManager.instance.onTaskVisibility(false);
+            }
 
             BG.DOFade(1f, BGFadeDuration);
 
@@ -82,9 +85,11 @@ public class MenuHandler : MonoBehaviour
     {
         if (!isMenuOpen)
         {
-            PlayerInputController.instance.SetMovementLock(true);
-            currentTaskManager.instance.onTaskVisibility(false);
-
+            if (PlayerInputController.instance != null && currentTaskManager.instance != null)
+            {
+                PlayerInputController.instance.SetMovementLock(true);
+                currentTaskManager.instance.onTaskVisibility(false);
+            }
             BG.DOFade(1f, BGFadeDuration);
 
             playAnimation(menuAnimations.openAnimation);
@@ -98,10 +103,12 @@ public class MenuHandler : MonoBehaviour
     {
         if (isMenuOpen)
         {
-            PlayerInputController.instance.SetMovementLock(false);
-            currentTaskManager.instance.onTaskVisibility(true);
-
-            BG.DOFade(0f,BGFadeDuration);
+            if (PlayerInputController.instance != null && currentTaskManager.instance != null)
+            {
+                PlayerInputController.instance.SetMovementLock(false);
+                currentTaskManager.instance.onTaskVisibility(true);
+            }
+            BG.DOFade(0f, BGFadeDuration);
 
             playAnimation(menuAnimations.closeAnimation);
             isMenuOpen = false;

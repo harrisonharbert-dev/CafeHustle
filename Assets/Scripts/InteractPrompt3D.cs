@@ -75,6 +75,7 @@ public class InteractPrompt3D : MonoBehaviour
     {
         if (text == null) return;
 
+        //Get text and tag strings
         string oldText = text.text;
         string tag = GetTextEffect(textEffect);
 
