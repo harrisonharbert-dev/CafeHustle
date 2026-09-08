@@ -196,6 +196,7 @@ public class Interactable : MonoBehaviour
         {
             isInRange = false;
             PlayerInputController.instance.SetCurrentInteractable(null);
+            
             if (prompt != null)
             {
                 prompt.onUI(false);
