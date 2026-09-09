@@ -11,17 +11,15 @@ public class MaterialController : MonoBehaviour
         propBlock = new MaterialPropertyBlock();
     }
 
-   public void SetMaterialBoolean(string name)
+    void SetMaterialBoolean(string name)
     {
         //Get property block of current renderer
         renderer.GetPropertyBlock(propBlock);
 
-        if(renderer.sharedMaterial.HasProperty(name))
+        if(propBlock.HasFloat(name))
         {
             //Get inverse of current boolean value and sets as newValue
-            float currentValue = propBlock.HasFloat(name)
-                ? propBlock.GetFloat(name)
-                : renderer.sharedMaterial.GetFloat(name);
+            float currentValue = propBlock.GetFloat(name);
             float newValue = 1 - currentValue;
 
             //Set new float
@@ -30,7 +28,7 @@ public class MaterialController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"[Material Controller] Invalid boolean reference name: {name} on {this}. Check spelling.");
+            Debug.LogWarning($"[Material Controller] Invalid boolean reference name: {name}on {this}. Check spelling.");
             return;
         }
     }
