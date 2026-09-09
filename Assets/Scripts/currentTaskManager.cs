@@ -32,6 +32,7 @@ public class currentTaskManager : MonoBehaviour
     // Update is called once per frame
     public void updateTask(string text)
     {
+        DOTween.Kill(textTask);
         int target = textTask.textInfo.characterCount;
         textTask.maxVisibleCharacters = 0;
         textTask.text = text;

@@ -117,7 +117,7 @@ public class CarryObject : MonoBehaviour
 
         if (prompt != null)
         {
-            prompt.onUI(false);
+            Destroy(prompt);
         }
 
         if (zoneIndicator != null && zonePrompt != null)
