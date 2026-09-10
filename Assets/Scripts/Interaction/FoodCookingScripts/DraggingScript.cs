@@ -213,52 +213,45 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             Space.Self
         );
     }
+    [Header("Screen Bounds")]
+    [Tooltip("How many pixels away from the edge of the screen food must stay.")]
+    [SerializeField] private float screenPadding = 50f;
 
-
-    // ============================================================
-    // MOUSE WORLD POSITION
-    // ============================================================
-
-    private bool GetMouseWorldPosition(
-        out Vector3 worldPosition)
+    private bool GetMouseWorldPosition(out Vector3 worldPosition)
     {
-        Ray ray =
-            cam.ScreenPointToRay(
-                Input.mousePosition
-            );
+        // Clamp mouse position so it cannot leave the visible screen.
+        Vector3 mousePosition = Input.mousePosition;
 
+        mousePosition.x = Mathf.Clamp(
+            mousePosition.x,
+            screenPadding,
+            Screen.width - screenPadding
+        );
 
-        Plane plane =
-            new Plane(
-                Vector3.up,
-                dragPlane.position
-            );
+        mousePosition.y = Mathf.Clamp(
+            mousePosition.y,
+            screenPadding,
+            Screen.height - screenPadding
+        );
 
+        Ray ray = cam.ScreenPointToRay(mousePosition);
 
-        if (plane.Raycast(
-                ray,
-                out float distance))
+        Plane plane = new Plane(
+            Vector3.up,
+            dragPlane.position
+        );
+
+        if (plane.Raycast(ray, out float distance))
         {
-            Vector3 hitPoint =
-                ray.GetPoint(distance);
+            Vector3 hitPoint = ray.GetPoint(distance);
 
+            hitPoint.y = dragPlane.position.y;
 
-            hitPoint.y =
-                dragPlane.position.y;
-
-
-            worldPosition =
-                hitPoint;
-
-
+            worldPosition = hitPoint;
             return true;
         }
 
-
-        worldPosition =
-            transform.position;
-
-
+        worldPosition = transform.position;
         return false;
     }
 
