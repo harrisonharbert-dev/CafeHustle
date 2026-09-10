@@ -959,6 +959,7 @@ MonoBehaviour:
   CanBeFlipped: 0
   Interactable: 1
   foodStatsScript: {fileID: 0}
+  screenPadding: 50
 --- !u!54 &435397680
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1640,7 +1641,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!114 &550589510
 MonoBehaviour:
@@ -1656,7 +1657,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DraggingScript
   cam: {fileID: 0}
   moveSpeed: 15
-  dragPlane: {fileID: 444099726826485494}
+  dragPlane: {fileID: 2000631453}
   rotationSpeed: 0
   flipDuration: 0.5
   flipEase: 4
@@ -1700,6 +1701,7 @@ MonoBehaviour:
   CanBeFlipped: 0
   Interactable: 1
   foodStatsScript: {fileID: 0}
+  screenPadding: 50
 --- !u!114 &550589511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3268,7 +3270,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 20c666acd5c813d4aa086dd628fda5cf, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 20c666acd5c813d4aa086dd628fda5cf, type: 3}
       propertyPath: m_IsActive
@@ -3945,15 +3947,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 5f16994a7fbb79e45a2c37d4360877bd, type: 3}
       propertyPath: m_LocalScale.x
-      value: 587.0232
+      value: 672.0421
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5f16994a7fbb79e45a2c37d4360877bd, type: 3}
       propertyPath: m_LocalScale.y
-      value: 587.0232
+      value: 672.0421
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5f16994a7fbb79e45a2c37d4360877bd, type: 3}
       propertyPath: m_LocalScale.z
-      value: 587.0232
+      value: 672.0421
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5f16994a7fbb79e45a2c37d4360877bd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4009,7 +4011,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5f16994a7fbb79e45a2c37d4360877bd, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5363,6 +5365,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1164763088}
+        m_TargetAssemblyTypeName: UnityEngine.VFX.VisualEffect, UnityEngine
+        m_MethodName: SendEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: OnSparkle
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 948161737}
+        m_TargetAssemblyTypeName: CharacterEmote, Assembly-CSharp
+        m_MethodName: PlayEmote
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: heart
+          m_BoolArgument: 0
+        m_CallState: 2
   minigameEvent:
     m_PersistentCalls:
       m_Calls:
@@ -5755,9 +5781,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bread
       objectReference: {fileID: 0}
+    - target: {fileID: 6037181104174588734, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6611320203764467278, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
       propertyPath: m_Constraints
-      value: 126
+      value: 112
       objectReference: {fileID: 0}
     - target: {fileID: 7169607850216423448, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
       propertyPath: m_Mesh
@@ -5826,7 +5856,7 @@ PrefabInstance:
     - target: {fileID: 8456738784675561965, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
       propertyPath: dragPlane
       value: 
-      objectReference: {fileID: 444099726826485494}
+      objectReference: {fileID: 2000631453}
     - target: {fileID: 8456738784675561965, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
       propertyPath: Interactable
       value: 1
