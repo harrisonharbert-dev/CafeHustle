@@ -28,6 +28,11 @@ public class PlayerInputController : MonoBehaviour
     private float maxSpeed;
     [HideInInspector] public bool isRunning = false;
     public bool isinDialogue = false;
+    
+    [SerializeField] private PlayerFootstepController footstepController;
+    [SerializeField] private float footstepFrequency = 2f;
+    private float footstepTimer;
+
 
     [HideInInspector] public bool lockMovement = false;
 
@@ -300,9 +305,23 @@ public class PlayerInputController : MonoBehaviour
 
         if (moveDirection.sqrMagnitude > 0.01f)
         {
+            if (footstepController != null && footstepFrequency > 0f)
+            {
+                footstepTimer += Time.fixedDeltaTime;
+                if (footstepTimer >= 1f / footstepFrequency)
+                {
+                    footstepController.PlayFootstep();
+                    footstepTimer = 0f;
+                }
+            }
+
             rigidBody.MoveRotation(
                 Quaternion.LookRotation(moveDirection, transform.up)
             );
+        }
+        else
+        {
+            footstepTimer = 0f;
         }
     }
 }

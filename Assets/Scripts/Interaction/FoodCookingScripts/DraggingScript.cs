@@ -1,8 +1,10 @@
+using CsvHelper.Configuration.Attributes;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Camera cam;
 
@@ -35,6 +37,11 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     [SerializeField][Range(0f, 1f)] private float jiggleStrength = 0.3f;
     [SerializeField] private int jiggleVibrato = 10;
     [SerializeField][Range(0f, 180f)] private float jiggleRandomness = 90f;
+
+
+    [Header("UnityEvents")]
+    [SerializeField] private UnityEvent onHoverEvent;
+    [SerializeField] private UnityEvent onHoverExitEvent;
 
 
     private Rigidbody rb;
@@ -504,5 +511,16 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             jiggleVibrato,
             jiggleRandomness
         );
+    }
+
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        onHoverEvent?.Invoke();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        onHoverExitEvent?.Invoke();
     }
 }

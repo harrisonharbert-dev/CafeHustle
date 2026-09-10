@@ -17,6 +17,21 @@ public class MinigameSessionManager : MonoBehaviour
     [SerializeField] private float minDelay = 1f;
     [SerializeField] private float maxDelay = 4f;
 
+    [System.Serializable]
+    public struct countdown
+    {
+        public string line1;
+        public string three;
+        public string two;
+        public string one;
+        public string start;
+
+    }
+    [Header("Countdown")]
+    [SerializeField] private countdown countdownText;
+    [SerializeField] private TextMeshProUGUI countdownUI;
+    [SerializeField] private GameObject CountDownTweener;
+
     [Header("Events")]
     public UnityEvent onPlayStart;
     public UnityEvent onPlayEnd;
@@ -34,9 +49,39 @@ public class MinigameSessionManager : MonoBehaviour
         if (playing)
             return;
         playStartTime = Time.time;
-        StartCoroutine(PlayRoutine());
+        StartCoroutine(CountdownRoutine());
     }
     // play session
+
+    private IEnumerator CountdownRoutine()
+    {   
+        UITweener tweener = CountDownTweener.GetComponent<UITweener>();
+        yield return new WaitForSeconds(2f);
+        CountDownTweener.SetActive(true);
+
+        countdownUI.text = countdownText.line1;
+        yield return new WaitForSeconds(1f);
+
+        tweener.Punch();
+        countdownUI.text = countdownText.three;
+        yield return new WaitForSeconds(1f);
+
+        tweener.Punch();
+        countdownUI.text = countdownText.two;
+        yield return new WaitForSeconds(1f);
+
+        tweener.Punch();
+        countdownUI.text = countdownText.one;
+        yield return new WaitForSeconds(1f);
+
+        tweener.Punch();
+        countdownUI.text = countdownText.start;
+        yield return new WaitForSeconds(1f);
+
+        CountDownTweener.SetActive(false);
+
+        StartCoroutine(PlayRoutine());
+    }
     private IEnumerator PlayRoutine()
     {
 
