@@ -264,10 +264,13 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public void Text(bool option)
     {
         if (textSettings.text == null) return;
-        int targetCharacters = option ? textSettings.text.textInfo.characterCount : 0;
+        DOTween.Kill(textSettings.text);
+        textSettings.text.ForceMeshUpdate();
+        int characterCount = textSettings.text.textInfo.characterCount;
+        int targetCharacters = option ? characterCount : 0;
 
         //set to inverse of target
-        textSettings.text.maxVisibleCharacters = option ? 0 : textSettings.text.textInfo.characterCount;
+        textSettings.text.maxVisibleCharacters = option ? 0 : characterCount;
         DOTween.To(() => textSettings.text.maxVisibleCharacters, x => textSettings.text.maxVisibleCharacters = x, targetCharacters, textSettings.duration).SetDelay(textSettings.delay);
     }
 

@@ -5,11 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using Yarn.Unity;
 using Unity.VisualScripting;
+using NUnit.Framework;
 
 public class CharacterEmote : MonoBehaviour
 {
     [Header("Emotes")]
-    public SerializableDictionary<string,Sprite> emoteDictionary;
+    public SerializableDictionary<string, Sprite> emoteDictionary;
 
     [Header("UI")]
     [SerializeField] private Image emoteImage;
@@ -24,6 +25,7 @@ public class CharacterEmote : MonoBehaviour
 
     private Tween transitionTween;
     private int currentIndex;
+    private bool isEmoting = false;
 
 
     private void Awake()
@@ -36,7 +38,7 @@ public class CharacterEmote : MonoBehaviour
     public Sprite GetEmote(string name)
     {
         emoteDictionary.TryGetValue(name, out Sprite sprite);
-        if(sprite == null)
+        if (sprite == null)
         {
             Debug.LogWarning($"[Emote] Emote '{name}' on {this} is null, please replace.");
         }
@@ -46,29 +48,32 @@ public class CharacterEmote : MonoBehaviour
     [YarnCommand("play_emote")]
     public void PlayEmote(string name)
     {
+        if(isEmoting) return;
         PlayIn(name);
     }
 
-    void PlayIn(string name) 
+    void PlayIn(string name)
     {
         transitionTween?.Kill();
 
         //Sets start and end frame index
+        isEmoting = true;
         int start = 0;
         int end = transitionFrames.Count - 1;
 
-        transitionTween = DOVirtual.Int(start, end, transitionDuration,OnTweenUpdate)
+        transitionTween = DOVirtual.Int(start, end, transitionDuration, OnTweenUpdate)
             .SetEase(Ease.Linear)
             .OnComplete(() => showEmote(name));
     }
 
-    void PlayOut() 
+    void PlayOut()
     {
         int start = transitionFrames.Count - 1;
         int end = 0;
 
         transitionTween = DOVirtual.Int(start, end, transitionDuration, OnTweenUpdate)
-            .SetEase(Ease.Linear);
+            .SetEase(Ease.Linear)
+            .OnComplete(() => isEmoting = false);
     }
 
     void OnTweenUpdate(int value)
@@ -83,7 +88,7 @@ public class CharacterEmote : MonoBehaviour
 
     private IEnumerator showEmoteRoutine(string name)
     {
-        
+
         emoteImage.sprite = GetEmote(name);
 
         yield return new WaitForSeconds(emoteDuration);
@@ -97,19 +102,22 @@ public class CharacterEmote : MonoBehaviour
     [YarnCommand("play_emote_plain")]
     public void PlayEmotePlain(string name)
     {
+        if(isEmoting) return;
         StartCoroutine(showEmotePlainRoutine(name));
     }
 
     private IEnumerator showEmotePlainRoutine(string name)
     {
-      emoteImage.sprite = GetEmote(name);
+        emoteImage.sprite = GetEmote(name);
+        isEmoting = true;
 
-      yield return new WaitForSeconds(emoteDuration);
+        yield return new WaitForSeconds(emoteDuration);
 
-      //
-      emoteImage.sprite = transitionFrames[0];   
+        //
+        isEmoting = false;
+        emoteImage.sprite = transitionFrames[0];
     }
 }
-    
+
 
 

@@ -33,9 +33,11 @@ public class currentTaskManager : MonoBehaviour
     public void updateTask(string text)
     {
         DOTween.Kill(textTask);
+
+        textTask.text = text;
+        textTask.ForceMeshUpdate();
         int target = textTask.textInfo.characterCount;
         textTask.maxVisibleCharacters = 0;
-        textTask.text = text;
         DOTween.To(() => textTask.maxVisibleCharacters, x => textTask.maxVisibleCharacters = x, target, 1f);
 
         onUpdateTask?.Invoke();
