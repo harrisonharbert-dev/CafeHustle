@@ -20,6 +20,7 @@ public class DialogueAudioController : ActionMarkupHandler
 
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private GameObject continueButton;
+    [SerializeField] private GameObject skipButton;
 
     [System.Serializable]
     public class colors
@@ -38,7 +39,7 @@ public class DialogueAudioController : ActionMarkupHandler
     [Tooltip("Pause (in seconds) after a comma, semicolon, or colon.")]
     [SerializeField] float shortPauseDuration = 0.15f;
     [Tooltip("Pause (in seconds) after a period, question mark, or exclamation mark.")]
-    [SerializeField] float longPauseDuration = 0.35f;    int characterCounter = 0;
+    [SerializeField] float longPauseDuration = 0.35f; int characterCounter = 0;
 
     static readonly char[] ShortPauseChars = { ',', ';', ':' };
     static readonly char[] LongPauseChars = { '.', '!', '?' };
@@ -168,27 +169,44 @@ public class DialogueAudioController : ActionMarkupHandler
     {
         characterCounter = 0;
         onNewLineEvent?.Invoke();
-        continueButton.SetActive(false);
+        if (continueButton != null)
+        {
+            continueButton.SetActive(false);
+        }
         TryApplyVoiceFromNameText();
 
 
         ApplyNameTextEffect();
+
     }
 
     // Synchronous — void
     public override void OnLineDisplayBegin(MarkupParseResult line, TMP_Text text)
     {
+        if (skipButton != null)
+        {
+            skipButton.SetActive(true);
+        }
     }
 
     public override void OnLineDisplayComplete()
     {
-        continueButton.SetActive(true);
+        if (continueButton != null)
+        { continueButton.SetActive(true); }
+
+
     }
 
     // Synchronous — void
     public override void OnLineWillDismiss()
     {
-        continueButton.SetActive(false);
+        if (continueButton != null)
+        { continueButton.SetActive(false); }
+
+        if (skipButton != null)
+        {
+            skipButton.SetActive(false);
+        }
     }
 
 

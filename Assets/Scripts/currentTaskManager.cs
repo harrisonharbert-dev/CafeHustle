@@ -10,14 +10,17 @@ public class currentTaskManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private TextMeshProUGUI textTask;
+    [SerializeField] private TextMeshProUGUI titleTask;
     [SerializeField] private GameObject container;
+
+    [SerializeField] private float typewriterDuration = 1f;
 
 
     [SerializeField] private UnityEvent onUpdateTask;
 
     private UITweener[] tweeners;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    
+
     void Awake()
     {
         if (instance != null && instance != this)
@@ -38,9 +41,21 @@ public class currentTaskManager : MonoBehaviour
         textTask.ForceMeshUpdate();
         int target = textTask.textInfo.characterCount;
         textTask.maxVisibleCharacters = 0;
-        DOTween.To(() => textTask.maxVisibleCharacters, x => textTask.maxVisibleCharacters = x, target, 1f);
+        DOTween.To(() => textTask.maxVisibleCharacters, x => textTask.maxVisibleCharacters = x, target, typewriterDuration);
 
         onUpdateTask?.Invoke();
+    }
+
+    public void updateTitle(string text)
+    {
+        DOTween.Kill(titleTask);
+
+        titleTask.text = text;
+        titleTask.ForceMeshUpdate();
+
+        int target = titleTask.textInfo.characterCount;
+        titleTask.maxVisibleCharacters = 0;
+        DOTween.To(() => titleTask.maxVisibleCharacters,x=> titleTask.maxVisibleCharacters = x, target, typewriterDuration);
     }
 
     public void onTaskVisibility(bool option)
@@ -49,6 +64,6 @@ public class currentTaskManager : MonoBehaviour
         {
             tweens.enabled = option;
         }
-        
+
     }
 }

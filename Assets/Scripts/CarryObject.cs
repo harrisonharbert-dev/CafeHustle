@@ -131,7 +131,7 @@ public class CarryObject : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         onDeliverEvent.Invoke();
-
+        InteractPrompt.instance.Refresh();
 
         if (PlayerInputController.instance.deliveryZonePos != null)
 
@@ -142,6 +142,7 @@ public class CarryObject : MonoBehaviour
         transform.DOLocalJump(Vector3.zero, jumpPower, 1, transitionDuration).OnComplete(() =>
         {
             PlayerInputController.instance.SetCurrentCarry(null);
+            InteractPrompt.instance.SetPromptVisibility(false);
             if (!isPlaceObject)
             {
                 Destroy(gameObject);
@@ -166,6 +167,7 @@ public class CarryObject : MonoBehaviour
             if (PlayerInputController.instance.playerState == PlayerInputController.playState.none)
             {
                 PlayerInputController.instance.SetCurrentCarry(this);
+                InteractPrompt.instance.Refresh();
                 if (prompt != null)
                 {
                     prompt.onUI(true);
@@ -184,6 +186,7 @@ public class CarryObject : MonoBehaviour
             if (PlayerInputController.instance.playerState == PlayerInputController.playState.none)
             {
                 PlayerInputController.instance.SetCurrentCarry(null);
+                InteractPrompt.instance.Refresh();
                 if (prompt != null)
                 {
                     prompt.onUI(false);

@@ -23,12 +23,18 @@ public class PlayerInputController : MonoBehaviour
         public float walking;
         public float running;
     }
-
+    [Header("Movement")]
     public moveStates moveSpeed;
+    [SerializeField] private float acceleration = 25f;
+    [SerializeField] private float deceleration = 30f;
+    [SerializeField] private float rotationSpeed = 720f;
+    private Vector3 currentVelocity;
     private float maxSpeed;
+
+
     [HideInInspector] public bool isRunning = false;
     public bool isinDialogue = false;
-    
+
     [SerializeField] private PlayerFootstepController footstepController;
     [SerializeField] private float footstepFrequency = 2f;
     private float footstepTimer;
@@ -111,9 +117,13 @@ public class PlayerInputController : MonoBehaviour
         switch (playerState)
         {
             case playState.none:
+                InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
+
                 break;
 
             case playState.carryingObject:
+                InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
+
                 break;
 
         }
@@ -200,6 +210,7 @@ public class PlayerInputController : MonoBehaviour
     {
         if (currentInteractable.isInRange && !lockMovement && context.performed && currentInteractable != null && currentInteractable.interactType == Interactable.interactableType.interactableWithInput)
         {
+            InteractPrompt.instance.SetPromptVisibility(false);
             transform.DOLookAt(currentInteractable.transform.position, interactRotationDuration, AxisConstraint.Y).OnComplete(() =>
             {
                 currentInteractable.InvokeEvent();
@@ -236,7 +247,7 @@ public class PlayerInputController : MonoBehaviour
                 {
                     playerState = playState.carryingNonDroppable;
                 }
-
+                InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
                 currentCarryItemID = currentCarryObject.itemID;
                 break;
             case playState.carryingObject:
@@ -245,6 +256,7 @@ public class PlayerInputController : MonoBehaviour
                 if (!inCarryDeliveryZone)
                 {
                     currentCarryObject.SetDrop();
+                    InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
                     clearHeldItem();
                 }
                 else
@@ -268,10 +280,12 @@ public class PlayerInputController : MonoBehaviour
 
         playerState = playState.none;
         currentCarryItemID = null;
+        InteractPrompt.instance.Refresh();
     }
     public void useDrop()
     {
         currentCarryObject.SetDrop();
+        InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
         playerState = playState.none;
     }
     public void Run(InputAction.CallbackContext context)
@@ -294,17 +308,25 @@ public class PlayerInputController : MonoBehaviour
         Shader.SetGlobalVector("_PlayerPosition", transform.position + Vector3.up);
 
 
+        // --- MOVEMENT (horizontal) ---
         Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, transform.up).normalized;
         Vector3 cameraRight = Vector3.ProjectOnPlane(cameraTransform.right, transform.up).normalized;
 
         Vector3 moveDirection = (cameraForward * moveInput.y + cameraRight * moveInput.x).normalized;
+        Vector3 targetVelocity = moveDirection * maxSpeed;
+
+        float rate = moveInput.sqrMagnitude > 0.01f ? acceleration : deceleration;
+        currentVelocity = Vector3.MoveTowards(currentVelocity, targetVelocity, rate * Time.fixedDeltaTime);
 
         Vector3 verticalVelocity = Vector3.Project(rigidBody.linearVelocity, transform.up);
+        rigidBody.linearVelocity = currentVelocity + verticalVelocity;
 
-        rigidBody.linearVelocity = moveDirection * maxSpeed + verticalVelocity;
-
+        // --- ROTATION ---
         if (moveDirection.sqrMagnitude > 0.01f)
         {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection, transform.up);
+            rigidBody.MoveRotation(Quaternion.RotateTowards(rigidBody.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime));
+
             if (footstepController != null && footstepFrequency > 0f)
             {
                 footstepTimer += Time.fixedDeltaTime;
@@ -314,14 +336,11 @@ public class PlayerInputController : MonoBehaviour
                     footstepTimer = 0f;
                 }
             }
-
-            rigidBody.MoveRotation(
-                Quaternion.LookRotation(moveDirection, transform.up)
-            );
         }
         else
         {
             footstepTimer = 0f;
         }
+
     }
 }

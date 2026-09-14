@@ -6,94 +6,19 @@ public class InteractPrompt3D : MonoBehaviour
 {
 
     [Header("References")]
-    [SerializeField] private TextMeshProUGUI text;
-    [SerializeField] private Image image;
     [SerializeField] private GameObject UIContainer;
     [SerializeField] private CanvasGroup canvasGroup;
 
 
-    [System.Serializable]
-    enum TextEffects
-    {
-        None,
-        Wavy,
-        Sketchy,
-        Shaky
-    }
-
-    [System.Serializable]
-    enum DisplayIcon
-    {
-        E,
-        F
-    }
-
-    [SerializeField] private Sprite e;
-    [SerializeField] private Sprite f;
-
-    [Header("Customization")]
-    [SerializeField] private string promptText;
-    [SerializeField] private TextEffects textEffect;
-    [SerializeField] private DisplayIcon displayIcon;
 
     void Start()
     {
         //Hide UI on start
         onUI(false);
-        ApplyTextEffect();
-
-
-        //Change text if exists
-        if (promptText != null)
-        {
-            text.text = promptText;
-        }
-
-
-        //Set interaction icon
-        image.sprite = GetIcon(displayIcon);
-
         if (canvasGroup == null)
         {
             canvasGroup = GetComponent<CanvasGroup>();
         }
-    }
-
-    private string GetTextEffect(TextEffects textEffect)
-    {
-        return textEffect switch
-        {
-            TextEffects.None => null,
-            TextEffects.Wavy => "wave",
-            TextEffects.Sketchy => "sketchy",
-            TextEffects.Shaky => "shake",
-            _ => null,
-        };
-    }
-
-    void ApplyTextEffect()
-    {
-        if (text == null) return;
-
-        //Get text and tag strings
-        string oldText = text.text;
-        string tag = GetTextEffect(textEffect);
-
-        text.text = $"<{tag}>{oldText}</{tag}>";
-    }
-
-
-    private Sprite GetIcon(DisplayIcon displayIcon)
-    {
-        if (displayIcon == DisplayIcon.E)
-        {
-            return e;
-        }
-        else if (displayIcon == DisplayIcon.F)
-        {
-            return f;
-        }
-        return null;
     }
 
 

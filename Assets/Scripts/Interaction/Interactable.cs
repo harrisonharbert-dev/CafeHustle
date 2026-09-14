@@ -11,6 +11,23 @@ using Yarn.Unity.Attributes;
 
 public class Interactable : MonoBehaviour
 {
+
+    public enum PromptText
+    {
+        Use,
+        PickUp,
+        Talk,
+        Open,
+        Read,
+        Drop,
+        Deliver,
+    }
+
+    public enum PromptKey
+    {
+        E,
+        F
+    }
     public enum interactableType
     {
         none,
@@ -52,6 +69,8 @@ public class Interactable : MonoBehaviour
     [SerializeField] private string dialogueName;
 
     [Header("Interaction Prompt")]
+    [SerializeField] private PromptText promptText;
+    [SerializeField] private PromptKey promptKey;
     [SerializeField] private InteractPrompt3D prompt;
     [SerializeField] private bool isInteractable = true;
     [SerializeField] private interactableZoneIndicator zoneIndicator;
@@ -97,22 +116,23 @@ public class Interactable : MonoBehaviour
         isInteractable = option;
 
         //Remove current interactable if set to false
-        if(option == false)
+        if (option == false)
         {
             PlayerInputController.instance.SetCurrentInteractable(null);
         }
 
         //Change zone indicator depending on interactable state
-        if (zoneIndicator != null) {
-        zoneIndicator.changeIndicatorVisibility(option);
+        if (zoneIndicator != null)
+        {
+            zoneIndicator.changeIndicatorVisibility(option);
         }
     }
 
 
     public void InvokeEvent()
     {
-        
-        if(isInteractable==false) return;
+
+        if (isInteractable == false) return;
 
         //Hide zone indicator if its not interactable
         if (interactType == interactableType.none && zoneIndicator != null)
@@ -170,13 +190,16 @@ public class Interactable : MonoBehaviour
             switch (interactType)
             {
                 case interactableType.interactableWithTrigger:
-                //Invoke action immediately if its set with trigger
+                    //Invoke action immediately if its set with trigger
+                    InteractPrompt.instance.Refresh();
                     InvokeEvent();
                     break;
 
                 case interactableType.interactableWithInput:
-                //Enable prompt and set as current if input is needed
+                    //Enable prompt and set as current if input is needed
+                    InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
                     PlayerInputController.instance.SetCurrentInteractable(this);
+                    InteractPrompt.instance.Refresh();
                     if (prompt != null)
                     {
                         prompt.onUI(true);
@@ -196,6 +219,7 @@ public class Interactable : MonoBehaviour
         {
             isInRange = false;
             PlayerInputController.instance.SetCurrentInteractable(null);
+            InteractPrompt.instance.Refresh();
             if (prompt != null)
             {
                 prompt.onUI(false);
