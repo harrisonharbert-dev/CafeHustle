@@ -44,16 +44,26 @@ public class StoryManager : MonoBehaviour
 
     public void SetStoryPoint(string name)
     {
-        storyPoints.TryGetValue(name, out StoryPoint point);
+        if (!storyPoints.TryGetValue(name, out StoryPoint point)) return;
 
         if(point.storyState == true) return;
+        point.storyState = true;
+        storyPoints[name] = point;
+        point.events?.Invoke();
+    }
+
+    public void SkipStoryPoint(string name)
+    {
+        if (!storyPoints.TryGetValue(name, out StoryPoint point)) return;
+
+        point.storyState = true;
+        storyPoints[name] = point;
 
         if (point.prerequisiteID != null)
         {
-            SetStoryPoint(point.prerequisiteID);
+            SkipStoryPoint(point.prerequisiteID);
         }
-
-        point.storyState = true;
+        
         point.events?.Invoke();
     }
 }

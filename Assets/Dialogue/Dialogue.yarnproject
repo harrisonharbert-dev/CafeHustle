@@ -1,31 +1,31 @@
-﻿{
-    "projectFileVersion": 4,
-    "sourceFiles": [
-        "**/*.yarn"
-    ],
-    "excludeFiles": [
-        "**/*~/*",
-        "./Samples/Yarn Spinner*/*"
-    ],
-    "localisation": {},
-    "baseLanguage": "en",
-    "compilerOptions": {
-        "diagnosticsSeverity": {}
-    },
-    "editorOptions": {
-        "yarnScriptEditor": {
-            "characters": [
-                {
-                    "name": "Boy",
-                    "colour": "#48fbfe"
-                },
-                {
-                    "name": "Dawn",
-                    "colour": "#cdb956"
-                }
-            ],
-            "startNode": "Intro"
+{
+  "projectFileVersion": 4,
+  "sourceFiles": [
+    "**/*.yarn"
+  ],
+  "excludeFiles": [
+    "**/*~/*",
+    "./Samples/Yarn Spinner*/*"
+  ],
+  "localisation": {},
+  "baseLanguage": "en",
+  "compilerOptions": {
+    "diagnosticsSeverity": {}
+  },
+  "editorOptions": {
+    "yarnScriptEditor": {
+      "characters": [
+        {
+          "name": "Boy",
+          "colour": "#48fbfe"
+        },
+        {
+          "name": "Dawn",
+          "colour": "#cdb956"
         }
-    },
-    "projectName": "Yarn"
+      ],
+      "startNode": "Intro"
+    }
+  },
+  "projectName": "Yarn"
 }
