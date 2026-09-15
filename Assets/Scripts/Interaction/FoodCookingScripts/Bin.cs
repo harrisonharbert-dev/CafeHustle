@@ -1,10 +1,10 @@
 using UnityEngine;
-
+using UnityEngine.Events;
 public class Bin : MonoBehaviour
 {
     [Header("Inventory")]
     [SerializeField] private HotbarSlot[] hotbarSlots;
-
+    public UnityEvent OnIngredientReturned;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,6 +24,8 @@ public class Bin : MonoBehaviour
         }
 
         ReturnIngredientToInventory(food.foodType);
+        
+        OnIngredientReturned?.Invoke();
 
         Destroy(other.gameObject);
     }

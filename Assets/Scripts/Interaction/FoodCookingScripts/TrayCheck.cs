@@ -29,7 +29,6 @@ public class TrayCheck : MonoBehaviour
 
     public CameraController CameraController;
 
-
     private void Start()
     {
         if (NextSectionUI != null)
@@ -44,7 +43,6 @@ public class TrayCheck : MonoBehaviour
 
         CameraController = FindAnyObjectByType<CameraController>();
     }
-
 
     private void Update()
     {
@@ -61,7 +59,6 @@ public class TrayCheck : MonoBehaviour
         }
     }
 
-
     private void OnTriggerEnter(Collider other)
     {
         FoodStats food = other.GetComponent<FoodStats>();
@@ -76,7 +73,6 @@ public class TrayCheck : MonoBehaviour
         }
     }
 
-
     private void OnTriggerExit(Collider other)
     {
         FoodStats food = other.GetComponent<FoodStats>();
@@ -88,7 +84,6 @@ public class TrayCheck : MonoBehaviour
             CheckTrayRequirements();
         }
     }
-
 
     public bool IsTrayValid()
     {
@@ -106,34 +101,68 @@ public class TrayCheck : MonoBehaviour
             return false;
         }
 
-
         Dictionary<FoodStats.FoodType, int> trayCounts =
             new Dictionary<FoodStats.FoodType, int>();
 
+        // ============================================================
+        // CHECK ALL FOOD COOKING
+        // ============================================================
 
         foreach (FoodStats food in foodsOnTray)
         {
             if (food == null)
                 continue;
 
-            if (!IsFoodCookedProperly(food))
+            string foodName = food.foodType.ToString();
+
+            // --------------------------------------------------------
+            // TWO-SIDED FOOD
+            // --------------------------------------------------------
+
+            if (food.requiresTwoSides)
             {
-                if (food.CookRatio < minCookRatio)
+                float sideOneRatio = GetSideOneRatio(food);
+                float sideTwoRatio = GetSideTwoRatio(food);
+
+                // Burnt takes priority.
+                if (sideOneRatio > maxCookRatio ||
+                    sideTwoRatio > maxCookRatio)
                 {
-                    SetEmote("Food is undercooked!");
-                }
-                else if (food.CookRatio > maxCookRatio)
-                {
-                    SetEmote("Food is overcooked!");
-                }
-                else
-                {
-                    SetEmote("Food isn't cooked properly!");
+                    SetEmote(foodName + " is burnt!");
+                    return false;
                 }
 
-                return false;
+                // Then check undercooked sides.
+                if (sideOneRatio < minCookRatio ||
+                    sideTwoRatio < minCookRatio)
+                {
+                    SetEmote(foodName + " is undercooked!");
+                    return false;
+                }
             }
 
+            // --------------------------------------------------------
+            // ONE-SIDED FOOD
+            // --------------------------------------------------------
+
+            else
+            {
+                if (food.CookRatio > maxCookRatio)
+                {
+                    SetEmote(foodName + " is burnt!");
+                    return false;
+                }
+
+                if (food.CookRatio < minCookRatio)
+                {
+                    SetEmote(foodName + " is undercooked!");
+                    return false;
+                }
+            }
+
+            // --------------------------------------------------------
+            // COUNT VALID FOOD
+            // --------------------------------------------------------
 
             if (!trayCounts.ContainsKey(food.foodType))
             {
@@ -143,10 +172,12 @@ public class TrayCheck : MonoBehaviour
             trayCounts[food.foodType]++;
         }
 
+        // ============================================================
+        // BUILD REQUIRED ORDER COUNTS
+        // ============================================================
 
         Dictionary<FoodStats.FoodType, int> requiredCounts =
             new Dictionary<FoodStats.FoodType, int>();
-
 
         foreach (OrderItem req in order.requiredItems)
         {
@@ -158,6 +189,9 @@ public class TrayCheck : MonoBehaviour
             requiredCounts[req.type] += req.amount;
         }
 
+        // ============================================================
+        // CHECK REQUIRED FOOD AMOUNTS
+        // ============================================================
 
         foreach (KeyValuePair<FoodStats.FoodType, int> required in requiredCounts)
         {
@@ -181,22 +215,27 @@ public class TrayCheck : MonoBehaviour
             }
         }
 
+        // ============================================================
+        // CHECK FOR EXTRA FOOD
+        // ============================================================
 
         foreach (KeyValuePair<FoodStats.FoodType, int> trayFood in trayCounts)
         {
             if (!requiredCounts.ContainsKey(trayFood.Key))
             {
-                SetEmote("Extra food on tray!");
+                SetEmote("Extra " + trayFood.Key + " on tray!");
                 return false;
             }
         }
-
 
         SetEmote("");
 
         return true;
     }
 
+    // ============================================================
+    // COOKING VALIDATION
+    // ============================================================
 
     private bool IsFoodCookedProperly(FoodStats food)
     {
@@ -226,6 +265,9 @@ public class TrayCheck : MonoBehaviour
                food.CookRatio <= maxCookRatio;
     }
 
+    // ============================================================
+    // SIDE ONE COOKING
+    // ============================================================
 
     private float GetSideOneRatio(FoodStats food)
     {
@@ -245,6 +287,9 @@ public class TrayCheck : MonoBehaviour
         return 0f;
     }
 
+    // ============================================================
+    // SIDE TWO COOKING
+    // ============================================================
 
     private float GetSideTwoRatio(FoodStats food)
     {
@@ -264,6 +309,9 @@ public class TrayCheck : MonoBehaviour
         return 0f;
     }
 
+    // ============================================================
+    // CHECK TRAY
+    // ============================================================
 
     public void CheckTrayRequirements()
     {
@@ -276,6 +324,9 @@ public class TrayCheck : MonoBehaviour
         }
     }
 
+    // ============================================================
+    // EMOTE RESPONSE
+    // ============================================================
 
     private void SetEmote(string message)
     {
@@ -285,6 +336,9 @@ public class TrayCheck : MonoBehaviour
         }
     }
 
+    // ============================================================
+    // SUCCESS
+    // ============================================================
 
     private void TriggerNextSection()
     {
@@ -297,11 +351,17 @@ public class TrayCheck : MonoBehaviour
 
         Success?.Invoke();
 
-        CameraController.transitioning = true;
+        if (CameraController != null)
+        {
+            CameraController.transitioning = true;
+        }
 
         StartCoroutine(EnterNextStage());
     }
 
+    // ============================================================
+    // MOVE TRAY TO NEXT STAGE
+    // ============================================================
 
     public IEnumerator EnterNextStage()
     {
@@ -310,10 +370,9 @@ public class TrayCheck : MonoBehaviour
         List<FoodStats> foodToMove =
             new List<FoodStats>(foodsOnTray);
 
-
-        // --------------------------------------------------
+        // ----------------------------------------------------------
         // STOP ALL FOOD ANIMATIONS / PHYSICS
-        // --------------------------------------------------
+        // ----------------------------------------------------------
 
         foreach (FoodStats food in foodToMove)
         {
@@ -328,7 +387,6 @@ public class TrayCheck : MonoBehaviour
                 dragging.Interactable = false;
             }
 
-            // Kill any DOTween animations on the food.
             food.transform.DOKill();
 
             Rigidbody rb =
@@ -342,10 +400,9 @@ public class TrayCheck : MonoBehaviour
             }
         }
 
-
-        // --------------------------------------------------
+        // ----------------------------------------------------------
         // SAVE FOOD WORLD TRANSFORMS
-        // --------------------------------------------------
+        // ----------------------------------------------------------
 
         List<Vector3> positions =
             new List<Vector3>();
@@ -355,7 +412,6 @@ public class TrayCheck : MonoBehaviour
 
         List<Vector3> scales =
             new List<Vector3>();
-
 
         foreach (FoodStats food in foodToMove)
         {
@@ -369,16 +425,12 @@ public class TrayCheck : MonoBehaviour
 
             positions.Add(food.transform.position);
             rotations.Add(food.transform.rotation);
-
-            // Save LOCAL scale.
-            // We never change it.
             scales.Add(food.transform.localScale);
         }
 
-
-        // --------------------------------------------------
-        // MOVE TRAY
-        // --------------------------------------------------
+        // ----------------------------------------------------------
+        // CHECK TARGET
+        // ----------------------------------------------------------
 
         if (trayTargetPoint == null)
         {
@@ -386,17 +438,17 @@ public class TrayCheck : MonoBehaviour
                 "Tray Target Point has not been assigned!"
             );
 
-            CameraController.transitioning = false;
+            if (CameraController != null)
+            {
+                CameraController.transitioning = false;
+            }
 
             yield break;
         }
 
-
         isMovingTray = true;
 
-
         transform.DOKill();
-
 
         Vector3 trayStartPosition =
             transform.position;
@@ -404,6 +456,9 @@ public class TrayCheck : MonoBehaviour
         Vector3 trayEndPosition =
             trayTargetPoint.position;
 
+        // ----------------------------------------------------------
+        // MOVE TRAY
+        // ----------------------------------------------------------
 
         Tween trayTween =
             transform.DOMove(
@@ -412,16 +467,14 @@ public class TrayCheck : MonoBehaviour
             )
             .SetEase(moveEase);
 
-
-        // --------------------------------------------------
-        // MOVE FOOD WITH THE TRAY WITHOUT PARENTING
-        // --------------------------------------------------
+        // ----------------------------------------------------------
+        // MOVE FOOD WITH TRAY
+        // ----------------------------------------------------------
 
         while (trayTween.IsActive() && trayTween.IsPlaying())
         {
             Vector3 trayOffset =
                 transform.position - trayStartPosition;
-
 
             for (int i = 0; i < foodToMove.Count; i++)
             {
@@ -436,20 +489,19 @@ public class TrayCheck : MonoBehaviour
                 food.transform.rotation =
                     rotations[i];
 
-                // Explicitly keep the original scale.
                 food.transform.localScale =
                     scales[i];
             }
 
-
             yield return null;
         }
 
+        // ----------------------------------------------------------
+        // FORCE FINAL POSITIONS
+        // ----------------------------------------------------------
 
-        // Make sure the final position is exact.
         Vector3 finalOffset =
             trayEndPosition - trayStartPosition;
-
 
         for (int i = 0; i < foodToMove.Count; i++)
         {
@@ -468,14 +520,21 @@ public class TrayCheck : MonoBehaviour
                 scales[i];
         }
 
-
         isMovingTray = false;
 
+        // ----------------------------------------------------------
+        // NEXT STAGE
+        // ----------------------------------------------------------
 
-        CameraController.NextStage(2);
+        if (CameraController != null)
+        {
+            CameraController.NextStage(2);
+            CameraController.transitioning = false;
+        }
 
-        CameraController.transitioning = false;
-
+        // ----------------------------------------------------------
+        // RESTORE FOOD
+        // ----------------------------------------------------------
 
         foreach (FoodStats food in foodToMove)
         {
@@ -493,7 +552,6 @@ public class TrayCheck : MonoBehaviour
 
             yield return new WaitForSeconds(1f);
 
-
             DraggingScript dragging =
                 food.GetComponent<DraggingScript>();
 
@@ -502,7 +560,6 @@ public class TrayCheck : MonoBehaviour
                 dragging.Interactable = true;
             }
         }
-
 
         Debug.Log("Tray reached target point.");
     }

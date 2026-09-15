@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class FoodStats : MonoBehaviour
 {
@@ -136,13 +137,17 @@ public class FoodStats : MonoBehaviour
     // START
     // ============================================================
 
+    public AudioSource audioSource;
+    public AudioClip[] cookingSound;
+    public bool isPlayingSound = false;
+
     void Start()
     {
         // Get the cookingStatus component from the parent.
 
         cookingStatusScript = foodModel.GetComponent<cookingStatus>();
 
-
+        audioSource = GetComponent<AudioSource>();
 
         // Get the renderer.
         //
@@ -240,6 +245,13 @@ public class FoodStats : MonoBehaviour
 
     private void CookFood()
     {
+        if (isPlayingSound == false)
+        {
+            isPlayingSound = true;
+            audioSource.loop = true;
+            audioSource.clip = cookingSound[0];
+            audioSource.Play();
+        }
         if (requiresTwoSides)
         {
             if (currentSide == 1)
@@ -293,7 +305,18 @@ public class FoodStats : MonoBehaviour
     // ============================================================
     // COOKING EVENTS
     // ============================================================
-
+    IEnumerator FadeAudio()
+    {
+        float startVolume = audioSource.volume;
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / 1f; // Fade out over 1 second
+            yield return null;
+        }
+        audioSource.Stop();
+        audioSource.volume = startVolume;
+        isPlayingSound = false;
+    }
     private void CheckCookingEvents()
     {
         // ========================================================
@@ -387,6 +410,7 @@ public class FoodStats : MonoBehaviour
             if (FoodBurnt != null)
             {
                 FoodBurnt.Invoke();
+                audioSource.PlayOneShot(cookingSound[1]);
             }
         }
     }
@@ -416,9 +440,11 @@ public class FoodStats : MonoBehaviour
 
     public void StopCooking()
     {
+        if (isCooking == true)
+        {
+            StartCoroutine(FadeAudio());
+        }
         isCooking = false;
-
-
         if (baseMaterial != null)
         {
             baseMaterial.DisableKeyword(
@@ -570,7 +596,6 @@ public class FoodStats : MonoBehaviour
 
 
             isFlipping = false;
-
 
             StartCoroutine(
                 FlipCooldown());

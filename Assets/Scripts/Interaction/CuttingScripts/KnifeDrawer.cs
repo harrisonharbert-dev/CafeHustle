@@ -53,6 +53,7 @@ public class KnifeDrawer : MonoBehaviour
     private Plane movementPlane;
 
     public UnityEvent onCutFail;
+    public UnityEvent CUTSFX;
     void Start()
     {
         pickupOffset =
@@ -255,6 +256,7 @@ public class KnifeDrawer : MonoBehaviour
 
     void TryCut()
     {
+        CUTSFX?.Invoke();
         Collider[] hits =
             Physics.OverlapSphere(
                 bladeTip.position,
