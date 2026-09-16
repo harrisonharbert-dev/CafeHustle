@@ -87,7 +87,7 @@ public class LevelLoader : MonoBehaviour
         }
 
         // Disable the previous scene
-        SetSceneObjectsActive(previousScene, false);
+        // SetSceneObjectsActive(previousScene, false);
 
         // Enable the new scene
         SetSceneObjectsActive(newScene, true);
@@ -153,7 +153,7 @@ public class LevelLoader : MonoBehaviour
         }
 
         // Enable StartingScene
-        SetSceneObjectsActive(startingScene, true);
+        // SetSceneObjectsActive(startingScene, true);
 
         // Make StartingScene active
         SceneManager.SetActiveScene(startingScene);

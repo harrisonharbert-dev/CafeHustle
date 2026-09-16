@@ -17,19 +17,9 @@ public class CutsceneAnimator : MonoBehaviour
     private TimelineAsset currentAsset;
 
 
-
-    public static CutsceneAnimator instance { get; private set; }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
 
         director = GetComponent<PlayableDirector>();
     }
@@ -43,7 +33,7 @@ public class CutsceneAnimator : MonoBehaviour
         director.playableAsset = currentAsset;
         director.Play();
 
-        if (PlayerInputController.instance.playerState == PlayerInputController.playState.none) return;
+        if (PlayerInputController.instance.playerState == PlayerInputController.playState.none || PlayerInputController.instance.playerState == PlayerInputController.playState.carryingNonDroppable) return;
         PlayerInputController.instance.useDrop();
     }
     //Play as emote, drop held item

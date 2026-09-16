@@ -37,9 +37,21 @@ public class CarryObject : MonoBehaviour
     private float jumpPower = 1.5f;
     private float throwDelay = 0.75f;
     [HideInInspector] public bool isInRange;
+    private CutsceneAnimator playerCutscene;
 
     private void Start()
     {
+        GameObject playerCutsceneObject = GameObject.FindGameObjectWithTag("playercutscene");
+        if (playerCutsceneObject != null)
+        {
+            playerCutscene = playerCutsceneObject.GetComponent<CutsceneAnimator>();
+        }
+
+        if (playerCutscene == null)
+        {
+            Debug.LogWarning($"[CarryObject] Missing CutsceneAnimator on object tagged playercutscene", this);
+        }
+
         if (prompt == null)
         {
             Debug.LogWarning($"[CarryObject] Missing interact prompt UI on {this}");
@@ -111,7 +123,7 @@ public class CarryObject : MonoBehaviour
 
     public void SetDeliver()
     {
-        CutsceneAnimator.instance.playAction(throwAnimation);
+        playerCutscene.playAction(throwAnimation);
         CharacterAnimationController.instance.SetTrigger(carryingTag);
         StartCoroutine(Throw(throwDelay));
 

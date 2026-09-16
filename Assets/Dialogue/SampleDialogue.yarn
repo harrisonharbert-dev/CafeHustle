@@ -76,7 +76,8 @@ title: FirstSpiritIntro
 ---
 
 
-<<play_cutscene CutsceneAnimator character_scared>>
+<<play_cutscene PlayerCutsceneAnimator character_scared>>
+<<play_cutscene CutsceneAnimator spirit-appear>>
 <<play_emote_plain player_emote exclaim>>
 Dawn: It that a… <shake>ghost?!</shake>
 
@@ -96,11 +97,11 @@ Spirit: Grandma? I didn’t think it had been that long.
 
 Spirit: It’s nice to meet you Dawn.
     -> Hi!
-        <<play_cutscene CutsceneAnimator character_wave>>
+        <<play_cutscene PlayerCutsceneAnimator character_wave>>
         Dawn: Hi!
         Spirit: Woob worb. Hi!
     -> It's nice to meet you too!
-        <<play_cutscene CutsceneAnimator character_wave>>
+        <<play_cutscene PlayerCutsceneAnimator character_wave>>
         Dawn: Well it's a pleasure to meet you too... spirit guy?
         Spirit: Blooop.
 Spirit: She. This place. It’s been left alone so long, that all my friends have left.
@@ -114,7 +115,7 @@ Spirit: But now you’re here, maybe you can help!
     <<detour spiritBackstory>>
 ->What are you doing here?
     <<detour spiritLocationBackstory>>
--> Help... how?
+->Help... how?
     <<detour spiritHelp>>
 
 //
@@ -171,4 +172,18 @@ title: finishedIntroMinigame
 ---
 Spirit: Oh my! That looks <wave>delicious</wave>!
 Dawn: See? Easy.
+===
+
+
+title: spiritTest
+---
+Spirit: Hi!
+->Hi! Happy.
+    Spirit: I am happy
+    <<play_cutscene CutsceneAnimator spirit-happy>>
+    Spirit: hi
+->Appear
+    Spirit: I am Appear
+    <<play_cutscene CutsceneAnimator spirit-appear>>
+    Spirit: wahoo
 ===
