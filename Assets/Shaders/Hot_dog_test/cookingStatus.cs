@@ -32,4 +32,24 @@ public class cookingStatus : MonoBehaviour
         failBonus = failBonus + value;
         failBonus = Mathf.Clamp01(failBonus);
     }
+
+    public void UpdateSide1Stage(float progressTime)
+    {
+        //Get property block from renderer
+        objectRenderer.GetPropertyBlock(propBlock);
+
+        //Update slider property
+        propBlock.SetFloat("_SIDE1STAGE", progressTime + failBonus);
+        objectRenderer.SetPropertyBlock(propBlock);
+    }
+
+        public void UpdateSide2Stage(float progressTime)
+    {
+        //Get property block from renderer
+        objectRenderer.GetPropertyBlock(propBlock);
+
+        //Update slider property
+        propBlock.SetFloat("_SIDE2STAGE", progressTime + failBonus);
+        objectRenderer.SetPropertyBlock(propBlock);
+    }
 }
