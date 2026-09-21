@@ -1,4 +1,3 @@
-using CsvHelper.Configuration.Attributes;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,50 +5,57 @@ using UnityEngine.EventSystems;
 
 public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    public enum RotationAxis
+    {
+        X,
+        Y,
+        Z
+    }
+
+    public enum FlipDirection
+    {
+        Forward,
+        Backward
+    }
+
     [SerializeField] private Camera cam;
-
     public float moveSpeed = 15f;
-
-    [Tooltip("The height/plane that the food will move across while being dragged.")]
     public Transform dragPlane;
-
 
     [Header("Food Rotation")]
     public float rotationSpeed = 120f;
-
+    public RotationAxis rotationAxis = RotationAxis.Z;
+    public bool reverseRotation;
 
     [Header("Flip Animation")]
     public float flipDuration = 0.5f;
     public Ease flipEase = Ease.InOutSine;
-
+    public RotationAxis flipAxis = RotationAxis.X;
+    public FlipDirection flipDirection = FlipDirection.Forward;
 
     [Header("Food")]
     public bool isFood = true;
 
-
     [Header("Food Model")]
-    [Tooltip("The CHILD model. Only this object will rotate/jiggle.")]
     public Transform foodModel;
-
 
     [Header("Reactivity")]
     [SerializeField] private float jiggleDuration = 0.3f;
-    [SerializeField][Range(0f, 1f)] private float jiggleStrength = 0.3f;
+    [SerializeField, Range(0f, 1f)] private float jiggleStrength = 0.3f;
     [SerializeField] private int jiggleVibrato = 10;
-    [SerializeField][Range(0f, 180f)] private float jiggleRandomness = 90f;
-
+    [SerializeField, Range(0f, 180f)] private float jiggleRandomness = 90f;
 
     [Header("UnityEvents")]
     [SerializeField] private UnityEvent onHoverEvent;
     [SerializeField] private UnityEvent onHoverExitEvent;
 
+    [Header("Screen Bounds")]
+    [SerializeField] private float screenPadding = 50f;
 
     private Rigidbody rb;
 
     [HideInInspector]
     public bool dragging;
-
-    private bool isFlipping;
 
     public bool CanBeFlipped;
     public bool Interactable;
@@ -57,227 +63,205 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     [HideInInspector]
     public FoodStats foodStatsScript;
 
+    private bool isFlipping;
+    private bool flipInputLocked;
+
+    private Tween flipTween;
+    private Tween jiggleTween;
 
     private void Awake()
     {
         if (cam == null)
-        {
             cam = FindAnyObjectByType<Camera>();
-        }
     }
 
-
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        foodStatsScript = GetComponent<FoodStats>();
 
-        foodStatsScript =
-            GetComponent<FoodStats>();
+        if (foodModel == null && transform.childCount > 0)
+            foodModel = transform.GetChild(0);
 
-
-        // If no model was assigned, try to find the first child.
-        if (foodModel == null)
-        {
-            if (transform.childCount > 0)
-            {
-                foodModel =
-                    transform.GetChild(0);
-            }
-        }
-
-
-        // Warn if the model is incorrectly assigned.
         if (foodModel == transform)
         {
-            Debug.LogError(
-                $"DraggingScript on {gameObject.name}: " +
-                $"Food Model cannot be the parent object. " +
-                $"Assign the CHILD model instead.",
-                this);
-
+            Debug.LogError("Food Model must be the CHILD model.", this);
             foodModel = null;
         }
 
-
         if (dragPlane == null)
         {
-            GameObject planeObject =
-                new GameObject(
-                    gameObject.name + "_DragPlane"
-                );
-
-            planeObject.transform.position =
-                transform.position;
-
-            dragPlane =
-                planeObject.transform;
+            GameObject plane = new GameObject(gameObject.name + "_DragPlane");
+            plane.transform.position = transform.position;
+            dragPlane = plane.transform;
         }
     }
 
-
-    void Update()
+    private void Update()
     {
-        if (CameraController.transitioning ||
-            !Interactable)
-        {
+        // Must release right click before another flip is possible.
+        if (Input.GetMouseButtonUp(1))
+            flipInputLocked = false;
+
+        if (CameraController.transitioning || !Interactable)
             return;
-        }
-
-
-        // ========================================================
-        // DRAGGING
-        // ========================================================
 
         if (dragging)
         {
-            Vector3 target;
-
-            if (GetMouseWorldPosition(out target))
+            if (GetMouseWorldPosition(out Vector3 target))
             {
-                // IMPORTANT:
-                // The PARENT moves.
-                //
-                // This is intentional because the Rigidbody,
-                // MeshCollider, FoodStats and DraggingScript
-                // are all on the parent.
-
-                transform.position =
-                    Vector3.Lerp(
-                        transform.position,
-                        target,
-                        moveSpeed * Time.deltaTime
-                    );
+                transform.position = Vector3.Lerp(
+                    transform.position,
+                    target,
+                    moveSpeed * Time.deltaTime
+                );
             }
         }
 
-
-        // ========================================================
-        // MANUAL ROTATION WHILE DRAGGING
-        // ========================================================
-
+        // Manual rotation
         if (dragging &&
             Input.GetMouseButton(1) &&
-            isFood)
+            isFood &&
+            !isFlipping)
         {
             RotateFoodModel();
         }
 
-
-        // ========================================================
-        // RIGHT CLICK FLIP
-        // ========================================================
-
+        // Flip
         if (!dragging &&
             Input.GetMouseButtonDown(1) &&
+            !flipInputLocked &&
+            !isFlipping &&
             isFood &&
             CanBeFlipped)
         {
+            flipInputLocked = true;
             CheckForFlipClick();
         }
 
-
-        // ========================================================
-        // DROP
-        // ========================================================
-
-        if (dragging &&
-            Input.GetMouseButtonUp(0))
-        {
+        if (dragging && Input.GetMouseButtonUp(0))
             DropFood();
-        }
     }
-
-
-    // ============================================================
-    // ROTATE MODEL
-    // ============================================================
 
     private void RotateFoodModel()
     {
         if (foodModel == null)
             return;
 
+        float amount = rotationSpeed * Time.deltaTime;
 
-        // ONLY THE CHILD MODEL ROTATES.
-        //
-        // Previously this was:
-        //
-        // transform.Rotate(...)
-        //
-        // which rotated the parent.
+        if (reverseRotation)
+            amount *= -1f;
 
         foodModel.Rotate(
-            0f,
-            0f,
-            rotationSpeed * Time.deltaTime,
+            GetAxis(rotationAxis),
+            amount,
             Space.Self
         );
     }
-    [Header("Screen Bounds")]
-    [Tooltip("How many pixels away from the edge of the screen food must stay.")]
-    [SerializeField] private float screenPadding = 50f;
 
-    private bool GetMouseWorldPosition(out Vector3 worldPosition)
+    // ============================================================
+    // FLIP
+    // ============================================================
+
+    private void FlipFood()
     {
-        // Clamp mouse position so it cannot leave the visible screen.
-        Vector3 mousePosition = Input.mousePosition;
+        if (isFlipping ||
+            foodModel == null ||
+            foodStatsScript == null)
+            return;
 
-        mousePosition.x = Mathf.Clamp(
-            mousePosition.x,
-            screenPadding,
-            Screen.width - screenPadding
-        );
+        isFlipping = true;
 
-        mousePosition.y = Mathf.Clamp(
-            mousePosition.y,
-            screenPadding,
-            Screen.height - screenPadding
-        );
-
-        Ray ray = cam.ScreenPointToRay(mousePosition);
-
-        Plane plane = new Plane(
-            Vector3.up,
-            dragPlane.position
-        );
-
-        if (plane.Raycast(ray, out float distance))
+        // Completely stop jiggle before recording rotation.
+        if (jiggleTween != null)
         {
-            Vector3 hitPoint = ray.GetPoint(distance);
-
-            hitPoint.y = dragPlane.position.y;
-
-            worldPosition = hitPoint;
-            return true;
+            jiggleTween.Kill();
+            jiggleTween = null;
         }
 
-        worldPosition = transform.position;
-        return false;
+        if (flipTween != null)
+        {
+            flipTween.Kill();
+            flipTween = null;
+        }
+
+        // This rotation NEVER changes during the tween.
+        Quaternion startRotation = foodModel.localRotation;
+
+        Vector3 axis = GetAxis(flipAxis);
+
+        float direction =
+            flipDirection == FlipDirection.Forward
+            ? 1f
+            : -1f;
+
+        // Only ever travels from 0 to 180.
+        float angle = 0f;
+
+        flipTween = DOTween.To(
+            () => angle,
+            value =>
+            {
+                angle = value;
+
+                // Rebuild rotation from the original rotation every frame.
+                // Nothing is accumulated.
+                foodModel.localRotation =
+                    startRotation *
+                    Quaternion.AngleAxis(
+                        angle * direction,
+                        axis
+                    );
+            },
+            180f,
+            flipDuration
+        );
+
+        flipTween
+            .SetEase(flipEase)
+            .SetUpdate(UpdateType.Normal)
+            .OnComplete(() =>
+            {
+                // Exact single 180 degree final rotation.
+                foodModel.localRotation =
+                    startRotation *
+                    Quaternion.AngleAxis(
+                        180f * direction,
+                        axis
+                    );
+
+                flipTween = null;
+                isFlipping = false;
+
+                // Exactly one gameplay flip.
+                foodStatsScript.FlipFood();
+            });
     }
 
-
-    // ============================================================
-    // CHECK FLIP CLICK
-    // ============================================================
-
-    void CheckForFlipClick()
+    private Vector3 GetAxis(RotationAxis axis)
     {
-        Ray ray =
-            cam.ScreenPointToRay(
-                Input.mousePosition
-            );
-
-
-        if (Physics.Raycast(
-                ray,
-                out RaycastHit hit,
-                100f))
+        switch (axis)
         {
-            // The collider is on the PARENT.
-            //
-            // So checking hit.collider.gameObject
-            // against transform is correct.
+            case RotationAxis.X:
+                return Vector3.right;
 
+            case RotationAxis.Y:
+                return Vector3.up;
+
+            case RotationAxis.Z:
+                return Vector3.forward;
+        }
+
+        return Vector3.right;
+    }
+
+    private void CheckForFlipClick()
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        {
             if (hit.collider.transform == transform ||
                 hit.collider.transform.IsChildOf(transform))
             {
@@ -286,226 +270,121 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         }
     }
 
-
-    // ============================================================
-    // FLIP FOOD
-    // ============================================================
-
-    private void FlipFood()
+    private bool GetMouseWorldPosition(out Vector3 worldPosition)
     {
-        if (isFlipping)
-            return;
+        Vector3 mouse = Input.mousePosition;
 
+        mouse.x = Mathf.Clamp(
+            mouse.x,
+            screenPadding,
+            Screen.width - screenPadding
+        );
 
-        if (foodStatsScript == null)
-            return;
+        mouse.y = Mathf.Clamp(
+            mouse.y,
+            screenPadding,
+            Screen.height - screenPadding
+        );
 
+        Ray ray = cam.ScreenPointToRay(mouse);
 
-        if (foodModel == null)
+        Plane plane = new Plane(
+            Vector3.up,
+            dragPlane.position
+        );
+
+        if (plane.Raycast(ray, out float distance))
         {
-            Debug.LogError(
-                $"Cannot flip {gameObject.name}: " +
-                $"Food Model is not assigned.",
-                this);
+            Vector3 hit = ray.GetPoint(distance);
 
-            return;
+            hit.y = dragPlane.position.y;
+
+            worldPosition = hit;
+            return true;
         }
 
-
-        isFlipping = true;
-
-
-        // IMPORTANT:
-        // Kill ONLY animations on the model.
-        //
-        // Do not touch transform.DOKill()
-        // because the parent is the draggable object.
-
-        foodModel.DOKill();
-
-
-        // Store the model's local rotation.
-        Quaternion startRotation =
-            foodModel.localRotation;
-
-
-        Quaternion targetRotation =
-            startRotation *
-            Quaternion.Euler(
-                180f,
-                0f,
-                0f
-            );
-
-
-        // ONLY ROTATE THE MODEL.
-        foodModel
-            .DOLocalRotateQuaternion(
-                targetRotation,
-                flipDuration
-            )
-            .SetEase(flipEase)
-            .OnComplete(() =>
-            {
-                isFlipping = false;
-
-
-                // Tell FoodStats that the flip has happened.
-                //
-                // FoodStats handles:
-                // - currentSide
-                // - cooking progress
-                // - FoodFlip / FoodCooked events
-                // - cooking state
-
-                foodStatsScript.FlipFood();
-            });
+        worldPosition = transform.position;
+        return false;
     }
 
-
-    // ============================================================
-    // BEGIN DRAG
-    // ============================================================
-
-    public void OnBeginDrag(
-        PointerEventData eventData)
+    public void OnBeginDrag(PointerEventData eventData)
     {
-        MeshCollider mesh =
-            GetComponent<MeshCollider>();
-
+        MeshCollider mesh = GetComponent<MeshCollider>();
 
         if (mesh != null)
             mesh.enabled = false;
 
-
-        // Kill parent movement animations if any.
-        //
-        // We are NOT rotating the parent anymore.
         transform.DOKill();
 
-
-        // Jiggle ONLY the model.
         Jiggle();
-
 
         dragging = true;
 
-
         if (rb != null)
-        {
             rb.useGravity = false;
-        }
-
 
         if (foodStatsScript != null)
-        {
             foodStatsScript.StopCooking();
-        }
     }
 
-
-    // ============================================================
-    // DRAG
-    // ============================================================
-
-    public void OnDrag(
-        PointerEventData eventData)
+    public void OnDrag(PointerEventData eventData)
     {
-        Vector3 target;
-
-
-        if (GetMouseWorldPosition(
-                out target))
+        if (GetMouseWorldPosition(out Vector3 target))
         {
-            // Parent moves.
-            transform.position =
-                Vector3.Lerp(
-                    transform.position,
-                    target,
-                    moveSpeed * Time.deltaTime
-                );
+            transform.position = Vector3.Lerp(
+                transform.position,
+                target,
+                moveSpeed * Time.deltaTime
+            );
         }
     }
 
-
-    // ============================================================
-    // END DRAG
-    // ============================================================
-
-    public void OnEndDrag(
-        PointerEventData eventData)
+    public void OnEndDrag(PointerEventData eventData)
     {
         DropFood();
     }
 
-
-    // ============================================================
-    // DROP FOOD
-    // ============================================================
-
     private void DropFood()
     {
-        MeshCollider mesh =
-            GetComponent<MeshCollider>();
-
+        MeshCollider mesh = GetComponent<MeshCollider>();
 
         if (mesh != null)
             mesh.enabled = true;
 
-
-        // Kill movement animation on parent.
         transform.DOKill();
 
-
-        // Jiggle ONLY the model.
         Jiggle();
-
 
         dragging = false;
 
-
         if (rb != null)
-        {
             rb.useGravity = true;
-        }
-
 
         if (foodStatsScript != null)
-        {
             foodStatsScript.StopCooking();
-        }
     }
-
-
-    // ============================================================
-    // JIGGLE MODEL
-    // ============================================================
 
     private void Jiggle()
     {
-        if (foodModel == null)
+        if (foodModel == null || isFlipping)
             return;
 
+        if (jiggleTween != null)
+            jiggleTween.Kill();
 
-        // IMPORTANT:
-        // Previously this was:
-        //
-        // transform.DOPunchRotation(...)
-        //
-        // which rotated the parent.
-        //
-        // Now ONLY the child model jiggles.
-
-        foodModel.DOPunchRotation(
+        jiggleTween = foodModel.DOPunchRotation(
             Random.insideUnitSphere *
             jiggleStrength *
             15f,
             jiggleDuration,
             jiggleVibrato,
             jiggleRandomness
-        );
+        )
+        .OnComplete(() =>
+        {
+            jiggleTween = null;
+        });
     }
-
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -515,5 +394,14 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public void OnPointerExit(PointerEventData eventData)
     {
         onHoverExitEvent?.Invoke();
+    }
+
+    private void OnDestroy()
+    {
+        if (flipTween != null)
+            flipTween.Kill();
+
+        if (jiggleTween != null)
+            jiggleTween.Kill();
     }
 }

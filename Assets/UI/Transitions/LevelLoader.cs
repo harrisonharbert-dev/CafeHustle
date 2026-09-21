@@ -7,6 +7,10 @@ public class LevelLoader : MonoBehaviour
     public Animator animator;
     private float transitionTime = 2f;
 
+    [Header("Scene Root")]
+    [Tooltip("Name of the parent object containing everything in each scene.")]
+    public string sceneRootName = "SceneRoot";
+
     public enum TransitionType
     {
         None,
@@ -23,6 +27,7 @@ public class LevelLoader : MonoBehaviour
     {
         ResetTransition();
     }
+
     private void Start()
     {
         if (animator != null)
@@ -53,7 +58,6 @@ public class LevelLoader : MonoBehaviour
     {
         isLoading = true;
 
-        // Play transition out
         if (animator != null &&
             (transitionType == TransitionType.OutOnly ||
              transitionType == TransitionType.InAndOut))
@@ -64,10 +68,9 @@ public class LevelLoader : MonoBehaviour
             yield return new WaitForSeconds(transitionTime);
         }
 
-        // Remember the current scene
         Scene previousScene = SceneManager.GetActiveScene();
 
-        // Load the new scene additively
+        // Load new scene
         AsyncOperation loadOperation = SceneManager.LoadSceneAsync(
             sceneName,
             LoadSceneMode.Additive
@@ -75,27 +78,23 @@ public class LevelLoader : MonoBehaviour
 
         yield return loadOperation;
 
-        // Find the newly loaded scene
         Scene newScene = GetNewestScene(sceneName);
 
         if (!newScene.IsValid())
         {
             Debug.LogError("Could not find loaded scene: " + sceneName);
-
             isLoading = false;
             yield break;
         }
 
-        // Disable the previous scene
-        SetSceneObjectsActive(previousScene, false);
+        // Disable ONLY the parent of the previous scene
+        SetSceneRootActive(previousScene, false);
 
-        // Enable the new scene
-        SetSceneObjectsActive(newScene, true);
+        // Enable ONLY the parent of the new scene
+        SetSceneRootActive(newScene, true);
 
-        // Make the new scene active
         SceneManager.SetActiveScene(newScene);
 
-        // Reset transition
         ResetTransition();
 
         isLoading = false;
@@ -119,7 +118,6 @@ public class LevelLoader : MonoBehaviour
     {
         isLoading = true;
 
-        // Play transition out
         if (animator != null &&
             (transitionType == TransitionType.OutOnly ||
              transitionType == TransitionType.InAndOut))
@@ -130,35 +128,31 @@ public class LevelLoader : MonoBehaviour
             yield return new WaitForSeconds(transitionTime);
         }
 
-        // Find the minigame
         Scene minigameScene = SceneManager.GetActiveScene();
 
         if (!minigameScene.IsValid())
         {
             Debug.LogError("Could not find current minigame scene.");
-
             isLoading = false;
             yield break;
         }
 
-        // Find StartingScene
-        Scene startingScene = SceneManager.GetSceneByName("prototype_environment");
+        Scene startingScene =
+            SceneManager.GetSceneByName("prototype_environment");
 
         if (!startingScene.IsValid())
         {
             Debug.LogError("Could not find StartingScene.");
-
             isLoading = false;
             yield break;
         }
 
-        // Enable StartingScene
-        SetSceneObjectsActive(startingScene, true);
+        // Enable the starting scene parent
+        SetSceneRootActive(startingScene, true);
 
-        // Make StartingScene active
         SceneManager.SetActiveScene(startingScene);
 
-        // Completely unload the minigame
+        // Destroy minigame
         AsyncOperation unloadOperation =
             SceneManager.UnloadSceneAsync(minigameScene);
 
@@ -166,7 +160,6 @@ public class LevelLoader : MonoBehaviour
 
         Debug.Log("Destroyed minigame scene: " + sceneName);
 
-        // Reset transition
         ResetTransition();
 
         isLoading = false;
@@ -188,14 +181,12 @@ public class LevelLoader : MonoBehaviour
     {
         isLoading = true;
 
-        // Remember the OLD scene
         Scene oldScene = SceneManager.GetActiveScene();
 
         string sceneName = oldScene.name;
 
         Debug.Log("Restarting scene: " + sceneName);
 
-        // Play transition out
         if (animator != null &&
             (transitionType == TransitionType.OutOnly ||
              transitionType == TransitionType.InAndOut))
@@ -206,10 +197,7 @@ public class LevelLoader : MonoBehaviour
             yield return new WaitForSeconds(transitionTime);
         }
 
-        // =====================================================
-        // LOAD A BRAND NEW COPY FIRST
-        // =====================================================
-
+        // Load fresh copy
         AsyncOperation loadOperation = SceneManager.LoadSceneAsync(
             sceneName,
             LoadSceneMode.Additive
@@ -217,42 +205,25 @@ public class LevelLoader : MonoBehaviour
 
         yield return loadOperation;
 
-        // Get the newly loaded copy
         Scene newScene = GetNewestScene(sceneName, oldScene);
 
         if (!newScene.IsValid())
         {
             Debug.LogError("Could not find newly loaded scene: " + sceneName);
-
             isLoading = false;
             yield break;
         }
 
-        // =====================================================
-        // ENABLE THE NEW SCENE
-        // =====================================================
+        // Enable only the new scene parent
+        SetSceneRootActive(newScene, true);
 
-        SetSceneObjectsActive(newScene, true);
-
-        // Make the NEW scene active
         SceneManager.SetActiveScene(newScene);
 
-        Debug.Log("New scene loaded: " + sceneName);
-
-        // =====================================================
-        // NOW DESTROY THE OLD SCENE
-        // =====================================================
-
+        // Destroy old copy
         AsyncOperation unloadOperation =
             SceneManager.UnloadSceneAsync(oldScene);
 
         yield return unloadOperation;
-
-        Debug.Log("Old scene destroyed: " + sceneName);
-
-        // =====================================================
-        // RESET TRANSITION
-        // =====================================================
 
         ResetTransition();
 
@@ -262,7 +233,7 @@ public class LevelLoader : MonoBehaviour
     }
 
     // =========================================================
-    // FIND NEWEST COPY OF A SCENE
+    // FIND NEWEST SCENE
     // =========================================================
 
     private Scene GetNewestScene(string sceneName)
@@ -271,11 +242,8 @@ public class LevelLoader : MonoBehaviour
         {
             Scene scene = SceneManager.GetSceneAt(i);
 
-            if (scene.name == sceneName &&
-                scene.isLoaded)
-            {
+            if (scene.name == sceneName && scene.isLoaded)
                 return scene;
-            }
         }
 
         return default;
@@ -299,10 +267,10 @@ public class LevelLoader : MonoBehaviour
     }
 
     // =========================================================
-    // ENABLE / DISABLE SCENE ROOT OBJECTS
+    // ENABLE / DISABLE SCENE PARENT
     // =========================================================
 
-    private void SetSceneObjectsActive(Scene scene, bool active)
+    private void SetSceneRootActive(Scene scene, bool active)
     {
         if (!scene.IsValid())
             return;
@@ -311,8 +279,17 @@ public class LevelLoader : MonoBehaviour
 
         foreach (GameObject obj in rootObjects)
         {
-            obj.SetActive(active);
+            if (obj.name == sceneRootName)
+            {
+                obj.SetActive(active);
+                return;
+            }
         }
+
+        Debug.LogWarning(
+            "Could not find '" + sceneRootName +
+            "' in scene '" + scene.name + "'."
+        );
     }
 
     // =========================================================

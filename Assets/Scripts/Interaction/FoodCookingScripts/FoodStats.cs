@@ -2,7 +2,6 @@ using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using System.Collections.Generic;
 
 public class FoodStats : MonoBehaviour
 {
@@ -15,17 +14,18 @@ public class FoodStats : MonoBehaviour
         Egg,
         Tomato,
         Sausage,
-        Bread,
+        Bread
     }
 
+    // ============================================================
+    // COOKING
+    // ============================================================
 
     [Header("Cooking")]
     public float cookingTime;
-
     [SerializeField] private float cookingProgress;
 
-
-    [Header("Meat Cooking")]
+    [Header("Two Sided Cooking")]
     public bool requiresTwoSides;
 
     [SerializeField] private float sideOneProgress;
@@ -33,43 +33,52 @@ public class FoodStats : MonoBehaviour
 
     public int currentSide = 1;
 
-
     [Header("Cooking State")]
     public bool isCooking;
     public bool IsHovering;
 
+    // ============================================================
+    // BURN
+    // ============================================================
 
     [Header("Burn")]
     [SerializeField] private float burnThreshold = 1.5f;
 
     public Material BurntMaterial;
 
-    private Material baseMaterial;
+    private Material[] baseMaterials;
 
+    // ============================================================
+    // COOKING STATUS
+    // ============================================================
 
     [Header("Cooking Status")]
     public cookingStatus cookingStatusScript;
 
+    // ============================================================
+    // FOOD MODEL
+    // ============================================================
 
     [Header("Food Model")]
-    [Tooltip("The CHILD model. Only this object will visually flip.")]
+    [Tooltip("The CHILD model.")]
     public Transform foodModel;
 
+    // ============================================================
+    // FLIP
+    // ============================================================
 
-    [Header("Flip Animation")]
-    public float flipDuration = 0.6f;
-    public float flipHeight = 0.25f;
-
-    public bool isFlipping;
-
-
-    [Header("Flip Settings")]
+    [Header("Flip")]
     public float flipCooldown = 0.7f;
 
+    public bool isFlipping;
     public bool canFlip = true;
 
+    // ============================================================
+    // EVENTS
+    // ============================================================
 
     [Header("Food Events")]
+
     [Tooltip("Triggered once when the first side reaches 100% cooking.")]
     public UnityEvent FoodFlip;
 
@@ -79,47 +88,42 @@ public class FoodStats : MonoBehaviour
     [Tooltip("Triggered once when the food reaches the burn threshold.")]
     public UnityEvent FoodBurnt;
 
+    private bool foodFlipEventTriggered;
+    private bool foodCookedEventTriggered;
+    private bool foodBurntEventTriggered;
 
     // ============================================================
-    // EVENT LOCKS
+    // AUDIO
     // ============================================================
 
-    [SerializeField] private bool foodFlipEventTriggered = false;
+    public AudioSource audioSource;
+    public AudioClip[] cookingSound;
 
-    [SerializeField] private bool foodCookedEventTriggered = false;
-
-    [SerializeField] private bool foodBurntEventTriggered = false;
+    public bool isPlayingSound;
 
     // ============================================================
-    // COOKING PROPERTIES
+    // PROPERTIES
     // ============================================================
 
     public bool SideOneCooked =>
         sideOneProgress >= cookingTime;
 
-
     public bool SideTwoCooked =>
         sideTwoProgress >= cookingTime;
-
 
     public bool FullyCooked
     {
         get
         {
             if (requiresTwoSides)
-            {
-                return SideOneCooked &&
-                       SideTwoCooked;
-            }
+                return SideOneCooked && SideTwoCooked;
 
             return cookingProgress >= cookingTime;
         }
     }
 
-
     public bool IsBurnt =>
         cookingProgress >= burnThreshold;
-
 
     public float CookRatio
     {
@@ -132,112 +136,58 @@ public class FoodStats : MonoBehaviour
         }
     }
 
-
     // ============================================================
     // START
     // ============================================================
 
-    public AudioSource audioSource;
-    public AudioClip[] cookingSound;
-    public bool isPlayingSound = false;
-
-    void Start()
+    private void Start()
     {
-        // Get the cookingStatus component from the parent.
-
-        cookingStatusScript = foodModel.GetComponent<cookingStatus>();
-
-        audioSource = GetComponent<AudioSource>();
-
-        // Get the renderer.
-        //
-        // With the new hierarchy, the renderer will normally
-        // be on the child foodModel.
-        Renderer renderer = null;
-
-
-        if (foodModel != null)
-        {
-            renderer =
-                foodModel.GetComponent<Renderer>();
-        }
-
-
-        // Fallback if renderer is on the parent.
-        if (renderer == null)
-        {
-            renderer =
-                GetComponent<Renderer>();
-        }
-
-
-        if (renderer != null)
-        {
-            baseMaterial =
-                renderer.material;
-        }
-
-
-        // Safety check.
         if (foodModel == null)
         {
             Debug.LogError(
-                $"FoodStats on {gameObject.name} has no Food Model assigned!",
-                this);
-        }
-        else if (foodModel == transform)
-        {
-            Debug.LogError(
-                $"FoodStats on {gameObject.name}: " +
-                $"Food Model cannot be the parent. " +
-                $"Assign the CHILD model instead.",
-                this);
-        }
-    }
+                $"{gameObject.name} has no Food Model assigned!",
+                this
+            );
 
+            return;
+        }
+
+        cookingStatusScript =
+            foodModel.GetComponent<cookingStatus>();
+
+        audioSource =
+            GetComponent<AudioSource>();
+
+        Renderer renderer =
+            foodModel.GetComponent<Renderer>();
+
+        if (renderer == null)
+            renderer = GetComponent<Renderer>();
+
+        if (renderer != null)
+            baseMaterials = renderer.materials;
+
+        // Make sure both sides visually start at 0.
+        UpdateBothSides();
+    }
 
     // ============================================================
     // UPDATE
     // ============================================================
 
-    void Update()
+    private void Update()
     {
-        // --------------------------------------------------------
-        // RIGHT CLICK FLIP
-        // --------------------------------------------------------
+        if (!isCooking)
+            return;
 
-        if (canFlip &&
-            requiresTwoSides &&
-            IsHovering &&
-            Input.GetMouseButtonDown(1) &&
-            !isFlipping)
-        {
-            FlipFood();
-        }
+        CookFood();
 
+        UpdateCookingStatus();
 
-        // --------------------------------------------------------
-        // COOKING
-        // --------------------------------------------------------
+        CheckCookingEvents();
 
-        if (isCooking)
-        {
-            CookFood();
-
-
-            // Update the cooking shader/look.
-            UpdateCookingStatus();
-
-
-            // Check cooked events.
-            CheckCookingEvents();
-
-
-            // Check burnt event.
-            CheckBurning();
-        }
+        CheckBurning();
     }
-
 
     // ============================================================
     // COOK FOOD
@@ -245,137 +195,139 @@ public class FoodStats : MonoBehaviour
 
     private void CookFood()
     {
-        if (isPlayingSound == false)
+        if (!isPlayingSound)
         {
             isPlayingSound = true;
-            audioSource.loop = true;
-            audioSource.clip = cookingSound[0];
-            audioSource.Play();
+
+            if (audioSource != null &&
+                cookingSound != null &&
+                cookingSound.Length > 0)
+            {
+                audioSource.loop = true;
+                audioSource.clip = cookingSound[0];
+                audioSource.Play();
+            }
         }
+
         if (requiresTwoSides)
         {
             if (currentSide == 1)
             {
-                sideOneProgress +=
-                    Time.deltaTime;
-
-                cookingProgress =
-                    sideOneProgress;
+                sideOneProgress += Time.deltaTime;
+                cookingProgress = sideOneProgress;
             }
             else
             {
-                sideTwoProgress +=
-                    Time.deltaTime;
-
-                cookingProgress =
-                    sideTwoProgress;
+                sideTwoProgress += Time.deltaTime;
+                cookingProgress = sideTwoProgress;
             }
         }
         else
         {
-            cookingProgress +=
-                Time.deltaTime;
+            cookingProgress += Time.deltaTime;
         }
     }
 
-
     // ============================================================
-    // UPDATE COOKING STATUS / SHADER
+    // UPDATE COOKING VISUAL
     // ============================================================
 
     private void UpdateCookingStatus()
     {
-        if (cookingStatusScript == null)
+        if (cookingStatusScript == null ||
+            cookingTime <= 0f)
             return;
-
-
-        // This is the value used by cookingStatus
-        // to change the appearance of the food.
-        cookingStatusScript.progress =
-            cookingProgress / cookingTime;
-
-
-        // Update the actual shader/material appearance.
-        cookingStatusScript.UpdateShaderStatus(
-            cookingProgress / cookingTime
-        );
-    }
-
-
-    // ============================================================
-    // COOKING EVENTS
-    // ============================================================
-    IEnumerator FadeAudio()
-    {
-        float startVolume = audioSource.volume;
-        while (audioSource.volume > 0)
-        {
-            audioSource.volume -= startVolume * Time.deltaTime / 1f; // Fade out over 1 second
-            yield return null;
-        }
-        audioSource.Stop();
-        audioSource.volume = startVolume;
-        isPlayingSound = false;
-    }
-    private void CheckCookingEvents()
-    {
-        // ========================================================
-        // TWO-SIDED FOOD
-        // ========================================================
 
         if (requiresTwoSides)
         {
-            // ----------------------------------------------------
-            // SIDE ONE COOKED
-            // ----------------------------------------------------
+            // IMPORTANT:
+            // Each side now keeps its OWN cooking appearance.
 
+            float side1 =
+                sideOneProgress / cookingTime;
+
+            float side2 =
+                sideTwoProgress / cookingTime;
+
+            cookingStatusScript.UpdateSide1Stage(side1);
+            cookingStatusScript.UpdateSide2Stage(side2);
+
+            // Keep progress representing the currently cooking side.
+            cookingStatusScript.progress =
+                currentSide == 1
+                ? side1
+                : side2;
+        }
+        else
+        {
+            float progress =
+                cookingProgress / cookingTime;
+
+            cookingStatusScript.progress =
+                progress;
+
+            cookingStatusScript.UpdateShaderStatus(
+                progress
+            );
+        }
+    }
+
+    // ============================================================
+    // UPDATE BOTH SIDES
+    // ============================================================
+
+    private void UpdateBothSides()
+    {
+        if (cookingStatusScript == null ||
+            cookingTime <= 0f)
+            return;
+
+        if (requiresTwoSides)
+        {
+            cookingStatusScript.UpdateSide1Stage(
+                sideOneProgress / cookingTime
+            );
+
+            cookingStatusScript.UpdateSide2Stage(
+                sideTwoProgress / cookingTime
+            );
+        }
+        else
+        {
+            cookingStatusScript.UpdateShaderStatus(
+                cookingProgress / cookingTime
+            );
+        }
+    }
+
+    // ============================================================
+    // EVENTS
+    // ============================================================
+
+    private void CheckCookingEvents()
+    {
+        if (requiresTwoSides)
+        {
+            // First side cooked.
             if (currentSide == 1 &&
                 SideOneCooked &&
                 !foodFlipEventTriggered)
             {
                 foodFlipEventTriggered = true;
 
-
-                // IMPORTANT:
-                // We DO NOT stop cooking.
-                //
-                // This means cookingStatus continues increasing
-                // and the food can become burnt.
-
-                if (FoodFlip != null)
-                {
-                    FoodFlip.Invoke();
-                }
+                FoodFlip?.Invoke();
             }
 
-
-            // ----------------------------------------------------
-            // BOTH SIDES COOKED
-            // ----------------------------------------------------
-
+            // Both sides cooked.
             if (SideOneCooked &&
                 SideTwoCooked &&
                 !foodCookedEventTriggered)
             {
                 foodCookedEventTriggered = true;
 
-
-                // Again, DO NOT stop cooking.
-                //
-                // The food can continue into the burn state.
-
-                if (FoodCooked != null)
-                {
-                    FoodCooked.Invoke();
-                }
+                FoodCooked?.Invoke();
             }
         }
-
-
-        // ========================================================
-        // ONE-SIDED FOOD
-        // ========================================================
-
         else
         {
             if (cookingProgress >= cookingTime &&
@@ -383,18 +335,13 @@ public class FoodStats : MonoBehaviour
             {
                 foodCookedEventTriggered = true;
 
-
-                if (FoodCooked != null)
-                {
-                    FoodCooked.Invoke();
-                }
+                FoodCooked?.Invoke();
             }
         }
     }
 
-
     // ============================================================
-    // BURNING
+    // BURN
     // ============================================================
 
     private void CheckBurning()
@@ -402,20 +349,22 @@ public class FoodStats : MonoBehaviour
         if (foodBurntEventTriggered)
             return;
 
-
         if (cookingProgress >= burnThreshold)
         {
             foodBurntEventTriggered = true;
 
-            if (FoodBurnt != null)
+            FoodBurnt?.Invoke();
+
+            if (audioSource != null &&
+                cookingSound != null &&
+                cookingSound.Length > 1)
             {
-                FoodBurnt.Invoke();
-                audioSource.PlayOneShot(cookingSound[1]);
+                audioSource.PlayOneShot(
+                    cookingSound[1]
+                );
             }
         }
     }
-
-
 
     // ============================================================
     // START COOKING
@@ -425,14 +374,15 @@ public class FoodStats : MonoBehaviour
     {
         isCooking = true;
 
-
-        if (baseMaterial != null)
+        if (baseMaterials != null)
         {
-            baseMaterial.EnableKeyword(
-                "_ISCOOKING");
+            foreach (Material material in baseMaterials)
+            {
+                if (material != null)
+                    material.EnableKeyword("_ISCOOKING");
+            }
         }
     }
-
 
     // ============================================================
     // STOP COOKING
@@ -440,18 +390,49 @@ public class FoodStats : MonoBehaviour
 
     public void StopCooking()
     {
-        if (isCooking == true)
-        {
+        if (isCooking)
             StartCoroutine(FadeAudio());
-        }
+
         isCooking = false;
-        if (baseMaterial != null)
+
+        if (baseMaterials != null)
         {
-            baseMaterial.DisableKeyword(
-                "_ISCOOKING");
+            foreach (Material material in baseMaterials)
+            {
+                if (material != null)
+                    material.DisableKeyword("_ISCOOKING");
+            }
         }
     }
 
+    // ============================================================
+    // AUDIO
+    // ============================================================
+
+    private IEnumerator FadeAudio()
+    {
+        if (audioSource == null)
+            yield break;
+
+        float startVolume =
+            audioSource.volume;
+
+        while (audioSource.volume > 0f)
+        {
+            audioSource.volume -=
+                startVolume *
+                Time.deltaTime;
+
+            yield return null;
+        }
+
+        audioSource.Stop();
+
+        audioSource.volume =
+            startVolume;
+
+        isPlayingSound = false;
+    }
 
     // ============================================================
     // FLIP FOOD
@@ -459,166 +440,50 @@ public class FoodStats : MonoBehaviour
 
     public void FlipFood()
     {
-        if (!requiresTwoSides)
+        if (!requiresTwoSides ||
+            !canFlip)
             return;
 
+        // IMPORTANT:
+        // There is NO animation here anymore.
+        //
+        // DraggingScript is responsible for the visual 180 degree
+        // flip. FoodStats only changes which side is cooking.
 
-        if (isFlipping)
-            return;
+        currentSide =
+            currentSide == 1
+            ? 2
+            : 1;
 
+        cookingProgress =
+            currentSide == 1
+            ? sideOneProgress
+            : sideTwoProgress;
 
-        if (!canFlip)
-            return;
-
-
-        // Don't flip if second side is already cooked.
-        if (currentSide == 2 &&
-            SideTwoCooked)
-            return;
-
-
-        // Make sure model exists.
-        if (foodModel == null)
-        {
-            Debug.LogError(
-                $"Cannot flip {gameObject.name}: " +
-                $"Food Model is not assigned.",
-                this);
-
-            return;
-        }
-
-
-        // Make absolutely sure we aren't flipping
-        // the parent object.
-        if (foodModel == transform)
-        {
-            Debug.LogError(
-                $"Cannot flip {gameObject.name}: " +
-                $"Food Model is assigned to the PARENT. " +
-                $"Assign the child model.",
-                this);
-
-            return;
-        }
-
-
-        isFlipping = true;
+        UpdateCookingStatus();
 
         canFlip = false;
 
-
-        // Kill only model tweens.
-        foodModel.DOKill();
-
-
-        // Store model local position.
-        Vector3 startPosition =
-            foodModel.localPosition;
-
-
-        // Store model local rotation.
-        Vector3 startRotation =
-            foodModel.localEulerAngles;
-
-
-        Sequence flip =
-            DOTween.Sequence();
-
-
-        // --------------------------------------------------------
-        // MODEL UP
-        // --------------------------------------------------------
-
-        flip.Append(
-            foodModel.DOLocalMoveY(
-                startPosition.y +
-                flipHeight,
-                flipDuration / 2f
-            )
-            .SetEase(Ease.OutQuad)
+        StartCoroutine(
+            FlipCooldown()
         );
-
-
-        // --------------------------------------------------------
-        // MODEL ROTATE 180
-        // --------------------------------------------------------
-
-        flip.Join(
-            foodModel.DOLocalRotate(
-                startRotation +
-                new Vector3(
-                    180f,
-                    0f,
-                    0f
-                ),
-                flipDuration
-            )
-            .SetEase(Ease.InOutSine)
-        );
-
-
-        // --------------------------------------------------------
-        // MODEL DOWN
-        // --------------------------------------------------------
-
-        flip.Append(
-            foodModel.DOLocalMoveY(
-                startPosition.y,
-                flipDuration / 2f
-            )
-            .SetEase(Ease.InQuad)
-        );
-
-
-        // --------------------------------------------------------
-        // FLIP COMPLETE
-        // --------------------------------------------------------
-
-        flip.OnComplete(() =>
-        {
-            // Change cooking side.
-            currentSide =
-                currentSide == 1
-                ? 2
-                : 1;
-
-
-            // Load progress from new side.
-            cookingProgress =
-                currentSide == 1
-                ? sideOneProgress
-                : sideTwoProgress;
-
-
-            // Update shader immediately after flip.
-            UpdateCookingStatus();
-
-
-            isFlipping = false;
-
-            StartCoroutine(
-                FlipCooldown());
-        });
     }
-
 
     // ============================================================
     // FLIP COOLDOWN
     // ============================================================
 
-    IEnumerator FlipCooldown()
+    private IEnumerator FlipCooldown()
     {
         yield return new WaitForSeconds(
-            flipCooldown);
-
+            flipCooldown
+        );
 
         canFlip = true;
     }
 
-
     // ============================================================
-    // FOOD READY
+    // READY
     // ============================================================
 
     public bool IsFoodReady()
@@ -626,20 +491,14 @@ public class FoodStats : MonoBehaviour
         return FullyCooked;
     }
 
-
     // ============================================================
-    // MOUSE ENTER
+    // MOUSE
     // ============================================================
 
     public void OnMouseEnter()
     {
         IsHovering = true;
     }
-
-
-    // ============================================================
-    // MOUSE EXIT
-    // ============================================================
 
     public void OnMouseExit()
     {

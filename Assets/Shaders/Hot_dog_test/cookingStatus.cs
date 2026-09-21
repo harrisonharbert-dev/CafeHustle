@@ -9,7 +9,7 @@ public class cookingStatus : MonoBehaviour
     [SerializeField] public float failBonus;
 
     private Renderer objectRenderer;
-    private MaterialPropertyBlock propBlock;
+    [SerializeField] private MaterialPropertyBlock propBlock;
 
     void Start()
     {
