@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour
     public FoodCuttable[] CuttableFoods;
     public static bool transitioning;
     public UnityEvent onStageComplete;
+    public UnityEvent[] DialoguePrompts;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -64,6 +65,7 @@ public class CameraController : MonoBehaviour
         yield return new WaitForSeconds(2f);
         Cameras[stageIndex - 1].SetActive(false);
         Cameras[stageIndex].SetActive(true);
+        DialoguePrompts[stageIndex - 1].Invoke();
         if (stageIndex == 1)
         {
             FoodHotBar.SetActive(true);
