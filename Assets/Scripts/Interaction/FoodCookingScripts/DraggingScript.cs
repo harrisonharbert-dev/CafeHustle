@@ -3,7 +3,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public class DraggingScript : MonoBehaviour,
+    IBeginDragHandler,
+    IDragHandler,
+    IEndDragHandler,
+    IPointerEnterHandler,
+    IPointerExitHandler
 {
     public enum RotationAxis
     {
@@ -53,6 +58,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     [SerializeField] private float screenPadding = 50f;
 
     private Rigidbody rb;
+    private Collider foodCollider;
 
     [HideInInspector]
     public bool dragging;
@@ -89,6 +95,10 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             foodModel = null;
         }
 
+        // Collider is now allowed to be on the child food model
+        if (foodModel != null)
+            foodCollider = foodModel.GetComponent<Collider>();
+
         if (dragPlane == null)
         {
             GameObject plane = new GameObject(gameObject.name + "_DragPlane");
@@ -99,7 +109,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     private void Update()
     {
-        // Must release right click before another flip is possible.
         if (Input.GetMouseButtonUp(1))
             flipInputLocked = false;
 
@@ -143,6 +152,10 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             DropFood();
     }
 
+    // ============================================================
+    // ROTATION
+    // ============================================================
+
     private void RotateFoodModel()
     {
         if (foodModel == null)
@@ -173,7 +186,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
         isFlipping = true;
 
-        // Completely stop jiggle before recording rotation.
         if (jiggleTween != null)
         {
             jiggleTween.Kill();
@@ -186,9 +198,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             flipTween = null;
         }
 
-        // This rotation NEVER changes during the tween.
         Quaternion startRotation = foodModel.localRotation;
-
         Vector3 axis = GetAxis(flipAxis);
 
         float direction =
@@ -196,7 +206,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             ? 1f
             : -1f;
 
-        // Only ever travels from 0 to 180.
         float angle = 0f;
 
         flipTween = DOTween.To(
@@ -205,8 +214,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             {
                 angle = value;
 
-                // Rebuild rotation from the original rotation every frame.
-                // Nothing is accumulated.
                 foodModel.localRotation =
                     startRotation *
                     Quaternion.AngleAxis(
@@ -223,7 +230,6 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             .SetUpdate(UpdateType.Normal)
             .OnComplete(() =>
             {
-                // Exact single 180 degree final rotation.
                 foodModel.localRotation =
                     startRotation *
                     Quaternion.AngleAxis(
@@ -234,10 +240,13 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
                 flipTween = null;
                 isFlipping = false;
 
-                // Exactly one gameplay flip.
                 foodStatsScript.FlipFood();
             });
     }
+
+    // ============================================================
+    // AXIS
+    // ============================================================
 
     private Vector3 GetAxis(RotationAxis axis)
     {
@@ -256,6 +265,10 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         return Vector3.right;
     }
 
+    // ============================================================
+    // FLIP CLICK
+    // ============================================================
+
     private void CheckForFlipClick()
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -269,6 +282,10 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             }
         }
     }
+
+    // ============================================================
+    // MOUSE POSITION
+    // ============================================================
 
     private bool GetMouseWorldPosition(out Vector3 worldPosition)
     {
@@ -307,12 +324,14 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         return false;
     }
 
+    // ============================================================
+    // DRAGGING
+    // ============================================================
+
     public void OnBeginDrag(PointerEventData eventData)
     {
-        MeshCollider mesh = GetComponent<MeshCollider>();
-
-        if (mesh != null)
-            mesh.enabled = false;
+        if (foodCollider != null)
+            foodCollider.enabled = false;
 
         transform.DOKill();
 
@@ -323,6 +342,7 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         if (rb != null)
             rb.useGravity = false;
 
+        // Stop cooking when food is picked up.
         if (foodStatsScript != null)
             foodStatsScript.StopCooking();
     }
@@ -346,10 +366,8 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     private void DropFood()
     {
-        MeshCollider mesh = GetComponent<MeshCollider>();
-
-        if (mesh != null)
-            mesh.enabled = true;
+        if (foodCollider != null)
+            foodCollider.enabled = true;
 
         transform.DOKill();
 
@@ -360,9 +378,13 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         if (rb != null)
             rb.useGravity = true;
 
-        if (foodStatsScript != null)
-            foodStatsScript.StopCooking();
+        // DO NOT StopCooking here.
+        // Stove decides whether the food should cook.
     }
+
+    // ============================================================
+    // JIGGLE
+    // ============================================================
 
     private void Jiggle()
     {
@@ -386,6 +408,10 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         });
     }
 
+    // ============================================================
+    // HOVER
+    // ============================================================
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         onHoverEvent?.Invoke();
@@ -395,6 +421,10 @@ public class DraggingScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         onHoverExitEvent?.Invoke();
     }
+
+    // ============================================================
+    // CLEANUP
+    // ============================================================
 
     private void OnDestroy()
     {

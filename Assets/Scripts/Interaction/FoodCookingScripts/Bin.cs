@@ -1,35 +1,34 @@
 using UnityEngine;
 using UnityEngine.Events;
+
 public class Bin : MonoBehaviour
 {
     [Header("Inventory")]
     [SerializeField] private HotbarSlot[] hotbarSlots;
+
     public UnityEvent OnIngredientReturned;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Ingredient"))
-            return;
-
-        FoodStats food = other.GetComponent<FoodStats>();
+        // Find FoodStats on the parent
+        FoodStats food = other.GetComponentInParent<FoodStats>();
 
         if (food == null)
-        {
-            Debug.LogWarning(
-                $"Ingredient {other.name} has no FoodStats component.",
-                other
-            );
-
             return;
-        }
+
+        // Check the actual parent food object's tag
+        if (!food.gameObject.CompareTag("Ingredient"))
+            return;
+
+        Debug.Log("Ingredient thrown in bin: " + food.gameObject.name);
 
         ReturnIngredientToInventory(food.foodType);
-        
+
         OnIngredientReturned?.Invoke();
 
-        Destroy(other.gameObject);
+        // Destroy the entire food object, not just the child collider
+        Destroy(food.gameObject);
     }
-
 
     private void ReturnIngredientToInventory(FoodStats.FoodType foodType)
     {
@@ -61,4 +60,3 @@ public class Bin : MonoBehaviour
         );
     }
 }
-

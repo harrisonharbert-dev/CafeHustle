@@ -1,39 +1,50 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
 public class PlateScorer : MonoBehaviour
 {
     public List<FoodStats> foodsOnPlate = new List<FoodStats>();
+
     public UnityEvent onOrderCompleted;
+
     [SerializeField] private bool orderCompleted = false;
+
     public UnityEvent onOrderSucceed;
     public UnityEvent onOrderFailed;
+
     public void Start()
     {
         // GetComponent<BoxCollider>().enabled = false;
     }
+
     private void OnTriggerEnter(Collider other)
     {
-        FoodStats food = other.GetComponent<FoodStats>();
+        // Collider is on the child food model,
+        // so find FoodStats on the parent.
+        FoodStats food = other.GetComponentInParent<FoodStats>();
 
         if (food != null && !foodsOnPlate.Contains(food))
         {
             foodsOnPlate.Add(food);
 
-            CheckPlate();
+            Debug.Log("Food added to plate: " + food.name);
 
+            CheckPlate();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        FoodStats food = other.GetComponent<FoodStats>();
+        // Collider is on the child food model,
+        // so find FoodStats on the parent.
+        FoodStats food = other.GetComponentInParent<FoodStats>();
 
-        if (food != null)
+        if (food != null && foodsOnPlate.Contains(food))
         {
             foodsOnPlate.Remove(food);
+
+            Debug.Log("Food removed from plate: " + food.name);
 
             CheckPlate();
         }
@@ -100,15 +111,35 @@ public class PlateScorer : MonoBehaviour
             if (plateAmount < required.Value)
             {
                 orderCompleted = false;
-                Debug.Log("Missing food: " + required.Key + " (required: " + required.Value + ", on plate: " + plateAmount + ")");
+
+                Debug.Log(
+                    "Missing food: " +
+                    required.Key +
+                    " (required: " +
+                    required.Value +
+                    ", on plate: " +
+                    plateAmount +
+                    ")"
+                );
+
                 return false;
             }
 
             // Too much food.
             if (plateAmount > required.Value)
             {
-                Debug.Log("Too much food: " + required.Key + " (required: " + required.Value + ", on plate: " + plateAmount + ")");
                 orderCompleted = false;
+
+                Debug.Log(
+                    "Too much food: " +
+                    required.Key +
+                    " (required: " +
+                    required.Value +
+                    ", on plate: " +
+                    plateAmount +
+                    ")"
+                );
+
                 return false;
             }
         }
@@ -119,14 +150,15 @@ public class PlateScorer : MonoBehaviour
             if (!requiredCounts.ContainsKey(plateFood.Key))
             {
                 orderCompleted = false;
-
                 return false;
             }
         }
 
         // Everything matches the order.
         orderCompleted = true;
-        onOrderSucceed.Invoke();
+
+        onOrderSucceed?.Invoke();
+
         return true;
     }
 
@@ -135,17 +167,17 @@ public class PlateScorer : MonoBehaviour
         return orderCompleted;
     }
 
-
     public void NextStage()
     {
-        //GetComponent<BoxCollider>().enabled = true;
-        if (orderCompleted == true)
+        // GetComponent<BoxCollider>().enabled = true;
+
+        if (orderCompleted)
         {
-            onOrderCompleted.Invoke();
+            onOrderCompleted?.Invoke();
         }
         else
         {
-            onOrderFailed.Invoke();
+            onOrderFailed?.Invoke();
         }
     }
 }

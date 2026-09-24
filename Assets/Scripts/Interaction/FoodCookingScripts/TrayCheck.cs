@@ -59,9 +59,15 @@ public class TrayCheck : MonoBehaviour
         }
     }
 
+    // ============================================================
+    // TRAY COLLISION
+    // ============================================================
+
     private void OnTriggerEnter(Collider other)
     {
-        FoodStats food = other.GetComponent<FoodStats>();
+        // Collider is on the child Food Model,
+        // so search upwards for FoodStats.
+        FoodStats food = other.GetComponentInParent<FoodStats>();
 
         if (food != null && !foodsOnTray.Contains(food))
         {
@@ -75,15 +81,23 @@ public class TrayCheck : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        FoodStats food = other.GetComponent<FoodStats>();
+        // Collider is on the child Food Model,
+        // so search upwards for FoodStats.
+        FoodStats food = other.GetComponentInParent<FoodStats>();
 
         if (food != null && foodsOnTray.Contains(food))
         {
             foodsOnTray.Remove(food);
 
+            Debug.Log("Food removed from tray: " + food.name);
+
             CheckTrayRequirements();
         }
     }
+
+    // ============================================================
+    // TRAY VALIDATION
+    // ============================================================
 
     public bool IsTrayValid()
     {

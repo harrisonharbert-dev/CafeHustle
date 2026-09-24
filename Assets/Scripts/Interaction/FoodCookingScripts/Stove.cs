@@ -6,41 +6,80 @@ public class Stove : MonoBehaviour
     public bool FoodOnPlate;
     public UnityEvent[] CookingVFX;
 
-    [SerializeField] private int foodOnStove;
+    [SerializeField] private int foodOnStove = 0;
 
-    public void FoodEntered(FoodStats food, DraggingScript dragging)
+    private void OnCollisionEnter(UnityEngine.Collision collision)
     {
-        if (food == null || dragging == null || !dragging.isFood)
-            return;
-
-        // Prevent duplicate collision calls
-        if (food.isCooking)
-            return;
-
-        Debug.Log("STOVE: Starting to cook " + food.gameObject.name);
-
-        food.StartCooking();
-        foodOnStove++;
-
-        if (foodOnStove == 1 && CookingVFX.Length > 0)
-            CookingVFX[0]?.Invoke();
+        StartFoodCooking(collision);
     }
 
-    public void FoodExited(FoodStats food, DraggingScript dragging)
+    private void OnCollisionStay(UnityEngine.Collision collision)
     {
+        // If flipping caused cooking to stop while still touching
+        // the stove, immediately start it again.
+        FoodStats food = collision.gameObject.GetComponentInParent<FoodStats>();
+
+        if (food != null && !food.isCooking)
+        {
+            DraggingScript dragging =
+                collision.gameObject.GetComponentInParent<DraggingScript>();
+
+            if (dragging != null && dragging.isFood && !dragging.dragging)
+            {
+                Debug.Log("Food still on stove - restarting cooking: " + food.gameObject.name);
+                food.StartCooking();
+            }
+        }
+    }
+
+    private void OnCollisionExit(UnityEngine.Collision collision)
+    {
+        FoodStats food =
+            collision.gameObject.GetComponentInParent<FoodStats>();
+
+        DraggingScript dragging =
+            collision.gameObject.GetComponentInParent<DraggingScript>();
+
         if (food == null || dragging == null || !dragging.isFood)
             return;
 
-        if (!food.isCooking)
-            return;
-
-        Debug.Log("STOVE: Stopping cooking " + food.gameObject.name);
+        Debug.Log("Stopping cooking: " + food.gameObject.name);
 
         food.StopCooking();
 
-        foodOnStove = Mathf.Max(0, foodOnStove - 1);
+        foodOnStove--;
+        foodOnStove = Mathf.Max(0, foodOnStove);
 
-        if (foodOnStove == 0 && CookingVFX.Length > 1)
+        if (foodOnStove == 0 &&
+            CookingVFX != null &&
+            CookingVFX.Length > 1)
+        {
             CookingVFX[1]?.Invoke();
+        }
+    }
+
+    private void StartFoodCooking(UnityEngine.Collision collision)
+    {
+        FoodStats food =
+            collision.gameObject.GetComponentInParent<FoodStats>();
+
+        DraggingScript dragging =
+            collision.gameObject.GetComponentInParent<DraggingScript>();
+
+        if (food == null || dragging == null || !dragging.isFood)
+            return;
+
+        Debug.Log("Starting to cook: " + food.gameObject.name);
+
+        food.StartCooking();
+
+        foodOnStove++;
+
+        if (foodOnStove == 1 &&
+            CookingVFX != null &&
+            CookingVFX.Length > 0)
+        {
+            CookingVFX[0]?.Invoke();
+        }
     }
 }

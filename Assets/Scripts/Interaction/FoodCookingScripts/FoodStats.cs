@@ -394,7 +394,7 @@ public class FoodStats : MonoBehaviour
             StartCoroutine(FadeAudio());
 
         isCooking = false;
-
+        
         if (baseMaterials != null)
         {
             foreach (Material material in baseMaterials)
