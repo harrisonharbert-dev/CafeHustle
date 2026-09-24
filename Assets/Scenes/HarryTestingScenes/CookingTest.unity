@@ -343,7 +343,6 @@ GameObject:
   - component: {fileID: 71104831}
   - component: {fileID: 71104830}
   - component: {fileID: 71104832}
-  - component: {fileID: 71104833}
   - component: {fileID: 71104834}
   m_Layer: 6
   m_Name: HotDog
@@ -513,28 +512,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!64 &71104833
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 71104828}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 1
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4032434617429848123, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
 --- !u!82 &71104834
 AudioSource:
   m_ObjectHideFlags: 0
@@ -9626,6 +9603,20 @@ MonoBehaviour:
         m_CallState: 2
   - m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 3359970169034622335}
+        m_TargetAssemblyTypeName: Debugger, Assembly-CSharp
+        m_MethodName: RestartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: FlippingStage
+          m_BoolArgument: 0
+        m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
       - m_Target: {fileID: 876544693}
         m_TargetAssemblyTypeName: LevelLoader, Assembly-CSharp
         m_MethodName: UnloadNamedScene
@@ -9706,7 +9697,7 @@ MonoBehaviour:
 
     Keypad1. RestartCurrentScene
 
-    Keypad2. Enter MainScene
+    Keypad2. BacktoMenu
 
     Keypad3.
     Enter WaffleGame
@@ -12220,6 +12211,7 @@ GameObject:
   - component: {fileID: 8821771076975291716}
   - component: {fileID: 9126636369929735157}
   - component: {fileID: 3455715236845203919}
+  - component: {fileID: 9126636369929735158}
   m_Layer: 6
   m_Name: HotDogModel
   m_TagString: Ingredient
@@ -12546,17 +12538,17 @@ MonoBehaviour:
   onOrderCompleted:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 876544693}
-        m_TargetAssemblyTypeName: LevelLoader, Assembly-CSharp
-        m_MethodName: UnloadNamedScene
-        m_Mode: 5
+      - m_Target: {fileID: 3359970169034622335}
+        m_TargetAssemblyTypeName: Debugger, Assembly-CSharp
+        m_MethodName: RestartGame
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: CookingTest
-          m_BoolArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   orderCompleted: 0
   onOrderSucceed:
@@ -13075,6 +13067,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &9126636369929735158
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7868564183263605379}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4032434617429848123, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
 --- !u!224 &9133090924872329576
 RectTransform:
   m_ObjectHideFlags: 0

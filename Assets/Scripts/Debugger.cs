@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class Debugger : MonoBehaviour
 {
@@ -60,7 +61,7 @@ public class Debugger : MonoBehaviour
         {
             DebuggerEvents[2].Invoke();
 
-      
+
 
         }
         if (Input.GetKey(KeyCode.Keypad4))
@@ -68,6 +69,12 @@ public class Debugger : MonoBehaviour
             DebuggerEnabled = false;
             DebuggerUI.SetActive(false);
         }
+    }
+
+    public void RestartGame()
+    {
+        PlayerPrefs.DeleteAll();
+        SceneManager.LoadScene("MainScene");
     }
 }
 
