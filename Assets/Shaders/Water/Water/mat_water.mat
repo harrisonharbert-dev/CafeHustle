@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: mat_water
-  m_Shader: {fileID: -6465566751694194690, guid: 510f37fbcb0ce354f818d4faefe4fa9c, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 99c17365b7503c74d91ea84ed6932bfb, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -68,12 +68,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Sparkle_Tex:
+        m_Texture: {fileID: 2800000, guid: e9f0a063581c8a547ac2791a3a63c383, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2D:
         m_Texture: {fileID: 2800000, guid: e88788a52da295f40abe5be3840f23fe, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _UVDistortion_5a1f8c33fb1d4b018e48b03f2b200b5b_NoiseMap_647888222_Texture2D:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -98,6 +106,7 @@ Material:
     - _Blend: 1
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
+    - _Caustic_Distance: 1.52
     - _Caustics_Speed: 0.4
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -112,7 +121,8 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _Float: 1
+    - _Float: 2.04
+    - _Foam_Distance: 1.11
     - _Foam_Scale: 125
     - _Fresnel_Power: 3
     - _GlossMapScale: 0
@@ -130,8 +140,12 @@ Material:
     - _Refraction_Scale: 10
     - _Refraction_Speed: 0.1
     - _Refraction_Strength: 0.005
+    - _Small_Wave_Rotation: 1.55
+    - _Small_Wave_Speed: -0.55
+    - _Small_Waves_Amount: 5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
+    - _Sparkle_Tiling: 37.54
     - _SpecularHighlights: 1
     - _Speed: 0.2
     - _SrcBlend: 1
@@ -139,35 +153,43 @@ Material:
     - _Surface: 0
     - _Tiling: 27.24
     - _Warble: 57.8
+    - _Water_Distance: 1.1
     - _Wave_Distance: 1
     - _Waves_Amount: 15
     - _Waves_Distance: 1.5
     - _Waves_Scale: 0
     - _Waves_Speed: -3
+    - _Waves_Strength: 0.002
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _Absorption_Colour: {r: 0.735849, g: 0.014713926, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Caustic_Color: {r: 0.3887504, g: 0.7693841, b: 0.7924528, a: 1}
     - _Caustics_Direction: {r: 0.005, g: 0.005, b: 0, a: 0}
     - _Color: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
     - _Deep_Colour: {r: 0, g: 0.52710396, b: 0.6037736, a: 0}
+    - _Deep_Water_Color: {r: 0.1607843, g: 0.50845253, b: 0.60784316, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Foam: {r: 0.8066038, g: 0.9365914, b: 1, a: 0}
+    - _Foam_Color: {r: 0.81394625, g: 0.94051886, b: 0.9481132, a: 1}
     - _Foam_Colour: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 0}
     - _Foam_Direction: {r: 0.005, g: 0.005, b: 0, a: 0}
+    - _Foam_Min_Max: {r: 0.07, g: 0.42, b: 0, a: 0}
     - _Foam_Min_max: {r: 0, g: 0.6, b: 0, a: 0}
     - _Foam_Tiling: {r: 1, g: 1, b: 0, a: 0}
     - _Fresnel_Colour: {r: 1, g: 0.4767933, b: 0, a: 0}
     - _Min_Max: {r: -3.88, g: 4.24, b: 0, a: 0}
-    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset: {r: 0.1, g: -0.1, b: 0, a: 0}
     - _Overlay_Colour: {r: 1, g: 1, b: 1, a: 0.18431373}
     - _Shadow_Tone: {r: 0.45529193, g: 0.74509805, b: 0.3764706, a: 0}
     - _Shallow_Colour: {r: 0.5219829, g: 0.8018868, b: 0.5793991, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Tiling: {r: 50, g: 50, b: 0, a: 0}
     - _UV: {r: 1, g: 1, b: 0, a: 0}
     - _Water_Accent: {r: 0.36445355, g: 0.8490566, b: 0.62640125, a: 0}
     - _Water_Base: {r: 0.11836952, g: 0.5200696, b: 0.7169812, a: 0}
+    - _Water_Color: {r: 0.23529409, g: 0.7764706, b: 0.61362827, a: 1}
     - _Waves_Distance: {r: 0, g: 1, b: 0, a: 0}
     - _Waves_Min_max: {r: 0, g: 1.87, b: 0, a: 0}
   m_BuildTextureStacks: []

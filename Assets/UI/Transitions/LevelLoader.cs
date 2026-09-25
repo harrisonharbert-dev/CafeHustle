@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Antlr4.Runtime.Atn;
 
 public class LevelLoader : MonoBehaviour
 {
@@ -39,6 +40,24 @@ public class LevelLoader : MonoBehaviour
             {
                 animator.SetTrigger("playStart");
             }
+        }
+    }
+    //Load scene
+    public void LoadNamedNonAdditiveScene(string sceneName)
+    {
+        StartCoroutine(LoadNonAdditiveScene(sceneName));
+    }
+    private IEnumerator LoadNonAdditiveScene(string sceneName)
+    {
+        //
+        if (transitionType == TransitionType.OutOnly || transitionType == TransitionType.InAndOut)
+        {
+            animator.SetTrigger("playEnd");
+
+            yield return new WaitForSeconds(transitionTime);
+
+            SceneManager.LoadScene(sceneName);
+
         }
     }
 

@@ -126,6 +126,11 @@ public class Interactable : MonoBehaviour
         {
             zoneIndicator.changeIndicatorVisibility(option);
         }
+
+        if (isInRange && option == true)
+        {
+            setEnter();
+        }
     }
 
 
@@ -179,7 +184,7 @@ public class Interactable : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!isInteractable) return;
+        
         if (other.gameObject.CompareTag("Player"))
         {
             if (played && playOnce) return;
@@ -187,26 +192,8 @@ public class Interactable : MonoBehaviour
             isInRange = true;
 
 
-            switch (interactType)
-            {
-                case interactableType.interactableWithTrigger:
-                    //Invoke action immediately if its set with trigger
-                    InteractPrompt.instance.Refresh();
-                    InvokeEvent();
-                    break;
-
-                case interactableType.interactableWithInput:
-                    //Enable prompt and set as current if input is needed
-                    InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
-                    PlayerInputController.instance.SetCurrentInteractable(this);
-                    InteractPrompt.instance.Refresh();
-                    if (prompt != null)
-                    {
-                        prompt.onUI(true);
-                    }
-                    break;
-            }
-
+            if (!isInteractable) return;
+            setEnter();
 
         }
 
@@ -214,19 +201,48 @@ public class Interactable : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (!isInteractable) return;
+        
         if (other.gameObject.CompareTag("Player") && PlayerInputController.instance.currentInteractable == this)
         {
             isInRange = false;
-            PlayerInputController.instance.SetCurrentInteractable(null);
-            InteractPrompt.instance.Refresh();
-            if (prompt != null)
-            {
-                prompt.onUI(false);
-            }
+
+            if (!isInteractable) return;
+            setExit();
         }
 
     }
 
+    void setEnter()
+    {
+        switch (interactType)
+        {
+            case interactableType.interactableWithTrigger:
+                //Invoke action immediately if its set with trigger
+                InteractPrompt.instance.Refresh();
+                InvokeEvent();
+                break;
+
+            case interactableType.interactableWithInput:
+                //Enable prompt and set as current if input is needed
+                InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
+                PlayerInputController.instance.SetCurrentInteractable(this);
+                InteractPrompt.instance.Refresh();
+                if (prompt != null)
+                {
+                    prompt.onUI(true);
+                }
+                break;
+        }
+    }
+
+    void setExit()
+    {
+        PlayerInputController.instance.SetCurrentInteractable(null);
+        InteractPrompt.instance.Refresh();
+        if (prompt != null)
+        {
+            prompt.onUI(false);
+        }
+    }
 
 }

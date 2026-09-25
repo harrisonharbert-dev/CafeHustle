@@ -18,8 +18,6 @@ public class InteractPrompt : MonoBehaviour
 
 
     private CanvasGroup canvasGroup;
-    private RectTransform rectTransform;
-    [SerializeField] private float fadeDuration;
     public UITweener tweener;
 
     [Header("UI")]
@@ -52,10 +50,10 @@ public class InteractPrompt : MonoBehaviour
     void Start()
     {
         //Get Components needed
-        canvasGroup = GetComponent<CanvasGroup>();
-        rectTransform = GetComponent<RectTransform>();
-
-        canvasGroup.alpha = 0f;
+        if (TryGetComponent<CanvasGroup>(out canvasGroup))
+        {
+            canvasGroup.alpha = 0f;
+        }
     }
 
 
@@ -92,7 +90,7 @@ public class InteractPrompt : MonoBehaviour
     }
 
     public void SetPromptVisibility(bool value)
-    {   
+    {
         foreach (Transform child in gameObject.transform)
         {
             child.gameObject.SetActive(value);
@@ -101,15 +99,14 @@ public class InteractPrompt : MonoBehaviour
 
     public void Refresh()
     {
+        //Get all player states
         PlayerInputController.playState playerState = PlayerInputController.instance.playerState;
         bool currentInteractable = PlayerInputController.instance.currentInteractable != null;
         bool currentCarryObject = PlayerInputController.instance.currentCarryObject != null;
         bool isInDialogue = PlayerInputController.instance.isinDialogue;
         bool isInDeliveryZone = PlayerInputController.instance.inCarryDeliveryZone;
 
-        Debug.Log($"Refreshed interact prompt: currentInteractable = {currentInteractable}. currentCarry = {currentCarryObject}. isInDialogue = {isInDialogue}. isInDeliveryZone = {isInDeliveryZone}.");
-
-
+        //If player is in dialogue, hide
         if (isInDialogue)
         {
             SetPromptVisibility(false);
@@ -120,48 +117,52 @@ public class InteractPrompt : MonoBehaviour
         switch (playerState)
         {
             case PlayerInputController.playState.none:
+                //If player is in range of a current carry or interactable, set prompt to true
                 if (currentCarryObject || currentInteractable)
                 {
-                    Debug.Log($"Set prompt visibility to true, current carry or interactable and playstate is none");
                     SetPromptVisibility(true);
                 }
+                //Set prompt to false if there isn't a carry or interactable in range
                 else if (!currentCarryObject && !currentInteractable)
                 {
-                    Debug.Log($"Set prompt visibility to true, no current carry or interactable and playstate is none");
                     SetPromptVisibility(false);
                 }
                 break;
 
             case PlayerInputController.playState.carryingObject:
+                // if the player is currently carrying an object, set drop prompt to true
                 SetPromptVisibility(true);
-                Debug.Log($"Set prompt visibility to true, is carrying object");
+
+                //Update text depending if in a delivery zone
                 if (isInDeliveryZone)
                 {
                     UpdateUIInfo(Interactable.PromptText.Deliver, Interactable.PromptKey.F);
-                    Debug.Log($"Changed interact key to F, can deliver");
                 }
                 else
                 {
                     UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
-                    Debug.Log($"Changed interact key to F, can drop");
                 }
                 ;
                 break;
 
+
+
             case PlayerInputController.playState.carryingNonDroppable:
+
+                // Hide prompt if carrying non-droppable and isn't close to a interactable and delivery zone
                 if (!currentInteractable && !isInDeliveryZone)
                 {
-                    Debug.Log($"Set prompt visibility to false, carrying non-droppable and not near interactable or delivery zone.");
                     SetPromptVisibility(false);
                     return;
                 }
 
-                Debug.Log($"Set Prompt visibility to true");
+                // Set it to true if above doesn't return
                 SetPromptVisibility(true);
 
+
+                //Change text if in delivery zone
                 if (isInDeliveryZone)
                     UpdateUIInfo(Interactable.PromptText.Deliver, Interactable.PromptKey.F);
-                    Debug.Log($"Changed interact key to F, can deliver");
                 break;
         }
     }

@@ -4,17 +4,12 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using DG.Tweening;
+using CsvHelper.Configuration.Attributes;
 
 public class updateRoofState : MonoBehaviour
 {
-    [System.Serializable]
-    public class obsEntry
-    {
-        public Transform roofPiece;
 
-        [HideInInspector] public float originalPosition;
 
-    }
     [System.Serializable]
     public class wallEntry
     {
@@ -24,20 +19,18 @@ public class updateRoofState : MonoBehaviour
     }
     [Header("Properties")]
     [SerializeField] private float transitionDuration = 0.5f;
-    [SerializeField] private float moveHeight = 5f;
-    private bool playerInside = false;
-    [Header("Roof Parts")]
-    [SerializeField] private List<obsEntry> obstructions = new List<obsEntry>();
 
     [Header("Wall Parts")]
     [SerializeField] private List<wallEntry> walls = new List<wallEntry>();
 
+    [Header("Roof Materials")]
+    [SerializeField] private Material[] materials;
+
     void Start()
     {
-        foreach (var entry in obstructions)
+        foreach(var entry in materials)
         {
-            if (entry.roofPiece == null) continue;
-            entry.originalPosition = entry.roofPiece.position.y;
+            entry.SetFloat("_ALPHA",1f);
         }
     }
 
@@ -45,12 +38,12 @@ public class updateRoofState : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        foreach (var entry in obstructions)
+        foreach (var entry in materials)
         {
-            if (entry.roofPiece == null) continue;
-            entry.roofPiece.DOMoveY(moveHeight + entry.originalPosition, transitionDuration);
-            entry.roofPiece.DOScale(0f,transitionDuration);
+            entry.DOFloat(0f, "_ALPHA", transitionDuration);
         }
+
+
         foreach (var entry in walls)
         {
             if (entry.skinnedMesh == null) continue;
@@ -63,14 +56,11 @@ public class updateRoofState : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-
-        foreach (var entry in obstructions)
+        foreach (var entry in materials)
         {
-            if (entry.roofPiece == null) continue;
-
-            entry.roofPiece.DOMoveY(entry.originalPosition, transitionDuration);
-            entry.roofPiece.DOScale(1f,transitionDuration);
+            entry.DOFloat(1f, "_ALPHA", transitionDuration);
         }
+
         foreach (var entry in walls)
         {
             if (entry.skinnedMesh == null) continue;

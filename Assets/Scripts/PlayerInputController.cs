@@ -97,11 +97,13 @@ public class PlayerInputController : MonoBehaviour
         maxSpeed = moveSpeed.walking;
 
         cameraTransform = Camera.main.transform;
+
         // Get Rigid body if unassigned
-        if (rigidBody == null)
+        if(TryGetComponent(out Rigidbody body))
         {
-            rigidBody = GetComponent<Rigidbody>();
+            rigidBody = body;
         }
+
     }
 
 
@@ -158,8 +160,6 @@ public class PlayerInputController : MonoBehaviour
             lockMovement = true;
         }
 
-
-        Debug.Log("Lock set to" + option);
 
         //Hide cursor
         Cursor.visible = option;
