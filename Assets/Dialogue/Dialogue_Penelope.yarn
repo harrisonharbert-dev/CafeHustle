@@ -1,0 +1,75 @@
+﻿title: Start_Penelope
+---
+<<declare $penelope_TalkTo = 0>>
+
+//Dialogue Jumper
+<<if $penelope_TalkTo == 1>>
+   <<jump Filler1_Penelope>>
+<<elseif $penelope_TalkTo == 2>>
+   <<jump AfterCooking_Penelope>>
+<<endif>>
+
+
+Penelope: When I heard there was a new person who had come to town, I just had to meet them
+Penelope: And young too! There’s no one in this town my age. They’re either old enough to croquet, or young enough to not know what croqueting is.
+
+Penelope: But anyways, name’s Penelope!
+
+Penelope: Though you can just call me Penny, that’s what most people ‘round here call me.
+
+Dawn: I’m Dawn.
+
+Penelope: Dawn… that’s a nice name! Very hopeful.
+
+Dawn: Aha, thank you.
+
+Penelope: So what brings you to this dumpty little town?
+
+    -> I needed a new start.
+        Dawn: I needed a new start, and my Grandma left me this property in her will. So, I figured, why not?
+    -> Grams gave me her house.
+        Dawn: Grams left me her house and cafe in the will.
+    -> I like the town.
+        Dawn: This town has more... space than the city. I was starting to suffocate, so I took the opportunity to move.
+
+Penelope: Well, fancy that. And here of all places. Did you even know this place existed before?
+
+Dawn: Not at all. Lawyers showed me on the map when they told me about it.
+
+Dawn: While you’re here, would you like anything to eat?
+
+Penelope: It all looks so nice! What do you recommend?
+
+Dawn: Well, I was just working on a mean eggs and toast. Wanna try it?
+
+Penelope: I haven’t had a chance to eat breakfast yet. So, show me what you’ve got!
+
+
+<<set $penelope_TalkTo to 1>>
+===
+
+
+title: Filler1_Penelope
+---
+Penelope: You sux!
+===
+
+
+title: AfterCooking_Penelope
+---
+Penelope: Golly, this looks good. And it tastes good too!
+
+Penelope: It tastes… savoury and… sweet? What did you put in it?
+
+Dawn: Trade secret. Gotta keep Grams secrets under lock and key.
+
+Penelope: Aw, man. Fair enough. Can I get a doggy bag? I would love to keep some for my mum to try.
+
+Dawn: Sure thing. Here you go.
+
+Penelope: Well, I’ve gotta run now. It was nice meeting you Dawn!
+
+Penelope: I’ll pop back another time.
+
+Dawn: See ya, Penny.
+===
