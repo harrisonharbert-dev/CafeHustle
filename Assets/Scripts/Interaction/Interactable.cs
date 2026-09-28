@@ -68,6 +68,10 @@ public class Interactable : MonoBehaviour
 
     [SerializeField] private string dialogueName;
 
+    [Header("Story")]
+    [SerializeField] private bool useSetStoryPointOnUse;
+    [SerializeField] private string currentStoryPoint;
+
     [Header("Interaction Prompt")]
     [SerializeField] private PromptText promptText;
     [SerializeField] private PromptKey promptKey;
@@ -108,6 +112,7 @@ public class Interactable : MonoBehaviour
         {
             Debug.LogWarning($"[Interactable] No interact prompt UI on {this}");
         }
+        
     }
 
     public void setInteractable(bool option)
@@ -179,8 +184,18 @@ public class Interactable : MonoBehaviour
             interactAction.Invoke();
         }
 
+        //Update story
+        if(useSetStoryPointOnUse && currentStoryPoint != null)
+        {
+            StoryManager.instance.SetStoryPoint(currentStoryPoint);
+        }
+
     }
 
+    public void updateCurrentStoryPoint(string name)
+    {
+        currentStoryPoint = name;
+    }
 
     private void OnTriggerEnter(Collider other)
     {

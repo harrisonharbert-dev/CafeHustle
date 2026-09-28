@@ -4,6 +4,6 @@ public class ObjectHandler : MonoBehaviour
 {
     public void onDestroy()
     {
-        Destroy(this);
+        Destroy(gameObject);
     }
 }

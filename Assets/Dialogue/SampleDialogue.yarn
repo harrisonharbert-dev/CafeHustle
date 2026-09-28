@@ -74,7 +74,12 @@ Dawn: Well, I pretty sure this is what she left me in the will. It’s gonna be 
 
 title: FirstSpiritIntro
 ---
-
+<<declare $spiritTalkTo = 0>>
+<<if $spiritTalkTo == 1>>
+    <<jump SpiritFiller1>>
+<<elseif $spiritTalkTo == 2>>
+    <<jump finishedIntroMinigame>>
+<<endif>>
 
 <<play_cutscene PlayerCutsceneAnimator character_scared>>
 <<play_cutscene CutsceneAnimator spirit-appear>>
@@ -135,6 +140,13 @@ Spirit: Now, let’s get to cooking! Your Grandma left a recipe book around here
 Spirit: Well how about you show us your skills by whipping me up a delicious plate of <wave>Waffles</wave>?
 Dawn: You're kidding me right?
 Spirit: Haha. No.
+
+<<set $spiritTalkTo = 1>>
+===
+
+title:SpiritFiller1
+---
+Spirit: Get those ingredients please~
 ===
 
 title: spiritBackstory

@@ -16,6 +16,10 @@ public class PlayerInputController : MonoBehaviour
     [HideInInspector] public Vector2 moveInput;
     private Rigidbody rigidBody;
     private Transform cameraTransform;
+    private Renderer obstructionRenderer;
+    private MaterialPropertyBlock obstructionPropertyBlock;
+    private static readonly int obstructionSizeId = Shader.PropertyToID("_Size");
+    private const float obstructionFadeDuration = 0.25f;
 
     [System.Serializable]
     public struct moveStates
@@ -31,6 +35,7 @@ public class PlayerInputController : MonoBehaviour
     private Vector3 currentVelocity;
     private float maxSpeed;
 
+    [SerializeField] private LayerMask obstructionMask;
 
     [HideInInspector] public bool isRunning = false;
     public bool isinDialogue = false;
@@ -73,6 +78,7 @@ public class PlayerInputController : MonoBehaviour
     public static PlayerInputController instance { get; private set; }
     private void Awake()
     {
+        obstructionPropertyBlock = new MaterialPropertyBlock();
 
         if (instance == null)
         {
@@ -99,7 +105,7 @@ public class PlayerInputController : MonoBehaviour
         cameraTransform = Camera.main.transform;
 
         // Get Rigid body if unassigned
-        if(TryGetComponent(out Rigidbody body))
+        if (TryGetComponent(out Rigidbody body))
         {
             rigidBody = body;
         }
@@ -307,7 +313,6 @@ public class PlayerInputController : MonoBehaviour
     {
         Shader.SetGlobalVector("_PlayerPosition", transform.position + Vector3.up);
 
-
         // --- MOVEMENT (horizontal) ---
         Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, transform.up).normalized;
         Vector3 cameraRight = Vector3.ProjectOnPlane(cameraTransform.right, transform.up).normalized;
@@ -342,5 +347,58 @@ public class PlayerInputController : MonoBehaviour
             footstepTimer = 0f;
         }
 
+        Vector3 screenPixelPos = Camera.main.WorldToScreenPoint(transform.position);
+        Vector2 normalizedScreenPos = new Vector2(screenPixelPos.x / Screen.width, screenPixelPos.y / Screen.height);
+        Shader.SetGlobalVector("_PlayerScreenPos", normalizedScreenPos);
+
+        //Raycast Obstacles
+        Vector3 dir = transform.position - cameraTransform.position;
+        Renderer hitRenderer = null;
+
+        if (Physics.Raycast(cameraTransform.position, dir.normalized, out RaycastHit hit, dir.magnitude, obstructionMask))
+        {
+            Renderer renderer = hit.collider.GetComponent<Renderer>();
+            if (renderer != null && renderer.sharedMaterial != null && renderer.sharedMaterial.HasProperty(obstructionSizeId))
+            {
+                hitRenderer = renderer;
+            }
+        }
+
+        if (hitRenderer != obstructionRenderer)
+        {
+            if (obstructionRenderer != null)
+            {
+                TweenObstructionSize(obstructionRenderer, 0f);
+            }
+
+            obstructionRenderer = hitRenderer;
+
+            if (obstructionRenderer != null)
+            {
+                TweenObstructionSize(obstructionRenderer, 0.3f);
+            }
+        }
+    }
+
+    private void TweenObstructionSize(Renderer targetRenderer, float targetSize)
+    {
+        DOTween.Kill(targetRenderer);
+
+        obstructionPropertyBlock.Clear();
+        targetRenderer.GetPropertyBlock(obstructionPropertyBlock);
+        float startSize = obstructionPropertyBlock.HasFloat(obstructionSizeId)
+            ? obstructionPropertyBlock.GetFloat(obstructionSizeId)
+            : targetRenderer.sharedMaterial.GetFloat(obstructionSizeId);
+
+        DOTween.To(() => startSize, value => SetObstructionSize(targetRenderer, value), targetSize, obstructionFadeDuration)
+            .SetTarget(targetRenderer);
+    }
+
+    private void SetObstructionSize(Renderer targetRenderer, float size)
+    {
+        obstructionPropertyBlock.Clear();
+        targetRenderer.GetPropertyBlock(obstructionPropertyBlock);
+        obstructionPropertyBlock.SetFloat(obstructionSizeId, size);
+        targetRenderer.SetPropertyBlock(obstructionPropertyBlock);
     }
 }
