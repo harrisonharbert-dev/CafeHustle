@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: mat_eggonly
+  m_Name: mat_bacon
   m_Shader: {fileID: -6465566751694194690, guid: 8d04a70351e95ff4293b5e444a20dd93, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -68,18 +68,18 @@ Material:
     m_Ints: []
     m_Floats:
     - _Cooking_Stage: 0
-    - _Height: -0.51
+    - _Height: -0.44
     - _ISCOOKING: 0
     - _Preview_Sides: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Rotation: 0
+    - _Rotation: 90
     - _SIDE1STAGE: 0
     - _SIDE2STAGE: 0
     - _Speed: 1.5
-    - _Use_Double_Sided: 0
+    - _Use_Double_Sided: 1
     m_Colors:
-    - _Rotate_Axis: {r: 1, g: 0, b: 0, a: 0}
+    - _Rotate_Axis: {r: 0, g: 0, b: 1, a: 0}
     - _Scaling_Min_Max: {r: 0.9, g: 1.1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

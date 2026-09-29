@@ -441,6 +441,36 @@ MonoBehaviour:
           m_StringArgument: sad
           m_BoolArgument: 0
         m_CallState: 2
+  FoodCooking:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9126636369929735159}
+        m_TargetAssemblyTypeName: MaterialController, Assembly-CSharp
+        m_MethodName: SetMaterialBoolTrue
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: _ISCOOKING
+          m_BoolArgument: 0
+        m_CallState: 2
+  StoppedCooking:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9126636369929735159}
+        m_TargetAssemblyTypeName: MaterialController, Assembly-CSharp
+        m_MethodName: SetMaterialBoolFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: _ISCOOKING
+          m_BoolArgument: 0
+        m_CallState: 2
   audioSource: {fileID: 0}
   cookingSound:
   - {fileID: 8300000, guid: b6b6be5ad58b530439d131e602bbb2e7, type: 3}
@@ -3423,6 +3453,7 @@ GameObject:
   - component: {fileID: 807066795}
   - component: {fileID: 807066794}
   - component: {fileID: 807066797}
+  - component: {fileID: 807066798}
   m_Layer: 6
   m_Name: TomatoModel
   m_TagString: Ingredient
@@ -3539,6 +3570,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1919639306910118992, guid: 80b1365a08da45a4dac20f9ec4210de5, type: 3}
+--- !u!114 &807066798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807066792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f491bdafef8195418f12288afa2432c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MaterialController
 --- !u!1 &811816516
 GameObject:
   m_ObjectHideFlags: 0
@@ -3863,6 +3906,127 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a4e26d64bd6ed3a4aa7b699eb5188d8a, type: 3}
   m_PrefabInstance: {fileID: 272300375}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &866121768
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2843053225819757446}
+    m_Modifications:
+    - target: {fileID: 767956771723684300, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.002062008
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.28299928
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.7576312
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.3778891
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.4762116
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.23752338
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.8500006
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.9841601
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -181.491
+      objectReference: {fileID: 0}
+    - target: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8394501808725649746, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+      propertyPath: m_Name
+      value: BellEmote
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+--- !u!224 &866121769 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4541944844237349197, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+  m_PrefabInstance: {fileID: 866121768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &866121770 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5739900078000194757, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+  m_PrefabInstance: {fileID: 866121768}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a5b76949dd07b7439314015205daccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1001 &876544691
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4172,6 +4336,36 @@ MonoBehaviour:
           m_StringArgument: sad
           m_BoolArgument: 0
         m_CallState: 2
+  FoodCooking:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4978562165063284720}
+        m_TargetAssemblyTypeName: MaterialController, Assembly-CSharp
+        m_MethodName: SetMaterialBoolTrue
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: _ISCOOKING
+          m_BoolArgument: 0
+        m_CallState: 2
+  StoppedCooking:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4978562165063284720}
+        m_TargetAssemblyTypeName: MaterialController, Assembly-CSharp
+        m_MethodName: SetMaterialBoolFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: _ISCOOKING
+          m_BoolArgument: 0
+        m_CallState: 2
   audioSource: {fileID: 0}
   cookingSound:
   - {fileID: 8300000, guid: b6b6be5ad58b530439d131e602bbb2e7, type: 3}
@@ -4193,7 +4387,7 @@ MonoBehaviour:
   moveSpeed: 15
   dragPlane: {fileID: 1043420190}
   rotationSpeed: 100
-  rotationAxis: 1
+  rotationAxis: 0
   reverseRotation: 0
   flipDuration: 0.5
   flipEase: 4
@@ -7765,6 +7959,36 @@ MonoBehaviour:
           m_StringArgument: sad
           m_BoolArgument: 0
         m_CallState: 2
+  FoodCooking:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7685427700509315561}
+        m_TargetAssemblyTypeName: MaterialController, Assembly-CSharp
+        m_MethodName: SetMaterialBoolTrue
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: _ISCOOKING
+          m_BoolArgument: 0
+        m_CallState: 2
+  StoppedCooking:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7685427700509315561}
+        m_TargetAssemblyTypeName: MaterialController, Assembly-CSharp
+        m_MethodName: SetMaterialBoolFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: _ISCOOKING
+          m_BoolArgument: 0
+        m_CallState: 2
   audioSource: {fileID: 0}
   cookingSound:
   - {fileID: 8300000, guid: b6b6be5ad58b530439d131e602bbb2e7, type: 3}
@@ -8109,13 +8333,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4978562165063284718}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071065, y: 0.7071071, z: -6.977276e-13, w: 4.0005095e-14}
+  m_LocalRotation: {x: 0.0000002682209, y: 1, z: -4.5474735e-13, w: 5.684342e-13}
   m_LocalPosition: {x: 0, y: 0.011150356, z: 0.008553244}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 931613356}
-  m_LocalEulerAnglesHint: {x: 180, y: 0, z: -270}
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: -180}
 --- !u!114 &652237561345834634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8732,6 +8956,36 @@ MonoBehaviour:
           m_StringArgument: sad
           m_BoolArgument: 0
         m_CallState: 2
+  FoodCooking:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 807066798}
+        m_TargetAssemblyTypeName: MaterialController, Assembly-CSharp
+        m_MethodName: SetMaterialBoolTrue
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: _ISCOOKING
+          m_BoolArgument: 0
+        m_CallState: 2
+  StoppedCooking:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 807066798}
+        m_TargetAssemblyTypeName: MaterialController, Assembly-CSharp
+        m_MethodName: SetMaterialBoolFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: _ISCOOKING
+          m_BoolArgument: 0
+        m_CallState: 2
   audioSource: {fileID: 0}
   cookingSound:
   - {fileID: 8300000, guid: b6b6be5ad58b530439d131e602bbb2e7, type: 3}
@@ -9231,7 +9485,8 @@ Transform:
   m_LocalPosition: {x: 1.1600001, y: -0.12, z: 0.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 866121769}
   m_Father: {fileID: 4894899046761417303}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &2911535378589909763
@@ -9936,7 +10191,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 396ae39c65c3b3d40bf355687232b9d9, type: 2}
+  - {fileID: 2100000, guid: 91643a85486506d4b863e73cf3de46a0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10350,9 +10605,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.101
+  near clip plane: 0.3
   far clip plane: 1000
-  field of view: 20
+  field of view: 45
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -10427,6 +10682,7 @@ GameObject:
   - component: {fileID: 3870804411074515726}
   - component: {fileID: 3395996544358814079}
   - component: {fileID: 4978562165063284719}
+  - component: {fileID: 4978562165063284720}
   m_Layer: 6
   m_Name: BaconModel
   m_TagString: Ingredient
@@ -10456,6 +10712,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1260533695876157110, guid: 5ed6e7792a51c434b839b7d727924771, type: 3}
+--- !u!114 &4978562165063284720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4978562165063284718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f491bdafef8195418f12288afa2432c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MaterialController
 --- !u!1 &5026179457102915481
 GameObject:
   m_ObjectHideFlags: 0
@@ -11940,9 +12208,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  Description: {fileID: 0}
-  DescriptionText: Ring to finish
-  HasText: 1
+  HoverIcon:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 866121770}
+        m_TargetAssemblyTypeName: CharacterEmote, Assembly-CSharp
+        m_MethodName: PlayEmote
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: exclaim
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &7420215920506845258
 Transform:
   m_ObjectHideFlags: 0
@@ -12031,7 +12311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &7679612997793700303
 GameObject:
   m_ObjectHideFlags: 0
@@ -12045,6 +12325,7 @@ GameObject:
   - component: {fileID: 7685427700509315558}
   - component: {fileID: 7685427700509315555}
   - component: {fileID: 7685427700509315560}
+  - component: {fileID: 7685427700509315561}
   m_Layer: 6
   m_Name: EggModel
   m_TagString: Ingredient
@@ -12161,6 +12442,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1663452790952754327, guid: 7d8cf04a96fb8474395a106935a5ad47, type: 3}
+--- !u!114 &7685427700509315561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7679612997793700303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f491bdafef8195418f12288afa2432c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MaterialController
 --- !u!1 &7821449529389205969
 GameObject:
   m_ObjectHideFlags: 0
@@ -12242,6 +12535,7 @@ GameObject:
   - component: {fileID: 9126636369929735157}
   - component: {fileID: 3455715236845203919}
   - component: {fileID: 9126636369929735158}
+  - component: {fileID: 9126636369929735159}
   m_Layer: 6
   m_Name: HotDogModel
   m_TagString: Ingredient
@@ -12722,8 +13016,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3327836276872958601}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.25881928, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: -10.689518, y: 2.0776644, z: -1.3023901}
+  m_LocalRotation: {x: 0.49999997, y: 0, z: 0, w: 0.8660255}
+  m_LocalPosition: {x: 7.856291, y: 5.059609, z: -0.05795002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13119,6 +13413,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -4032434617429848123, guid: 1a98af3d2f1b6904390fb4b9143ebb6b, type: 3}
+--- !u!114 &9126636369929735159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7868564183263605379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f491bdafef8195418f12288afa2432c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MaterialController
 --- !u!224 &9133090924872329576
 RectTransform:
   m_ObjectHideFlags: 0

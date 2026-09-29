@@ -88,6 +88,9 @@ public class FoodStats : MonoBehaviour
     [Tooltip("Triggered once when the food reaches the burn threshold.")]
     public UnityEvent FoodBurnt;
 
+    public UnityEvent FoodCooking;
+    public UnityEvent StoppedCooking;
+
     private bool foodFlipEventTriggered;
     private bool foodCookedEventTriggered;
     private bool foodBurntEventTriggered;
@@ -373,15 +376,7 @@ public class FoodStats : MonoBehaviour
     public void StartCooking()
     {
         isCooking = true;
-
-        if (baseMaterials != null)
-        {
-            foreach (Material material in baseMaterials)
-            {
-                if (material != null)
-                    material.EnableKeyword("_ISCOOKING");
-            }
-        }
+        FoodCooking.Invoke();
     }
 
     // ============================================================
@@ -394,15 +389,8 @@ public class FoodStats : MonoBehaviour
             StartCoroutine(FadeAudio());
 
         isCooking = false;
-        
-        if (baseMaterials != null)
-        {
-            foreach (Material material in baseMaterials)
-            {
-                if (material != null)
-                    material.DisableKeyword("_ISCOOKING");
-            }
-        }
+
+        StoppedCooking.Invoke();
     }
 
     // ============================================================
