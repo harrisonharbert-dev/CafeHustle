@@ -112,7 +112,7 @@ public class Interactable : MonoBehaviour
         {
             Debug.LogWarning($"[Interactable] No interact prompt UI on {this}");
         }
-        
+
     }
 
     public void setInteractable(bool option)
@@ -185,7 +185,7 @@ public class Interactable : MonoBehaviour
         }
 
         //Update story
-        if(useSetStoryPointOnUse && currentStoryPoint != null)
+        if (useSetStoryPointOnUse && currentStoryPoint != null)
         {
             StoryManager.instance.SetStoryPoint(currentStoryPoint);
         }
@@ -199,7 +199,7 @@ public class Interactable : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
+
         if (other.gameObject.CompareTag("Player"))
         {
             if (played && playOnce) return;
@@ -216,7 +216,7 @@ public class Interactable : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        
+
         if (other.gameObject.CompareTag("Player") && PlayerInputController.instance.currentInteractable == this)
         {
             isInRange = false;
@@ -257,6 +257,32 @@ public class Interactable : MonoBehaviour
         if (prompt != null)
         {
             prompt.onUI(false);
+        }
+    }
+
+    public void ResetPlayOnce()
+    {
+        played = false;
+    }
+
+    public void ChangePlayOnce(bool value)
+    {
+        playOnce = value;
+    }
+
+    public void ChangeInteractType(int choice)
+    {
+        if (choice == 1)
+        {
+            interactType = interactableType.none;
+        }
+        else if (choice == 2)
+        {
+            interactType = interactableType.interactableWithTrigger;
+        }
+        else if (choice == 3)
+        {
+            interactType = interactableType.interactableWithInput;
         }
     }
 

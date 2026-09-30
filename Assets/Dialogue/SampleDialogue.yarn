@@ -10,20 +10,7 @@ Narrator: I love beans.
     Narrator: Who doesn't?
 ===
 
-title: Intro
----
-The cabin rattles as the wheels glide along the tracks.
-The train screeches to a stop.
-Dawn: <wave>Littlelake</wave>. Finally, a new start.
-Dawn: Grandma’s house should be somewhere around here. I was told it would be near the station.
-===
 
-title: trainSign
----
-Welcome to <wave>Littlelake</wave>.
-Stick around. Or Don't.
-<<play_emote player_emote heart>>
-===
 
 title: NPC
 ---
@@ -81,6 +68,8 @@ title: FirstSpiritIntro
     <<jump finishedIntroMinigame>>
 <<endif>>
 
+
+<<set $spiritTalkTo = 1>>
 <<play_cutscene PlayerCutsceneAnimator character_scared>>
 <<play_cutscene CutsceneAnimator spirit-appear>>
 <<play_emote_plain player_emote exclaim>>
@@ -141,7 +130,7 @@ Spirit: Well how about you show us your skills by whipping me up a delicious pla
 Dawn: You're kidding me right?
 Spirit: Haha. No.
 
-<<set $spiritTalkTo = 1>>
+
 ===
 
 title:SpiritFiller1
@@ -184,6 +173,8 @@ title: finishedIntroMinigame
 ---
 Spirit: Oh my! That looks <wave>delicious</wave>!
 Dawn: See? Easy.
+Spirit: Mmmm! It tastes amazing!
+<<play_cutscene CutsceneAnimator seapancake-appear>>
 ===
 
 

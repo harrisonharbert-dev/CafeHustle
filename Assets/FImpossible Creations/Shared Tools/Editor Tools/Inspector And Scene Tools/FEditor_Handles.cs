@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditorInternal;
@@ -18,10 +18,10 @@ public static class FEditor_TransformHandles
         EditorGUI.BeginChangeCheck();
 
         Handles.color = Color.green;
-        Quaternion rotation = (Tools.pivotRotation != PivotRotation.Local) ? Quaternion.identity : rootReference.rotation;
+        Quaternion rotation = (UnityEditor.Tools.pivotRotation != UnityEditor.PivotRotation.Local) ? Quaternion.identity : rootReference.rotation;
 
         float size = HandleUtility.GetHandleSize(position) * 0.125f;
-        Handles.SphereHandleCap(0, position, rotation, size, EventType.Repaint);
+        Handles.SphereHandleCap(0, position, rotation, size, UnityEngine.EventType.Repaint);
         Vector3 pos = Handles.PositionHandle(position, rotation);
 
         return pos;
@@ -59,7 +59,7 @@ public static class FEditor_TransformHandles
             GUILayout.BeginArea(new Rect(labelPos, labelSize));
             GUIStyle style = new GUIStyle();
             style.normal.textColor = Color.black;
-            style.alignment = TextAnchor.MiddleCenter;
+            style.alignment = UnityEngine.TextAnchor.MiddleCenter;
             GUILayout.Label(new GUIContent(text), style);
             GUILayout.EndArea();
 
@@ -121,24 +121,53 @@ public static class FEditor_TransformHandles
         return scale;
     }
 
-    public static Vector3 PositionHandle(Vector3 position, Quaternion rotation, float size = 1f, bool worldScale = false, bool freeHandle = true, bool colorize = true)
+    public static Vector3 PositionHandle(Vector3 position, Quaternion rotation, float size = 1f, bool worldScale = false, bool freeHandle = true, bool colorize = true, float planeHandlesSize = 0.75f, bool yHandles = true)
     {
         float handleSize = size;
         if (worldScale) handleSize = HandleUtility.GetHandleSize(position) * size;
 
         Color color = Handles.color;
 
+        if (freeHandle == false)
+        {
+            Vector3 off;
+            float plsize = handleSize * 0.2f * planeHandlesSize;
+
+            // Plane Handles
+            if (colorize) Handles.color = new Color(0f, 0f, 1f, 0.85f); // XY plane
+            off = rotation * ((Vector3.up + Vector3.right) * plsize);
+            position = Handles.Slider2D(position + off, rotation * Vector3.forward, rotation * Vector3.right, rotation * Vector3.up, plsize, Handles.RectangleHandleCap, 0.001f) - off;
+
+            if (yHandles)
+            {
+                if (colorize) Handles.color = new Color(0.0f, 1, 0.0f, 0.75f); // XZ plane
+                off = rotation * ((Vector3.right - Vector3.forward) * plsize);
+                position = Handles.Slider2D(position + off, rotation * Vector3.up, rotation * Vector3.right, rotation * Vector3.forward, plsize, Handles.RectangleHandleCap, 0.001f) - off;
+            }
+
+            if (colorize) Handles.color = new Color(1f, 0f, 0f, 0.75f); // YZ plane
+            off = rotation * (-(Vector3.forward + Vector3.down) * plsize);
+            position = Handles.Slider2D(position + off, rotation * Vector3.right, rotation * Vector3.up, rotation * Vector3.forward, plsize, Handles.RectangleHandleCap, 0.001f) - off;
+        }
+
         if (colorize) Handles.color = Handles.xAxisColor;
         position = Handles.Slider(position, rotation * Vector3.right, handleSize, Handles.ArrowHandleCap, 0.001f);
-        if (colorize) Handles.color = Handles.yAxisColor;
-        position = Handles.Slider(position, rotation * Vector3.up, handleSize, Handles.ArrowHandleCap, 0.001f);
+
+        if (yHandles)
+        {
+            if (colorize) Handles.color = Handles.yAxisColor;
+            position = Handles.Slider(position, rotation * Vector3.up, handleSize, Handles.ArrowHandleCap, 0.001f);
+        }
+
         if (colorize) Handles.color = Handles.zAxisColor;
         position = Handles.Slider(position, rotation * Vector3.forward, handleSize, Handles.ArrowHandleCap, 0.001f);
 
         if (freeHandle)
         {
             Handles.color = Handles.centerColor;
-            position = Handles.FreeMoveHandle(position, handleSize * 0.15f, Vector3.one * 0.001f, Handles.RectangleHandleCap);
+            Vector3 prePos = position;
+            var fmh_169_57_639174723056456247 = Quaternion.identity; position = Handles.FreeMoveHandle(position, handleSize * 0.15f, Vector3.one * 0.001f, Handles.RectangleHandleCap);
+            if (yHandles == false) position.y = prePos.y;
         }
 
         Handles.color = color;
