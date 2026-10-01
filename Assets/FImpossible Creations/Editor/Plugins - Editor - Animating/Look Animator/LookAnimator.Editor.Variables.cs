@@ -135,6 +135,7 @@ namespace FIMSpace.FLook
         protected SerializedProperty sp_ConstantParentalAxisUpdate;
 
         protected SerializedProperty sp_StopLookAboveMargin;
+        protected SerializedProperty sp_UnrestrictedRotationMode;
 
         #endregion
 
@@ -278,6 +279,7 @@ namespace FIMSpace.FLook
             sp_ConstantParentalAxisUpdate = serializedObject.FindProperty("ConstantParentalAxisUpdate");
             
             sp_StopLookAboveMargin = serializedObject.FindProperty("StopLookAboveMargin");
+            sp_UnrestrictedRotationMode = serializedObject.FindProperty("UnrestrictedRotationMode");
 
 
             // EYES

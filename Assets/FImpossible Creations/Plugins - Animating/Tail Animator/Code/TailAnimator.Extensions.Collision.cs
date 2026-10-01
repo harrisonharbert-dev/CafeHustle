@@ -333,9 +333,9 @@ namespace FIMSpace.FTail
             Collision collision = TailSegments[index].collisionContacts;
             float thisCollRadius = FImp_ColliderData_Sphere.CalculateTrueRadiusOfSphereCollider(TailSegments[index].transform, TailSegments[index].ColliderRadius) * 0.95f;
 
-            if (collision.GetComponent<Collider>())
+            if (collision.collider)
             {
-                SphereCollider collidedSphere = collision.GetComponent<Collider>() as SphereCollider;
+                SphereCollider collidedSphere = collision.collider as SphereCollider;
 
                 // If we collide sphere we can calculate precise segment offset for it
                 if (collidedSphere)
@@ -344,7 +344,7 @@ namespace FIMSpace.FTail
                 }
                 else
                 {
-                    CapsuleCollider collidedCapsule = collision.GetComponent<Collider>() as CapsuleCollider;
+                    CapsuleCollider collidedCapsule = collision.collider as CapsuleCollider;
 
                     // If we collide capsule we can calculate precise segment offset for it
                     if (collidedCapsule)
@@ -353,7 +353,7 @@ namespace FIMSpace.FTail
                     }
                     else
                     {
-                        BoxCollider collidedBox = collision.GetComponent<Collider>() as BoxCollider;
+                        BoxCollider collidedBox = collision.collider as BoxCollider;
 
                         // If we collide box we can calculate precise segment offset for it
                         if (collidedBox)
@@ -381,14 +381,14 @@ namespace FIMSpace.FTail
                         }
                         else // If we collide mesh we can't calculate very precise segment offset but we can support it in some way
                         {
-                            MeshCollider collidedMesh = collision.GetComponent<Collider>() as MeshCollider;
+                            MeshCollider collidedMesh = collision.collider as MeshCollider;
                             if (collidedMesh)
                             {
                                 FImp_ColliderData_Mesh.PushOutFromMeshCollider(collidedMesh, collision, thisCollRadius, ref pos);
                             }
                             else // If we collide terrain we can calculate very precise segment offset because terrain not rotates
                             {
-                                TerrainCollider terrain = collision.GetComponent<Collider>() as TerrainCollider;
+                                TerrainCollider terrain = collision.collider as TerrainCollider;
                                 FImp_ColliderData_Terrain.PushOutFromTerrain(terrain, thisCollRadius, ref pos);
                             }
                         }

@@ -163,7 +163,7 @@ namespace FIMSpace.FLook
             headOvG.transform.SetParent(LookBones[0].Transform);
             headOvG.transform.localRotation = Quaternion.identity;
             headOvG.transform.localPosition = Vector3.zero;
-            headOv = new FTools.UniRotateBone(headOvG.transform, BaseTransform);
+            headOv = new FTools.UniRotateBone(headOvG.transform, baseTransform);
             headOv.RefreshCustomAxis(Vector3.up, Vector3.forward);
             overrideRefInitialized = true;
         }
@@ -196,7 +196,7 @@ namespace FIMSpace.FLook
 
                 if ( ApplyClampingForOverrideMode)
                 {
-                    Quaternion lookAtLocal = Quaternion.LookRotation(BaseTransform.InverseTransformDirection(targetLookDir).normalized);
+                    Quaternion lookAtLocal = Quaternion.LookRotation(baseTransform.InverseTransformDirection(targetLookDir).normalized);
                     Vector3 angles = lookAtLocal.eulerAngles;
                     angles.x = Mathf.DeltaAngle(0f, angles.x);
                     angles.y = Mathf.DeltaAngle(0f, angles.y);
@@ -224,7 +224,7 @@ namespace FIMSpace.FLook
                         angles.x = GetClampedAngle(angles.x, YRotationLimits.y, YElasticRange);
                     }
 
-                    lastPerfectLookTarget = Quaternion.Euler(angles) * BaseTransform.forward;
+                    lastPerfectLookTarget = Quaternion.Euler(angles) * baseTransform.forward;
                 }
 
                 Vector3 lookAngles = headOv.GetCustomLookAngles(lastPerfectLookTarget, headOv);
@@ -278,7 +278,7 @@ namespace FIMSpace.FLook
 
             if (LeadBone)
             {
-                if (LookBones[0].Transform != LeadBone) { LookBones[0] = new LookBone(LeadBone); if (BaseTransform) LookBones[0].RefreshBoneDirections(BaseTransform); }
+                if (LookBones[0].Transform != LeadBone) { LookBones[0] = new LookBone(LeadBone); if (baseTransform) LookBones[0].RefreshBoneDirections(baseTransform); }
 
                 for (int i = 1; i < 1 + BackBonesCount; i++)
                 {
@@ -286,10 +286,10 @@ namespace FIMSpace.FLook
                     {
                         LookBone l = new LookBone(LookBones[i - 1].Transform.parent);
                         LookBones.Add(l);
-                        if (BaseTransform) l.RefreshBoneDirections(BaseTransform);
+                        if (baseTransform) l.RefreshBoneDirections(baseTransform);
                     }
                     else
-                    if (LookBones[i] == null || LookBones[i].Transform == null) { LookBones[i] = new LookBone(LookBones[i - 1].Transform.parent); if (BaseTransform) LookBones[i].RefreshBoneDirections(BaseTransform); }
+                    if (LookBones[i] == null || LookBones[i].Transform == null) { LookBones[i] = new LookBone(LookBones[i - 1].Transform.parent); if (baseTransform) LookBones[i].RefreshBoneDirections(baseTransform); }
                 }
             }
             else

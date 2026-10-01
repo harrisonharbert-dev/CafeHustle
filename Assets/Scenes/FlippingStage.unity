@@ -936,34 +936,10 @@ MonoBehaviour:
   jiggleRandomness: 90
   onHoverEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 435397684}
-        m_TargetAssemblyTypeName: UnityEngine.VFX.VisualEffect, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onHoverExitEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 435397684}
-        m_TargetAssemblyTypeName: UnityEngine.VFX.VisualEffect, UnityEngine
-        m_MethodName: Stop
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   screenPadding: 50
   dragging: 0
   CanBeFlipped: 0
@@ -1603,6 +1579,12 @@ MonoBehaviour:
   FoodBurnt:
     m_PersistentCalls:
       m_Calls: []
+  FoodCooking:
+    m_PersistentCalls:
+      m_Calls: []
+  StoppedCooking:
+    m_PersistentCalls:
+      m_Calls: []
   audioSource: {fileID: 0}
   cookingSound: []
   isPlayingSound: 0
@@ -1685,34 +1667,10 @@ MonoBehaviour:
   jiggleRandomness: 90
   onHoverEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 550589515}
-        m_TargetAssemblyTypeName: UnityEngine.VFX.VisualEffect, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onHoverExitEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 550589515}
-        m_TargetAssemblyTypeName: UnityEngine.VFX.VisualEffect, UnityEngine
-        m_MethodName: Stop
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   screenPadding: 50
   dragging: 0
   CanBeFlipped: 0
@@ -6362,9 +6320,9 @@ MonoBehaviour:
           m_StringArgument: finished-intro-minigame
           m_BoolArgument: 0
         m_CallState: 2
-  Description: {fileID: 0}
-  DescriptionText: Ring to finish
-  HasText: 1
+  HoverIcon:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!222 &5104376891190491404
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6475,11 +6433,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8456738784675561965, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
       propertyPath: onHoverEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8456738784675561965, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
       propertyPath: onHoverExitEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8456738784675561965, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
       propertyPath: onHoverEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode

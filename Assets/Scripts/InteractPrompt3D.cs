@@ -41,7 +41,7 @@ public class InteractPrompt3D : MonoBehaviour
 
     public void onUI(bool option)
     {
-        if (UIContainer != null)
+        if (UIContainer != null && PlayerInputController.instance.isinDialogue == false)
         {
             foreach (Transform child in UIContainer.transform)
             {

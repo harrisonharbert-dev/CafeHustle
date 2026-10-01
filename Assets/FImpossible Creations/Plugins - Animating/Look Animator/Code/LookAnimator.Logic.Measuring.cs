@@ -13,7 +13,7 @@ namespace FIMSpace.FLook
         /// </summary>
         public Vector3 GetDistanceMeasurePosition()
         {
-            return BaseTransform.position + BaseTransform.TransformVector(DistanceMeasurePoint);
+            return baseTransform.position + baseTransform.TransformVector(DistanceMeasurePoint);
         }
 
 
@@ -37,8 +37,8 @@ namespace FIMSpace.FLook
                 }
                 else
                 {
-                    if (leadBoneInitLocalOffset == Vector3.zero) return LeadBone.position + BaseTransform.TransformVector(StartLookPointOffset);
-                    return BaseTransform.TransformPoint(leadBoneInitLocalOffset) + BaseTransform.TransformVector(StartLookPointOffset);
+                    if (leadBoneInitLocalOffset == Vector3.zero) return LeadBone.position + baseTransform.TransformVector(StartLookPointOffset);
+                    return baseTransform.TransformPoint(leadBoneInitLocalOffset) + baseTransform.TransformVector(StartLookPointOffset);
                 }
             }
             else
@@ -56,7 +56,7 @@ namespace FIMSpace.FLook
         public void RefreshLookStartPositionAnchor()
         {
             if (!usingAxisCorrection)
-                leadBoneInitLocalOffset = BaseTransform.InverseTransformPoint(LeadBone.position);
+                leadBoneInitLocalOffset = baseTransform.InverseTransformPoint(LeadBone.position);
             else
                 leadBoneInitLocalOffset = axisCorrectionMatrix.inverse.MultiplyPoint(LeadBone.position);
 

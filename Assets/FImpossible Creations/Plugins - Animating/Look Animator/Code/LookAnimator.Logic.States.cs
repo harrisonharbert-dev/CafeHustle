@@ -48,7 +48,7 @@ namespace FIMSpace.FLook
             preActiveLookTarget = activeLookTarget;
             //preActiveLookPosition = activeLookPosition;
             preWeightFaloff = FaloffValue;
-            lastBaseRotation = BaseTransform.rotation;
+            lastBaseRotation = baseTransform.rotation;
             preLookDir = GetCurrentHeadForwardDirection();
         }
     }

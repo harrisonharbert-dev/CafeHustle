@@ -101,8 +101,8 @@ namespace FIMSpace.FLook
             }
             else // Easier calculations when using standard z - forward - y up
             {
-                worldDirectionAndTargetAngles = BaseTransform.InverseTransformDirection(worldDirectionAndTargetAngles);
-                worldDirectionAndTargetAngles = WrapVector(Quaternion.LookRotation(worldDirectionAndTargetAngles, BaseTransform.TransformDirection(ModelUpAxis)).eulerAngles);
+                worldDirectionAndTargetAngles = baseTransform.InverseTransformDirection(worldDirectionAndTargetAngles);
+                worldDirectionAndTargetAngles = WrapVector(Quaternion.LookRotation(worldDirectionAndTargetAngles, baseTransform.TransformDirection(ModelUpAxis)).eulerAngles);
             }
 
             return worldDirectionAndTargetAngles;

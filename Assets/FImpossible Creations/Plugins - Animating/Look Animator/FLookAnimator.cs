@@ -28,6 +28,8 @@ namespace FIMSpace.FLook
         [Tooltip("Base root transform - object which moves / rotates - character transform / game object")]
         public Transform BaseTransform;
 
+        /// <summary> Base transform reference to use calculations with, should never return null </summary>
+        Transform baseTransform;
 
         [Tooltip("Faloff value of how weight of animation should be spread over bones")]
         //[Range(0f, 2.5f)]
@@ -209,7 +211,7 @@ namespace FIMSpace.FLook
         public Vector3 StartLookPointOffset;
 
         [Tooltip("Freezes reference start look position in x and z axes to avoid re-reaching max rotation limits when hips etc. are rotating in animation clip.\n\nIf your character is crouching or so, you would like to have this parameter disabled")]
-        public bool AnchorStartLookPoint = true;
+        public bool AnchorStartLookPoint = false;
         [Tooltip("In some cases you'll want to refresh anchor position during gameplay to make it more fitting to character's animation poses")]
         public bool RefreshStartLookPoint = true;
 
@@ -314,6 +316,9 @@ namespace FIMSpace.FLook
         [Tooltip("Updating reference axis for parental look rotation mode every frame")]
         public bool ConstantParentalAxisUpdate = true;
 
+        [Tooltip("Allowing to rotate 360 to closest angle - can be used for turrets")]
+        public bool UnrestrictedRotationMode = false;
+
         #endregion
 
 
@@ -323,7 +328,10 @@ namespace FIMSpace.FLook
         {
             initialized = false;
             _LOG_NoRefs();
+
             if (BaseTransform == null) FindBaseTransform();
+            baseTransform = BaseTransform;
+
             if (LookBones == null || LookBones.Count == 0 || ContainsNullTransforms()) { RefreshLookBones(); }
             if (!StartAfterTPose) InitializeBaseVariables(); else startAfterTPoseCounter = 0;
         }
@@ -351,6 +359,7 @@ namespace FIMSpace.FLook
         bool updateLookAnimator = true;
         bool wasUpdating = false;
         float distanceOptimizeFade = 1f;
+
         void Update()
         {
             #region Conditions to do any calculations for Look Animator

@@ -2,7 +2,6 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
-using NUnit.Framework;
 using Yarn.Unity;
 using UnityEngine.Events;
 using System.Collections;
@@ -36,6 +35,14 @@ public class PlayerInputController : MonoBehaviour
     private float maxSpeed;
 
     [SerializeField] private LayerMask obstructionMask;
+
+    [Header("Ground / Slope Check")]
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float groundCheckDistance = 0.3f; // distance below capsule bottom to check
+    [SerializeField] private float groundCheckRadius = 0.25f;  // should roughly match capsule radius
+    private bool isGrounded;
+    private Vector3 groundNormal = Vector3.up;
+    private CapsuleCollider capsuleCollider;
 
     [HideInInspector] public bool isRunning = false;
     public bool isinDialogue = false;
@@ -108,6 +115,12 @@ public class PlayerInputController : MonoBehaviour
         if (TryGetComponent(out Rigidbody body))
         {
             rigidBody = body;
+        }
+
+        // Get capsule collider for ground-check sizing
+        if (TryGetComponent(out CapsuleCollider capsule))
+        {
+            capsuleCollider = capsule;
         }
 
     }
@@ -199,7 +212,7 @@ public class PlayerInputController : MonoBehaviour
     [YarnCommand("player_look_at")]
     public void LookAt(GameObject target)
     {
-        transform.DOLookAt(target.transform.position, interactRotationDuration, AxisConstraint.Y);
+        transform.DODynamicLookAt(target.transform.position, 3f, AxisConstraint.Y);
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -309,27 +322,73 @@ public class PlayerInputController : MonoBehaviour
         }
 
     }
+
+    private void CheckGround()
+    {
+        // Cast from the bottom of the capsule (or transform position if no capsule found)
+        Vector3 origin = transform.position;
+        float castDistance = groundCheckDistance;
+
+        if (capsuleCollider != null)
+        {
+            // Bottom of the capsule in world space, pulled up slightly so the cast starts inside the collider
+            float bottomOffset = (capsuleCollider.height * 0.5f) - capsuleCollider.radius;
+            Vector3 localBottom = capsuleCollider.center - Vector3.up * bottomOffset;
+            origin = transform.TransformPoint(localBottom) + Vector3.up * 0.1f;
+            castDistance = groundCheckDistance + 0.1f;
+        }
+
+        if (Physics.SphereCast(origin, groundCheckRadius, Vector3.down, out RaycastHit hit, castDistance, groundLayer))
+        {
+            isGrounded = true;
+            groundNormal = hit.normal;
+        }
+        else
+        {
+            isGrounded = false;
+            groundNormal = Vector3.up;
+        }
+    }
+
     private void FixedUpdate()
     {
         Shader.SetGlobalVector("_PlayerPosition", transform.position + Vector3.up);
 
-        // --- MOVEMENT (horizontal) ---
-        Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, transform.up).normalized;
-        Vector3 cameraRight = Vector3.ProjectOnPlane(cameraTransform.right, transform.up).normalized;
+        CheckGround();
+
+        // --- MOVEMENT (horizontal, slope-aware) ---
+        Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up).normalized;
+        Vector3 cameraRight = Vector3.ProjectOnPlane(cameraTransform.right, Vector3.up).normalized;
 
         Vector3 moveDirection = (cameraForward * moveInput.y + cameraRight * moveInput.x).normalized;
-        Vector3 targetVelocity = moveDirection * maxSpeed;
+
+        // Project movement onto the ground slope so we don't fight the collision response on inclines
+        Vector3 slopeMoveDirection = isGrounded
+            ? Vector3.ProjectOnPlane(moveDirection, groundNormal).normalized
+            : moveDirection;
+
+        Vector3 targetVelocity = slopeMoveDirection * maxSpeed;
 
         float rate = moveInput.sqrMagnitude > 0.01f ? acceleration : deceleration;
         currentVelocity = Vector3.MoveTowards(currentVelocity, targetVelocity, rate * Time.fixedDeltaTime);
 
-        Vector3 verticalVelocity = Vector3.Project(rigidBody.linearVelocity, transform.up);
-        rigidBody.linearVelocity = currentVelocity + verticalVelocity;
+        if (isGrounded)
+        {
+            // currentVelocity already includes the correct vertical component from the slope
+            // projection, so we don't stack collision-response vertical velocity on top of it.
+            rigidBody.linearVelocity = currentVelocity;
+        }
+        else
+        {
+            // Airborne: preserve gravity/fall velocity, only control horizontal movement
+            Vector3 verticalVelocity = Vector3.Project(rigidBody.linearVelocity, Vector3.up);
+            rigidBody.linearVelocity = currentVelocity + verticalVelocity;
+        }
 
         // --- ROTATION ---
         if (moveDirection.sqrMagnitude > 0.01f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection, transform.up);
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
             rigidBody.MoveRotation(Quaternion.RotateTowards(rigidBody.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime));
 
             if (footstepController != null && footstepFrequency > 0f)

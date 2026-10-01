@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using FIMSpace.FEditor;
 using UnityEditor;
 using UnityEngine;
@@ -74,18 +74,27 @@ namespace FIMSpace.FLook
 
         private float _editor_arrowsAlpha = 2f;
 
+        void EditorRefreshBaseTransform()
+        {
+            if( baseTransform == null ) baseTransform = BaseTransform;
+            if( baseTransform == null ) baseTransform = transform;
+        }
 
         private void OnDrawGizmos()
         {
-            if (BaseTransform == null || LeadBone == null)
+            EditorRefreshBaseTransform();
+
+            if ((baseTransform == null && Application.isPlaying) || LeadBone == null)
             {
                 Handles.Label(transform.position, new GUIContent(FGUI_Resources.Tex_Warning, "There is no 'Lead Bone' or 'Base Transform' defined!"));
                 return;
             }
 
+            var t = baseTransform;
+
             Color gC = Gizmos.color;
             Color hC = Handles.color;
-            _gizmosDist = Vector3.Distance(LeadBone.position, BaseTransform.position);
+            _gizmosDist = Vector3.Distance(LeadBone.position, t.position);
 
             if (_editor_arrowsAlpha < 2f) _editor_arrowsAlpha += 0.005f;
 
@@ -96,13 +105,13 @@ namespace FIMSpace.FLook
 
                 if (LeadBone)
                 {
-                    if (BaseTransform)
+                    if ( t )
                     {
                         Gizmos_DrawTargetPos(lookAtPos);
                         Gizmos_DrawClamping(_gizmosDist * 1.495f, lookAtPos);
                         Gizmos_DrawFeatureGuides(_gizmosDist * 1.495f);
 
-                        //Debug.DrawLine(LeadBone.position + StartLookPointOffset, BaseTransform.position, new Color(0.9f, 0.25f, 0.25f, 0.7f));
+                        //Debug.DrawLine(LeadBone.position + StartLookPointOffset, t.position, new Color(0.9f, 0.25f, 0.25f, 0.7f));
                     }
                 }
             }
@@ -111,7 +120,7 @@ namespace FIMSpace.FLook
 
             if (LeadBone != null)
             {
-                if (LeadBone != transform) Handles.Label(LeadBone.position, _tex_Finalbone);
+                if (LeadBone != transform) UnityEditor.Handles.Label(LeadBone.position, _tex_Finalbone);
 
                 Vector3 previousCheckPos = LeadBone ? LeadBone.position : Vector3.zero;
                 for (int i = 1; i < LookBones.Count; i++)
@@ -135,21 +144,24 @@ namespace FIMSpace.FLook
         {
             if (!drawGizmos) return;
 
+            EditorRefreshBaseTransform();
+
             Color gC = Gizmos.color;
             Color hC = Handles.color;
-
 
             if (_gizmosPreForw != ModelForwardAxis || _gizmosPreUp != ModelUpAxis) _editor_arrowsAlpha = 1.5f;
 
             Gizmos_DrawArrowGuide();
 
-            if (BaseTransform == null || LeadBone == null) return;
+            var t = baseTransform;
+
+            if( t == null || LeadBone == null) return;
 
             Vector3 lookAtPos;
             if (Application.isPlaying) lookAtPos = smoothLookPosition; else lookAtPos = GetLookAtPosition();
 
             // Reference scale distance
-            _gizmosDist = Vector3.Distance(LeadBone.position, BaseTransform.position);
+            _gizmosDist = Vector3.Distance(LeadBone.position, t.position);
 
             if (LeadBone)
             {
@@ -162,7 +174,7 @@ namespace FIMSpace.FLook
                     if (RightEye) Gizmos_DrawEyeObj(RightEye);
                 }
 
-                if (BaseTransform) if (!DebugRays) Gizmos_DrawTargetPos(lookAtPos);
+                if ( t ) if (!DebugRays) Gizmos_DrawTargetPos(lookAtPos);
             }
 
             Gizmos_DrawMaxDistance();
@@ -191,16 +203,15 @@ namespace FIMSpace.FLook
             Handles.SphereHandleCap(0, eye.position, Quaternion.identity, dist * 0.3f, EventType.Repaint);
             Handles.color = new Color(0f, 0f, 0f, gizmosAlpha * 0.7f);
             Handles.SphereHandleCap(0, eye.position, Quaternion.identity, dist * 0.125f, EventType.Repaint);
-
-
         }
 
 
         private void Gizmos_DrawTargetPos(Vector3 lookAtPos)
         {
-            float d = Vector3.Distance(BaseTransform.position, LeadBone.position);
+            var t = baseTransform;
+            if( t == null ) return;
 
-            //lookStartReferenceTransform = LeadBone;
+            float d = Vector3.Distance(t.position, LeadBone.position);
 
             Vector3 lookStartPosition = GetLookStartMeasurePosition();
 
@@ -221,9 +232,9 @@ namespace FIMSpace.FLook
 
             Handles.DrawDottedLine(lookStartPosition, lookAtPos, 3f);
 
-            Handles.DrawLine(lookAtPos - BaseTransform.forward * d * 0.1f, lookAtPos + BaseTransform.forward * d * 0.1f);
-            Handles.DrawLine(lookAtPos - BaseTransform.right * d * 0.1f, lookAtPos + BaseTransform.right * d * 0.1f);
-            Handles.DrawLine(lookAtPos - BaseTransform.up * d * 0.1f, lookAtPos + BaseTransform.up * d * 0.1f);
+            Handles.DrawLine(lookAtPos - t.forward * d * 0.1f, lookAtPos + t.forward * d * 0.1f);
+            Handles.DrawLine(lookAtPos - t.right * d * 0.1f, lookAtPos + t.right * d * 0.1f);
+            Handles.DrawLine(lookAtPos - t.up * d * 0.1f, lookAtPos + t.up * d * 0.1f);
             Handles.SphereHandleCap(0, lookAtPos, Quaternion.identity, d * 0.02f, EventType.Repaint);
 
 
@@ -241,9 +252,9 @@ namespace FIMSpace.FLook
 
                 Handles.DrawDottedLine(lookStartPosition, lookAtPos, 3f);
 
-                Handles.DrawLine(lookAtPos - BaseTransform.forward * d * 0.1f, lookAtPos + BaseTransform.forward * d * 0.1f);
-                Handles.DrawLine(lookAtPos - BaseTransform.right * d * 0.1f, lookAtPos + BaseTransform.right * d * 0.1f);
-                Handles.DrawLine(lookAtPos - BaseTransform.up * d * 0.1f, lookAtPos + BaseTransform.up * d * 0.1f);
+                Handles.DrawLine(lookAtPos - t.forward * d * 0.1f, lookAtPos + t.forward * d * 0.1f);
+                Handles.DrawLine(lookAtPos - t.right * d * 0.1f, lookAtPos + t.right * d * 0.1f);
+                Handles.DrawLine(lookAtPos - t.up * d * 0.1f, lookAtPos + t.up * d * 0.1f);
                 Handles.SphereHandleCap(0, lookAtPos, Quaternion.identity, d * 0.02f, EventType.Repaint);
             }
 
@@ -315,20 +326,22 @@ namespace FIMSpace.FLook
         public bool _gizmosDrawingGuides = true;
         private void Gizmos_DrawArrowGuide()
         {
-            if (BaseTransform == null) return;
             if (LeadBone == null) return;
 
-            if (_editor_arrowsAlpha > 0f)
+            var t = baseTransform;
+            if( t == null ) return;
+
+            if( _editor_arrowsAlpha > 0f)
             {
-                float d = Vector3.Distance(LeadBone.position, BaseTransform.position);
-                Vector3 arrowStart = Vector3.Lerp(BaseTransform.position, LeadBone.position, 0.7f);
+                float d = Vector3.Distance(LeadBone.position, t.position);
+                Vector3 arrowStart = Vector3.Lerp( t.position, LeadBone.position, 0.7f);
 
                 Handles.color = new Color(0.05f, 0.225f, 1f, 0.9f * _editor_arrowsAlpha);
-                FGUI_Handles.DrawArrow(BaseTransform.TransformDirection(ModelForwardAxis) * d * .22f + arrowStart, Quaternion.LookRotation(BaseTransform.TransformDirection(ModelForwardAxis), BaseTransform.TransformDirection(ModelUpAxis)), d * 0.2f);
+                FGUI_Handles.DrawArrow( t.TransformDirection(ModelForwardAxis) * d * .22f + arrowStart, Quaternion.LookRotation( t.TransformDirection(ModelForwardAxis), t.TransformDirection(ModelUpAxis)), d * 0.2f);
 
                 Handles.color = new Color(0.05f, 0.8f, 0.05f, 0.75f * _editor_arrowsAlpha);
-                arrowStart = LeadBone.position + BaseTransform.TransformDirection(ModelUpAxis) * d * .285f;
-                FGUI_Handles.DrawArrow(arrowStart, Quaternion.LookRotation(BaseTransform.TransformDirection(ModelUpAxis), BaseTransform.TransformDirection(ModelForwardAxis)), d * 0.15f, 4f, 0.5f);
+                arrowStart = LeadBone.position + t.TransformDirection(ModelUpAxis) * d * .285f;
+                FGUI_Handles.DrawArrow(arrowStart, Quaternion.LookRotation( t.TransformDirection(ModelUpAxis), t.TransformDirection(ModelForwardAxis)), d * 0.15f, 4f, 0.5f);
             }
 
             if (_editor_arrowsAlpha > -0.1f) _editor_arrowsAlpha -= 0.0125f;
@@ -343,10 +356,11 @@ namespace FIMSpace.FLook
             Color boneColor = new Color(0.075f, .85f, 0.3f, gizmosAlpha * 0.7f);
             Handles.color = boneColor;
 
-            Vector3 f = BaseTransform.TransformDirection(ModelForwardAxis);
+            var t = baseTransform;
+            Vector3 f = t.TransformDirection(ModelForwardAxis);
 
             if (LeadBone.childCount > 0)
-                FGUI_Handles.DrawBoneHandle(LeadBone.position, LeadBone.position + BaseTransform.TransformDirection(ModelUpAxis) * Vector3.Distance(LeadBone.position, LeadBone.parent.position) / 2f, f);
+                FGUI_Handles.DrawBoneHandle(LeadBone.position, LeadBone.position + t.TransformDirection(ModelUpAxis) * Vector3.Distance(LeadBone.position, LeadBone.parent.position) / 2f, f);
 
             if (LookBones.Count > 0)
             {
@@ -393,10 +407,11 @@ namespace FIMSpace.FLook
         {
             if (_Editor_Category != EEditorLookCategory.Limit && DebugRays == false) return;
 
-            Handles.matrix = BaseTransform.localToWorldMatrix;
+            var t = baseTransform;
+            Handles.matrix = t.localToWorldMatrix;
 
             Vector3 startLook = GetLookStartMeasurePosition();
-            Vector3 startLookLocal = BaseTransform.InverseTransformPoint(startLook);
+            Vector3 startLookLocal = t.InverseTransformPoint(startLook);
             Vector3 dir = (lookPos - startLook).normalized;
 
             if (LookState == EFHeadLookState.ClampedAngle)
@@ -406,7 +421,7 @@ namespace FIMSpace.FLook
 
             //Gizmos.DrawLine(startLook, startLook + dir);
 
-            Vector3 axisDir = BaseTransform.InverseTransformDirection(dir);
+            Vector3 axisDir = t.InverseTransformDirection(dir);
             axisDir.y = 0; axisDir.Normalize();
             Handles.DrawLine(startLookLocal, startLookLocal + axisDir * radius);
 
@@ -452,7 +467,7 @@ namespace FIMSpace.FLook
             else
                 Handles.color = new Color(0.3f, 1f, 0.7f, 0.7f);
 
-            axisDir = BaseTransform.InverseTransformDirection(dir);
+            axisDir = t.InverseTransformDirection(dir);
             axisDir.x = 0; axisDir.z = Mathf.Abs(axisDir.z); axisDir.Normalize();
             Handles.DrawLine(startLookLocal, startLookLocal + axisDir * radius / 1.2f);
 
@@ -471,9 +486,10 @@ namespace FIMSpace.FLook
         {
             if (!_gizmosDrawingGuides && DebugRays == false) return;
 
-            Handles.matrix = BaseTransform.localToWorldMatrix;
+            var t = baseTransform;
+            Handles.matrix = t.localToWorldMatrix;
             //Vector3 startLook = GetLookStartMeasurePosition();
-            //Vector3 startLookLocal = BaseTransform.InverseTransformPoint(startLook);
+            //Vector3 startLookLocal = t.InverseTransformPoint(startLook);
             Vector3 startLookLocal = Vector3.zero;
 
             // Hold back range

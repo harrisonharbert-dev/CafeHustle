@@ -11,6 +11,7 @@ public class MoveNPC : MonoBehaviour
     [SerializeField] private bool UseAnimator;
     private bool isFollowing;
     private bool isLookingAtPlayer;
+    private bool hasPendingDestination;
     [SerializeField] private Animator animator;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -32,27 +33,19 @@ public class MoveNPC : MonoBehaviour
     {
         if (isFollowing == true)
         {
-            GoToDestination(destination);
-        }
-
-
-
-        if (navMeshAgent.remainingDistance < navMeshAgent.stoppingDistance)
-        {
-            navMeshAgent.updateRotation = false;
-            if (!isLookingAtPlayer)
+            if (destination != null)
             {
-                isLookingAtPlayer = true;
-                transform.DOLookAt(PlayerInputController.instance.transform.position, 0.3f, AxisConstraint.Y);
+                navMeshAgent.SetDestination(destination.position);
             }
         }
-        else
+
+        if (hasPendingDestination && navMeshAgent != null && !navMeshAgent.pathPending &&
+            navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance &&
+            navMeshAgent.velocity.sqrMagnitude <= 0.01f)
         {
-            navMeshAgent.updateRotation = true;
-            isLookingAtPlayer = false;
+            hasPendingDestination = false;
+            OnDestinationReached();
         }
-
-
 
         if (!UseAnimator) return;
         float velocity = navMeshAgent.velocity.magnitude;
@@ -74,12 +67,20 @@ public class MoveNPC : MonoBehaviour
     {
         destination = newDestination;
 
-        if (destination != null)
+        if (destination != null && navMeshAgent != null)
         {
-            Vector3 targetVector = destination.transform.position;
-
-            navMeshAgent.SetDestination(targetVector);
+            hasPendingDestination = true;
+            navMeshAgent.SetDestination(destination.position);
         }
+        else
+        {
+            hasPendingDestination = false;
+        }
+    }
+
+    public virtual void OnDestinationReached()
+    {
+        transform.DOLookAt(PlayerInputController.instance.transform.position, 1f, AxisConstraint.Y);
     }
 
     public void FollowTarget(Transform newDestination)

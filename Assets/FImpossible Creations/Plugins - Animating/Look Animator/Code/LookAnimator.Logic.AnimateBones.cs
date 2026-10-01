@@ -92,9 +92,9 @@ namespace FIMSpace.FLook
                     }
                     else
                     {
-                        offset *= Quaternion.AngleAxis(BackBonesAddOffset.x + LookBones[i].correctionOffset.x + NodAxis.x * backNodFactor, BaseTransform.right);
-                        offset *= Quaternion.AngleAxis(BackBonesAddOffset.y + LookBones[i].correctionOffset.y + NodAxis.y * backNodFactor, BaseTransform.up);
-                        offset *= Quaternion.AngleAxis(BackBonesAddOffset.z + LookBones[i].correctionOffset.z + NodAxis.z * backNodFactor, BaseTransform.forward);
+                        offset *= Quaternion.AngleAxis(BackBonesAddOffset.x + LookBones[i].correctionOffset.x + NodAxis.x * backNodFactor, baseTransform.right);
+                        offset *= Quaternion.AngleAxis(BackBonesAddOffset.y + LookBones[i].correctionOffset.y + NodAxis.y * backNodFactor, baseTransform.up);
+                        offset *= Quaternion.AngleAxis(BackBonesAddOffset.z + LookBones[i].correctionOffset.z + NodAxis.z * backNodFactor, baseTransform.forward);
                     }
 
                 }
@@ -120,9 +120,9 @@ namespace FIMSpace.FLook
                 }
                 else
                 {
-                    headOff *= Quaternion.AngleAxis(LookBones[0].correctionOffset.x + NodAxis.x * nodFactor, BaseTransform.right);
-                    headOff *= Quaternion.AngleAxis(LookBones[0].correctionOffset.y + NodAxis.y * nodFactor, BaseTransform.up);
-                    headOff *= Quaternion.AngleAxis(LookBones[0].correctionOffset.z + NodAxis.z * nodFactor, BaseTransform.forward);
+                    headOff *= Quaternion.AngleAxis(LookBones[0].correctionOffset.x + NodAxis.x * nodFactor, baseTransform.right);
+                    headOff *= Quaternion.AngleAxis(LookBones[0].correctionOffset.y + NodAxis.y * nodFactor, baseTransform.up);
+                    headOff *= Quaternion.AngleAxis(LookBones[0].correctionOffset.z + NodAxis.z * nodFactor, baseTransform.forward);
                 }
             }
 

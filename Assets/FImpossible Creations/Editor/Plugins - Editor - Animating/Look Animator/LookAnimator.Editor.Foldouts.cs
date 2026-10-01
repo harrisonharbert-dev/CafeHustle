@@ -964,6 +964,7 @@ namespace FIMSpace.FLook
                 EditorGUIUtility.labelWidth = 0;
                 sp.Next(false);
                 EditorGUILayout.PropertyField(sp); // Calibration
+                EditorGUILayout.PropertyField(sp_UnrestrictedRotationMode); 
 
                 GUILayout.Space(4f);
             }

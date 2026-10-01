@@ -69,7 +69,7 @@ namespace FIMSpace.FLook
 
                 // If there is no target to follow we move focus point to front of lead bone
                 if (!lookT)
-                    return LeadBone.position + BaseTransform.TransformVector(ModelForwardAxis) * Vector3.Distance(LeadBone.position, BaseTransform.position);
+                    return LeadBone.position + baseTransform.TransformVector(ModelForwardAxis) * Vector3.Distance(LeadBone.position, baseTransform.position);
                 else
                 {
                     if (FollowMode == EFFollowMode.ToFollowSpaceOffset)
@@ -77,7 +77,7 @@ namespace FIMSpace.FLook
                     else if (FollowMode == EFFollowMode.WorldOffset)
                         return lookT.position + FollowOffset;
                     else if (FollowMode == EFFollowMode.LocalOffset)
-                        return lookT.position + BaseTransform.TransformVector(FollowOffset);
+                        return lookT.position + baseTransform.TransformVector(FollowOffset);
                     else
                         return lookT.position;
                 }
@@ -124,7 +124,7 @@ namespace FIMSpace.FLook
         /// </summary>
         public Vector3 GetForwardPosition()
         {
-            return LeadBone.position + BaseTransform.TransformDirection(ModelForwardAxis);
+            return LeadBone.position + baseTransform.TransformDirection(ModelForwardAxis);
         }
 
 
@@ -152,8 +152,8 @@ namespace FIMSpace.FLook
             if (Mathf.Abs(characterDelta.y) > maxRotOff) lookRotation = characterRotation;
             else
             {
-                if (characterDelta.y < XRotationLimits.x) lookRotation.y = characterRotation.y + XRotationLimits.y;
-                if (characterDelta.y > XRotationLimits.y) lookRotation.y = characterRotation.y + XRotationLimits.x;
+                if (characterDelta.y < XRotationLimits.x) lookRotation.y = characterRotation.y + XRotationLimits.x;
+                if (characterDelta.y > XRotationLimits.y) lookRotation.y = characterRotation.y + XRotationLimits.y;
 
                 if (characterDelta.x < YRotationLimits.x) lookRotation.x = characterRotation.x + XRotationLimits.x;
                 if (characterDelta.x > YRotationLimits.y) lookRotation.x = characterRotation.x + XRotationLimits.y;

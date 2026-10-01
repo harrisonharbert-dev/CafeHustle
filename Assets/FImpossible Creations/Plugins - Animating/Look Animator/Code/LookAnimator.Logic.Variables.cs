@@ -48,6 +48,8 @@ namespace FIMSpace.FLook
         public void InitializeBaseVariables()
         {
             if (BaseTransform == null) FindBaseTransform();
+            baseTransform = BaseTransform;
+
             _LOG_NoRefs();
 
             LookState = EFHeadLookState.Null;
@@ -59,19 +61,19 @@ namespace FIMSpace.FLook
             ResetBones();
 
             smoothLookPosition = GetForwardPosition();
-            lookFreezeFocusPoint = BaseTransform.InverseTransformPoint(smoothLookPosition);
+            lookFreezeFocusPoint = baseTransform.InverseTransformPoint(smoothLookPosition);
             refreshReferencePose = true;
             RefreshStartLookPoint = true;
-            rootStaticRotation = BaseTransform.rotation;
+            rootStaticRotation = baseTransform.rotation;
             _preBackBonesCount = BackBonesCount;
-            lastBaseRotation = BaseTransform.rotation;
+            lastBaseRotation = baseTransform.rotation;
             
             // Reset corrections, sometimes quaternion is NaN there we fix it
             for (int i = 0; i < LookBones.Count; i++)
             {
                 if (LookBones[i].correctionOffset == Vector3.zero) LookBones[i].correctionOffset = Vector3.zero;
                 LookBones[i].lastKeyframeRotation = LookBones[i].Transform.localRotation;
-                LookBones[i].RefreshBoneDirections(BaseTransform);
+                LookBones[i].RefreshBoneDirections(baseTransform);
             }
 
             CheckOverrideReference();

@@ -59,9 +59,7 @@ namespace FIMSpace.FLook
 
                 if (WhenAboveGoBackAfter > 0f)
                 {
-                    //if (WhenAboveGoBackAfterVertical > 0f) //{ //}
-                    //else //{
-                    float diff = Mathf.Abs(_preLookAboveLookAngles.x - whenAboveGoBackAngles.x) + Mathf.Abs(_preLookAboveLookAngles.y - whenAboveGoBackAngles.y);
+                    float diff = Mathf.Abs( Mathf.DeltaAngle( _preLookAboveLookAngles.x, whenAboveGoBackAngles.x ) ) + Mathf.Abs( Mathf.DeltaAngle( _preLookAboveLookAngles.y, whenAboveGoBackAngles.y ) );
 
                     whenAboveGoBackTimer += delta * Mathf.Lerp(0.0f, 1f, Mathf.InverseLerp(LookWhenAbove / 5f, LookWhenAbove, diff));
 

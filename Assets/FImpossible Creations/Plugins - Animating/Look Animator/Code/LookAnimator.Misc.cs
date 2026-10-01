@@ -10,8 +10,8 @@ namespace FIMSpace.FLook
     public partial class FLookAnimator
     {
         #region Hierarchy window icon
-        public string EditorIconPath { get { if (PlayerPrefs.GetInt("AnimsH", 1) == 0) return ""; else return "Look Animator/LookAnimator_SmallIcon"; } }
-        public void OnDrop(UnityEngine.EventSystems.PointerEventData data) { }
+        public string EditorIconPath { get { if( PlayerPrefs.GetInt( "AnimsH", 1 ) == 0 ) return ""; else return "Look Animator/LookAnimator_SmallIcon"; } }
+        public void OnDrop( UnityEngine.EventSystems.PointerEventData data ) { }
 
         #endregion
 
@@ -36,16 +36,16 @@ namespace FIMSpace.FLook
         /// <summary>
         /// Computing elastic clamp angle for given parameters
         /// </summary>
-        private float GetClampedAngle(float current, float limit, float elastic, float sign = 1f)
+        private float GetClampedAngle( float current, float limit, float elastic, float sign = 1f )
         {
-            if (elastic <= 0f) return limit;
+            if( elastic <= 0f ) return limit;
             else
             {
                 float elasticRange = 0f;
 
-                if (elastic > 0f)
+                if( elastic > 0f )
                 {
-                    elasticRange = FEasing.EaseOutCubic(0f, elastic, (current * sign - limit * sign) / (180f + limit * sign));
+                    elasticRange = FEasing.EaseOutCubic( 0f, elastic, ( current * sign - limit * sign ) / ( 180f + limit * sign ) );
                 }
 
                 return limit + elasticRange * sign;
@@ -58,34 +58,34 @@ namespace FIMSpace.FLook
         /// </summary>
         private void ComputeBonesRotationsFixVariables()
         {
-            if (BaseTransform != null)
+            if( baseTransform != null )
             {
-                Quaternion preRot = BaseTransform.rotation;
-                BaseTransform.rotation = Quaternion.identity;
+                Quaternion preRot = baseTransform.rotation;
+                baseTransform.rotation = Quaternion.identity;
 
                 FromAuto = LeadBone.rotation * -Vector3.forward;
 
-                float angl = Quaternion.Angle(Quaternion.identity, LeadBone.rotation);
-                Quaternion rotateAxis = (LeadBone.rotation * Quaternion.Inverse(Quaternion.FromToRotation(FromAuto, ModelForwardAxis)));
+                float angl = Quaternion.Angle( Quaternion.identity, LeadBone.rotation );
+                Quaternion rotateAxis = ( LeadBone.rotation * Quaternion.Inverse( Quaternion.FromToRotation( FromAuto, ModelForwardAxis ) ) );
 
-                OffsetAuto = Quaternion.AngleAxis(angl, rotateAxis.eulerAngles.normalized).eulerAngles;
+                OffsetAuto = Quaternion.AngleAxis( angl, rotateAxis.eulerAngles.normalized ).eulerAngles;
 
-                BaseTransform.rotation = preRot;
+                baseTransform.rotation = preRot;
 
                 RefreshParentalLookReferenceAxis();
 
-                headForward = Quaternion.FromToRotation(LeadBone.InverseTransformDirection(BaseTransform.TransformDirection(ModelForwardAxis.normalized)), Vector3.forward) * Vector3.forward;
+                headForward = Quaternion.FromToRotation( LeadBone.InverseTransformDirection( baseTransform.TransformDirection( ModelForwardAxis.normalized ) ), Vector3.forward ) * Vector3.forward;
             }
             else
             {
-                Debug.LogWarning("Base Transform isn't defined, so we can't use auto correction!");
+                Debug.LogWarning( "Base Transform isn't defined, so we can't use auto correction!" );
             }
         }
 
         private void RefreshParentalLookReferenceAxis()
         {
-            parentalReferenceLookForward = Quaternion.Inverse(LeadBone.parent.rotation) * BaseTransform.rotation * ModelForwardAxis.normalized;
-            parentalReferenceUp = Quaternion.Inverse(LeadBone.parent.rotation) * BaseTransform.rotation * ModelUpAxis.normalized;
+            parentalReferenceLookForward = Quaternion.Inverse( LeadBone.parent.rotation ) * baseTransform.rotation * ModelForwardAxis.normalized;
+            parentalReferenceUp = Quaternion.Inverse( LeadBone.parent.rotation ) * baseTransform.rotation * ModelUpAxis.normalized;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace FIMSpace.FLook
         /// </summary>
         public Vector3 GetCurrentHeadForwardDirection()
         {
-            return (LeadBone.rotation * Quaternion.FromToRotation(headForward, Vector3.forward)) * Vector3.forward;
+            return ( LeadBone.rotation * Quaternion.FromToRotation( headForward, Vector3.forward ) ) * Vector3.forward;
         }
 
 
@@ -102,9 +102,10 @@ namespace FIMSpace.FLook
         /// </summary>
         public virtual void FindHeadBone()
         {
+            if( BaseTransform == null ) baseTransform = transform; else baseTransform = BaseTransform;
             // First let's check if it's humanoid character, then we can get head bone transform from it
             Transform root = transform;
-            if( BaseTransform ) root = BaseTransform;
+            if( baseTransform ) root = baseTransform;
 
             Animator animator = root.GetComponentInChildren<Animator>();
             Transform animatorHeadBone = null;
@@ -214,7 +215,7 @@ namespace FIMSpace.FLook
         /// <summary>
         /// Searching through component's owner to find clavicle / shoulder and upperarm bones
         /// </summary>
-        public virtual void FindCompensationBones(  )
+        public virtual void FindCompensationBones()
         {
             // First let's check if it's humanoid character, then we can get head bone transform from it
             Transform root = transform;

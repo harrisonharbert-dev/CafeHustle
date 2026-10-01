@@ -57,6 +57,15 @@ namespace FIMSpace.FLook
                         angles.y = XRotationLimits.y;
                     }
 
+                    if( angles.x < YRotationLimits.x ) // Looking to the up clamp angle
+                    {
+                        angles.x = YRotationLimits.x;
+                    }
+                    else if( angles.x > YRotationLimits.y ) // Looking to the down clamp angle
+                    {
+                        angles.x = YRotationLimits.y;
+                    }
+
                     return angles;
                 }
             }
@@ -220,13 +229,12 @@ namespace FIMSpace.FLook
                 // Horizontal
                 float angle = Mathf.Abs(Mathf.DeltaAngle(_preLookAboveLookAngles.y, angles.y));
 
-
                 if (angle < animatedLookWhenAbove)
                     angles.y = _preLookAboveLookAngles.y;
                 else
                 {
                     if (angle != 0f)
-                        angles.y = Mathf.LerpUnclamped(_preLookAboveLookAngles.y, angles.y, (angle - animatedLookWhenAbove) / angle);
+                        angles.y = Mathf.LerpAngle( _preLookAboveLookAngles.y, angles.y, ( angle - animatedLookWhenAbove ) / angle );
 
                     _preLookAboveLookAngles.y = angles.y;
                 }
@@ -240,7 +248,7 @@ namespace FIMSpace.FLook
                 else
                 {
                     if (angle != 0f)
-                        angles.x = Mathf.LerpUnclamped(_preLookAboveLookAngles.x, angles.x, (angle - limit) / angle);
+                        angles.x = Mathf.LerpAngle( _preLookAboveLookAngles.x, angles.x, ( angle - limit ) / angle );
 
                     _preLookAboveLookAngles.x = angles.x;
                 }
@@ -260,9 +268,17 @@ namespace FIMSpace.FLook
         {
             if (!usingAxisCorrection)
             {
-                Vector3 off = (BaseTransform.rotation * Quaternion.Inverse(lastBaseRotation)).eulerAngles;
+                Vector3 off = (baseTransform.rotation * Quaternion.Inverse(lastBaseRotation)).eulerAngles;
                 off = WrapVector(off) * BaseRotationCompensation;
                 animatedLookAngles -= off;
+            }
+
+            if (UnrestrictedRotationMode)
+            {
+                // Horizontal target angles are wrapped to -180..180. Use the equivalent
+                // angle nearest to the current animation so crossing that boundary does
+                // not make the look rotation travel almost a full turn.
+                angles.y = animatedLookAngles.y + Mathf.DeltaAngle(animatedLookAngles.y, angles.y);
             }
 
             if (!instantRotation)

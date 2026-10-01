@@ -81,7 +81,7 @@ namespace FIMSpace.FTail
             }
 
             if (ParentTail._TransformsGhostChain.Contains(collision.transform)) return;
-            if (ParentTail.IgnoredColliders.Contains(collision.GetComponent<Collider>())) return;
+            if (ParentTail.IgnoredColliders.Contains(collision.collider)) return;
 
             ParentTail.CollisionDetection(Index, collision);
             previousCollision = collision.transform;

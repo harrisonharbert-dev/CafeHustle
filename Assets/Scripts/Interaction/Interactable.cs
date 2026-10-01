@@ -1,3 +1,4 @@
+using DG.Tweening;
 using KinematicCharacterController;
 using KinematicCharacterController.Walkthrough.AddingImpulses;
 using System.Collections;
@@ -37,6 +38,7 @@ public class Interactable : MonoBehaviour
     }
     public interactableType interactType;
     [SerializeField] private bool playOnce;
+    [SerializeField] private bool lookAtPlayerWhenInteract;
 
     private bool played;
 
@@ -164,6 +166,11 @@ public class Interactable : MonoBehaviour
         if (playOnce)
         {
             setInteractable(false);
+        }
+
+        if (lookAtPlayerWhenInteract)
+        {
+            transform.DOLookAt(PlayerInputController.instance.transform.position, 1f,AxisConstraint.Y);
         }
 
 

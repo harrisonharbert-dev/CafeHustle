@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace FIMSpace.FLook
 {
@@ -47,16 +47,19 @@ namespace FIMSpace.FLook
 
         private float EyesOutOfRangeBlend = 1f;
 
-        // If you are using also look animator, you can simply uncomment this and one LateUpdate() line for this feature
+        // If you are using also look animator, you can simply uncomment this line below and LateUpdate() line for this feature
         //public FLookAnimator UseLookAnimatorTarget = null;
 
         private Transform[] eyes;
         private Vector3[] eyeForwards;
+        private Vector3[] eyeUps;
         private Quaternion[] eyesInitLocalRotations;
         private Quaternion[] eyesLerpRotations;
 
         private float _eyesBlend;
         private Vector3 headForward;
+        private Quaternion eyesHeadReferenceBaseRotation = Quaternion.identity;
+        private Vector3 eyesHeadUp;
 
 
         public Transform GetEyesTarget()
@@ -87,20 +90,61 @@ namespace FIMSpace.FLook
             }
 
             eyeForwards = new Vector3[eyes.Length];
+            eyeUps = new Vector3[eyes.Length];
             eyesInitLocalRotations = new Quaternion[eyes.Length];
             eyesLerpRotations = new Quaternion[eyes.Length];
 
+            Vector3 referenceForward = baseTransform.TransformDirection(ModelForwardAxis.normalized);
+            Vector3 referenceUp = baseTransform.TransformDirection(ModelUpAxis.normalized);
+            Vector3.OrthoNormalize(ref referenceForward, ref referenceUp);
+
             for (int i = 0; i < eyeForwards.Length; i++)
             {
-                Vector3 rootPos = eyes[i].position + Vector3.Scale(BaseTransform.forward, eyes[i].transform.lossyScale);
-                Vector3 targetPos = eyes[i].position;
+                Vector3 eyeForward = eyes[i].InverseTransformDirection(referenceForward);
+                Vector3 eyeUp = eyes[i].InverseTransformDirection(referenceUp);
+                Vector3.OrthoNormalize(ref eyeForward, ref eyeUp);
 
-                eyeForwards[i] = (eyes[i].InverseTransformPoint(rootPos) - eyes[i].InverseTransformPoint(targetPos)).normalized;
+                eyeForwards[i] = eyeForward;
+                eyeUps[i] = eyeUp;
                 eyesInitLocalRotations[i] = eyes[i].localRotation;
                 eyesLerpRotations[i] = eyes[i].rotation;
             }
 
-            headForward = Quaternion.FromToRotation(GetHeadReference().InverseTransformDirection(BaseTransform.forward), Vector3.forward) * Vector3.forward;
+            Transform headReference = GetHeadReference();
+            Vector3 headLocalForward = headReference.InverseTransformDirection(referenceForward);
+            Vector3 headLocalUp = headReference.InverseTransformDirection(referenceUp);
+            Vector3.OrthoNormalize(ref headLocalForward, ref headLocalUp);
+
+            eyesHeadReferenceBaseRotation = Quaternion.LookRotation(headLocalForward, headLocalUp);
+            eyesHeadUp = headLocalUp;
+        }
+
+
+        private Quaternion GetEyesLookRotation(Vector3 worldDirection)
+        {
+            Transform headReference = GetHeadReference();
+            Quaternion referenceRotation = headReference.rotation * eyesHeadReferenceBaseRotation;
+
+            if (worldDirection.sqrMagnitude < 0.000001f) return referenceRotation;
+
+            Vector3 localDirection = Quaternion.Inverse(referenceRotation) * worldDirection.normalized;
+            float horizontalMagnitude = Mathf.Sqrt(localDirection.x * localDirection.x + localDirection.z * localDirection.z);
+
+            float pitch = -Mathf.Atan2(localDirection.y, horizontalMagnitude) * Mathf.Rad2Deg;
+            float yaw = Mathf.Atan2(localDirection.x, localDirection.z) * Mathf.Rad2Deg;
+
+            pitch = Mathf.Clamp(pitch, EyesYRange.x, EyesYRange.y);
+            yaw = Mathf.Clamp(yaw, EyesXRange.x, EyesXRange.y);
+
+            Quaternion lookRotation = referenceRotation * Quaternion.Euler(pitch, yaw, 0f);
+            Vector3 lookForward = lookRotation * Vector3.forward;
+            Vector3 headUp = headReference.TransformDirection(eyesHeadUp);
+            Vector3 lookUp = Vector3.ProjectOnPlane(headUp, lookForward);
+
+            if (lookUp.sqrMagnitude < 0.000001f)
+                lookUp = Vector3.ProjectOnPlane(lookRotation * Vector3.up, lookForward);
+
+            return Quaternion.LookRotation(lookForward, lookUp.normalized);
         }
 
 
@@ -125,7 +169,7 @@ namespace FIMSpace.FLook
             else
             {
                 if (EyesTarget == null)
-                    if (LookState != EFHeadLookState.ClampedAngle && LookState != EFHeadLookState.Following) fade = true;
+                    if (LookState != FLookAnimator.EFHeadLookState.ClampedAngle && LookState != EFHeadLookState.Following) fade = true;
             }
 
             if (fade)
@@ -141,51 +185,20 @@ namespace FIMSpace.FLook
             if (eyeTarget != null)
             {
                 Vector3 lookStartPosition = GetLookStartMeasurePosition();
-
-
-                Quaternion lookRotationQuat = Quaternion.LookRotation(eyeTarget.position - lookStartPosition);
-                Vector3 lookRotation = lookRotationQuat.eulerAngles;
-
-
-                #region Limitating rotation
-
-                Vector3 headRotation = (GetHeadReference().rotation * Quaternion.FromToRotation(headForward, Vector3.forward)).eulerAngles;// BaseTransform.rotation.eulerAngles;
-
-                // Vector with degrees differences to all axes
-                Vector2 deltaVector = new Vector3(Mathf.DeltaAngle(lookRotation.x, headRotation.x), Mathf.DeltaAngle(lookRotation.y, headRotation.y));
-
-                // Limit when looking up or down
-                if (deltaVector.x > EyesYRange.y)
-                    lookRotation.x = headRotation.x - EyesYRange.y;
-                else if (deltaVector.x < EyesYRange.x)
-                    lookRotation.x = headRotation.x - EyesYRange.x;
-
-                // Limit when looking left or right
-                if (deltaVector.y > -EyesXRange.x)
-                    lookRotation.y = headRotation.y - EyesXRange.y;
-                else if (deltaVector.y < -EyesXRange.y)
-                    lookRotation.y = headRotation.y + EyesXRange.y;
-
-                #endregion
-
+                Quaternion lookRotation = GetEyesLookRotation(eyeTarget.position - lookStartPosition);
 
                 for (int i = 0; i < eyes.Length; i++)
                 {
                     Quaternion initRot = eyes[i].rotation;
-                    Quaternion newEyeRot = Quaternion.Euler(lookRotation);
 
                     float mul = 1f;
                     if (eyes[i] == LeftEye) { if (InvertLeftEye) mul = -1f; } else if (eyes[i] == RightEye) if (InvertRightEye) mul = -1f;
-                    newEyeRot *= Quaternion.FromToRotation(eyeForwards[i], Vector3.forward * mul);
-                    newEyeRot *= eyesInitLocalRotations[i];
+                    Quaternion eyeMapping = Quaternion.Inverse(Quaternion.LookRotation(eyeForwards[i] * mul, eyeUps[i]));
+                    Quaternion newEyeRot = lookRotation * eyeMapping;
 
-                    eyes[i].rotation = newEyeRot;
-                    eyes[i].rotation *= Quaternion.Inverse(eyesInitLocalRotations[i]);
-                    if (EyesOffsetRotation != Vector3.zero) eyes[i].rotation *= Quaternion.Euler(EyesOffsetRotation);
-                    if (i == 0) { if (LeftEyeOffsetRotation != Vector3.zero) eyes[i].rotation *= Quaternion.Euler(LeftEyeOffsetRotation); }
-                    else if (i ==1) if (RightEyeOffsetRotation != Vector3.zero) eyes[i].rotation *= Quaternion.Euler(RightEyeOffsetRotation);
-
-                    newEyeRot = eyes[i].rotation;
+                    if (EyesOffsetRotation != Vector3.zero) newEyeRot *= Quaternion.Euler(EyesOffsetRotation);
+                    if (eyes[i] == LeftEye) { if (LeftEyeOffsetRotation != Vector3.zero) newEyeRot *= Quaternion.Euler(LeftEyeOffsetRotation); }
+                    else if (eyes[i] == RightEye) if (RightEyeOffsetRotation != Vector3.zero) newEyeRot *= Quaternion.Euler(RightEyeOffsetRotation);
 
                     eyesLerpRotations[i] = Quaternion.Slerp(eyesLerpRotations[i], newEyeRot, delta * Mathf.Lerp(2f, 40f, EyesSpeed));
 

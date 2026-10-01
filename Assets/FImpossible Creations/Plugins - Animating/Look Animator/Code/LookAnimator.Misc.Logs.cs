@@ -22,8 +22,9 @@ namespace FIMSpace.FLook
         private void _Debug_Rays()
         {
             if (!DebugRays) return;
+            if( baseTransform == null ) return;
 
-            Debug.DrawRay(GetLookStartMeasurePosition() + Vector3.up * 0.01f, Quaternion.Euler(finalLookAngles) * BaseTransform.TransformDirection(ModelForwardAxis), Color.cyan);
+            Debug.DrawRay(GetLookStartMeasurePosition() + Vector3.up * 0.01f, Quaternion.Euler(finalLookAngles) * baseTransform.TransformDirection(ModelForwardAxis), Color.cyan);
             //Vector3 startLook = GetLookStartMeasurePosition();
 
             //Debug.DrawRay(startLook + Vector3.up * 0.25f, axisCorrectionMatrix.MultiplyVector(Vector3.forward), Color.blue);
@@ -33,12 +34,12 @@ namespace FIMSpace.FLook
             //Debug.DrawRay(GetLookStartMeasurePosition() + Vector3.up, Quaternion.Euler(finalLookAngles) * ModelForwardAxis, Color.cyan);
 
             //Quaternion fromto = Quaternion.FromToRotation(Vector3.forward, ModelForwardAxis) * Quaternion.FromToRotation(Vector3.up, ModelUpAxis);
-            //Quaternion rot = Quaternion.Euler(finalLookAngles) * fromto * BaseTransform.rotation;
+            //Quaternion rot = Quaternion.Euler(finalLookAngles) * fromto * baseTransform.rotation;
 
             //Debug.DrawRay(GetLookStartMeasurePosition() + Vector3.up * 1.1f, rot * Vector3.forward, Color.yellow);
 
             //fromto = Quaternion.FromToRotation(Vector3.right, Vector3.Cross(Vector3.up, ModelForwardAxis));
-            //rot = fromto * Quaternion.Euler(finalLookAngles) * BaseTransform.rotation;
+            //rot = fromto * Quaternion.Euler(finalLookAngles) * baseTransform.rotation;
 
             //Debug.DrawRay(GetLookStartMeasurePosition() + Vector3.up * 1.2f, rot * Vector3.forward, Color.red);
         }
