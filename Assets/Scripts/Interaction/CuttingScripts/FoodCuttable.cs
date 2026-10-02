@@ -14,7 +14,6 @@ public class FoodCuttable : MonoBehaviour
 
     [Header("Slice")]
     public Material crossSectionMaterial;
-    public float sliceForce = 1.5f;
     public float halfSeparation = 0.05f;
     public float spawnLift = 0.03f;
 
@@ -30,6 +29,7 @@ public class FoodCuttable : MonoBehaviour
 
     [Header("Mesh Changes")]
     public Material cutMaterial;
+
     private void Start()
     {
         SetupCutGuide();
@@ -37,7 +37,6 @@ public class FoodCuttable : MonoBehaviour
 
     private void Update()
     {
-        // Keep the guide line attached to the food
         SetupCutGuide();
     }
 
@@ -68,9 +67,9 @@ public class FoodCuttable : MonoBehaviour
         if (cutStart == null || cutEnd == null)
             return false;
 
-        // --------------------------------------------------
-        // 1. CHECK KNIFE POSITION
-        // --------------------------------------------------
+        // -----------------------------
+        // CHECK KNIFE POSITION
+        // -----------------------------
 
         Vector3 start = cutStart.position;
         Vector3 end = cutEnd.position;
@@ -83,13 +82,15 @@ public class FoodCuttable : MonoBehaviour
 
         Vector3 cutDirection = cutLine.normalized;
 
-        // Find the closest point on the cut line to the knife
-        Vector3 startToKnife = knifePosition - start;
+        Vector3 startToKnife =
+            knifePosition - start;
 
         float distanceAlongLine =
-            Vector3.Dot(startToKnife, cutDirection);
+            Vector3.Dot(
+                startToKnife,
+                cutDirection
+            );
 
-        // Check that the knife is actually BETWEEN cutStart and cutEnd
         if (distanceAlongLine < 0f ||
             distanceAlongLine > cutLength)
         {
@@ -99,15 +100,17 @@ public class FoodCuttable : MonoBehaviour
             return false;
         }
 
-        // Find the closest point on the intended cut line
         Vector3 closestPoint =
-            start + cutDirection * distanceAlongLine;
+            start +
+            cutDirection *
+            distanceAlongLine;
 
-        // Distance from knife to the intended cut line
         float distanceFromLine =
-            Vector3.Distance(knifePosition, closestPoint);
+            Vector3.Distance(
+                knifePosition,
+                closestPoint
+            );
 
-        // Check line tolerance
         if (distanceFromLine > lineTolerance)
         {
             Debug.Log(
@@ -118,9 +121,9 @@ public class FoodCuttable : MonoBehaviour
             return false;
         }
 
-        // --------------------------------------------------
-        // 2. CHECK KNIFE ANGLE
-        // --------------------------------------------------
+        // -----------------------------
+        // CHECK KNIFE ANGLE
+        // -----------------------------
 
         float angle =
             Vector3.Angle(
@@ -128,7 +131,6 @@ public class FoodCuttable : MonoBehaviour
                 knifeDirection
             );
 
-        // Allow the knife to point either direction
         if (angle > 90f)
             angle = 180f - angle;
 
@@ -140,9 +142,9 @@ public class FoodCuttable : MonoBehaviour
             return false;
         }
 
-        // --------------------------------------------------
-        // 3. SUCCESSFUL CUT
-        // --------------------------------------------------
+        // -----------------------------
+        // SUCCESS
+        // -----------------------------
 
         cutSuccessful = true;
 
@@ -200,7 +202,7 @@ public class FoodCuttable : MonoBehaviour
                 crossSectionMaterial
             );
 
-        // Match original tomato transform
+        // Match original transform
         upper.transform.position = transform.position;
         upper.transform.rotation = transform.rotation;
         upper.transform.localScale = transform.localScale;
@@ -208,6 +210,10 @@ public class FoodCuttable : MonoBehaviour
         lower.transform.position = transform.position;
         lower.transform.rotation = transform.rotation;
         lower.transform.localScale = transform.localScale;
+
+        // -----------------------------
+        // MATERIAL
+        // -----------------------------
 
         MeshRenderer upperRenderer =
             upper.GetComponent<MeshRenderer>();
@@ -221,44 +227,28 @@ public class FoodCuttable : MonoBehaviour
         if (lowerRenderer != null && cutMaterial != null)
             lowerRenderer.material = cutMaterial;
 
+        // -----------------------------
+        // PHYSICS + DRAGGING
+        // -----------------------------
+
         SetupSlicePhysics(upper);
         SetupSlicePhysics(lower);
 
-        // Separate halves
+        // -----------------------------
+        // SEPARATE THE PIECES SLIGHTLY
+        // -----------------------------
+
         upper.transform.position +=
             planeNormal * halfSeparation;
 
         lower.transform.position -=
             planeNormal * halfSeparation;
 
-        // Small lift so they don't clip into board
         upper.transform.position +=
             Vector3.up * spawnLift;
 
         lower.transform.position +=
             Vector3.up * spawnLift;
-
-        Rigidbody upperRB =
-            upper.GetComponent<Rigidbody>();
-
-        Rigidbody lowerRB =
-            lower.GetComponent<Rigidbody>();
-
-        if (upperRB != null)
-        {
-            upperRB.AddForce(
-                planeNormal * sliceForce,
-                ForceMode.Impulse
-            );
-        }
-
-        if (lowerRB != null)
-        {
-            lowerRB.AddForce(
-                -planeNormal * sliceForce,
-                ForceMode.Impulse
-            );
-        }
 
         Success();
 
@@ -270,11 +260,20 @@ public class FoodCuttable : MonoBehaviour
     void SetupSlicePhysics(GameObject slice)
     {
         slice.layer = gameObject.layer;
+        slice.tag = gameObject.tag;
+
+        // -----------------------------
+        // COLLIDER
+        // -----------------------------
 
         MeshCollider meshCollider =
             slice.AddComponent<MeshCollider>();
 
         meshCollider.convex = true;
+
+        // -----------------------------
+        // RIGIDBODY
+        // -----------------------------
 
         Rigidbody rb =
             slice.AddComponent<Rigidbody>();
@@ -286,6 +285,21 @@ public class FoodCuttable : MonoBehaviour
 
         rb.interpolation =
             RigidbodyInterpolation.Interpolate;
+
+        // Freeze the tomato piece so cutting it
+        // doesn't knock it across the board.
+        rb.constraints =
+            RigidbodyConstraints.FreezeAll;
+
+        // -----------------------------
+        // DRAGGING
+        // -----------------------------
+
+        DraggingScript dragging =
+            slice.AddComponent<DraggingScript>();
+
+        dragging.isFood = true;
+        dragging.Interactable = true;
     }
 
     void Success()

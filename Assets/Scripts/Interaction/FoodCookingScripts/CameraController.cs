@@ -58,10 +58,6 @@ public class CameraController : MonoBehaviour
 
     IEnumerator DelayedStage(int stageIndex)
     {
-        Debug.Log("RanKnifeDrop");
-        KnifeDrawer knifeDrawer = FindAnyObjectByType<KnifeDrawer>();
-        knifeDrawer.HandlePickup();
-        knifeDrawer.GetComponent<KnifeDrawer>().holdingKnife = false;
         yield return new WaitForSeconds(2f);
         Cameras[stageIndex - 1].SetActive(false);
         Cameras[stageIndex].SetActive(true);
@@ -75,5 +71,11 @@ public class CameraController : MonoBehaviour
             FoodHotBar.SetActive(false);
         }
     }
-
+    public void DisableKnife()
+    {
+        Debug.Log("RanKnifeDrop");
+        KnifeDrawer knifeDrawer = FindAnyObjectByType<KnifeDrawer>();
+        knifeDrawer.HandlePickup();
+        knifeDrawer.GetComponent<KnifeDrawer>().holdingKnife = false;
+    }
 }

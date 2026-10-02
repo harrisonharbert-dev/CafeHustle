@@ -74,11 +74,13 @@ public class DraggingScript : MonoBehaviour,
 
     private Tween flipTween;
     private Tween jiggleTween;
+    public bool HasAReturnPoint;
+    public Transform ReturnPoint;
 
     private void Awake()
     {
         if (cam == null)
-            cam = FindAnyObjectByType<Camera>();
+            cam = Camera.main;
     }
 
     private void Start()
@@ -361,9 +363,18 @@ public class DraggingScript : MonoBehaviour,
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        DropFood();
+        if (HasAReturnPoint && ReturnPoint != null)
+            ReturnToPosition();
+        else
+            DropFood();
     }
-
+    public void ReturnToPosition()
+    {
+        this.gameObject.transform.DOMove(ReturnPoint.position, 0.5f).SetEase(Ease.InOutSine).OnComplete(() =>
+        {
+            DropFood();
+        });
+    }
     private void DropFood()
     {
         if (foodCollider != null)
