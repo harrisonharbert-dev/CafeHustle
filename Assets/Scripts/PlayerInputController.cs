@@ -353,6 +353,9 @@ public class PlayerInputController : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            moveInput = new Vector2(0f, 0f);
+            currentVelocity = Vector3.zero;
+            rigidBody.linearVelocity = Vector3.Project(rigidBody.linearVelocity, Vector3.up);
             return;
         }
         else
