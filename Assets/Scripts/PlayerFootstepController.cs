@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using KinematicCharacterController;
 using UnityEngine;
 using UnityEngine.VFX;
 

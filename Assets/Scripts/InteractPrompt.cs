@@ -68,6 +68,7 @@ public class InteractPrompt : MonoBehaviour
             Interactable.PromptText.Read => "Read",
             Interactable.PromptText.Drop => "Drop",
             Interactable.PromptText.Deliver => "Deliver",
+            Interactable.PromptText.Inspect => "Inspect",
             _ => "Interact"
         };
     }

@@ -46,13 +46,14 @@ public class PlayerInputController : MonoBehaviour
 
     [HideInInspector] public bool isRunning = false;
     public bool isinDialogue = false;
+    public bool isViewingModel = false;
 
     [SerializeField] private PlayerFootstepController footstepController;
     [SerializeField] private float footstepFrequency = 2f;
     private float footstepTimer;
 
 
-    [HideInInspector] public bool lockMovement = false;
+    public bool lockMovement = false;
 
 
 
@@ -165,6 +166,13 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 
+    public void SetViewingModel(bool option)
+    {
+        isViewingModel = option;
+
+        SetMovementLock(option);
+    }
+
     private IEnumerator waitLock(bool option, float time)
     {
         yield return new WaitForSeconds(time);
@@ -174,22 +182,9 @@ public class PlayerInputController : MonoBehaviour
     {
         lockMovement = option;
 
-        if (isinDialogue)
+        if (isinDialogue || isViewingModel)
         {
             lockMovement = true;
-        }
-
-
-        //Hide cursor
-        Cursor.visible = option;
-
-        if (option == false)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.None;
         }
 
         moveInput = new Vector2(0f, 0f);
@@ -353,6 +348,18 @@ public class PlayerInputController : MonoBehaviour
     private void FixedUpdate()
     {
         Shader.SetGlobalVector("_PlayerPosition", transform.position + Vector3.up);
+
+        if (lockMovement)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            return;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
 
         CheckGround();
 

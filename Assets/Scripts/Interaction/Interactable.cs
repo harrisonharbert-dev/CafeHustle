@@ -1,6 +1,4 @@
 using DG.Tweening;
-using KinematicCharacterController;
-using KinematicCharacterController.Walkthrough.AddingImpulses;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +20,7 @@ public class Interactable : MonoBehaviour
         Read,
         Drop,
         Deliver,
+        Inspect,
     }
 
     public enum PromptKey

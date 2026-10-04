@@ -106,7 +106,6 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     private Vector2 startingPos;
     private Image image;
     private Color startingCol;
-    private bool isWaitingForDependency = false;
 
     [SerializeField] private UnityEvent onVisibleEvent;
     [SerializeField] private UnityEvent onDisableEvent;
@@ -264,14 +263,24 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public void Text(bool option)
     {
         if (textSettings.text == null) return;
-        DOTween.Kill(textSettings.text);
-        textSettings.text.ForceMeshUpdate();
-        int characterCount = textSettings.text.textInfo.characterCount;
+        TextMeshProUGUI targetText = textSettings.text;
+        DOTween.Kill(targetText);
+        targetText.ForceMeshUpdate();
+        int characterCount = targetText.textInfo.characterCount;
         int targetCharacters = option ? characterCount : 0;
+        targetText.maxVisibleCharacters = option ? 0 : characterCount;
 
-        //set to inverse of target
-        textSettings.text.maxVisibleCharacters = option ? 0 : characterCount;
-        DOTween.To(() => textSettings.text.maxVisibleCharacters, x => textSettings.text.maxVisibleCharacters = x, targetCharacters, textSettings.duration).SetDelay(textSettings.delay);
+        DOTween.To(() => targetText.maxVisibleCharacters,
+            value => targetText.maxVisibleCharacters = value,
+            targetCharacters,
+            textSettings.duration)
+            .SetTarget(targetText)
+            .SetDelay(textSettings.delay)
+            .OnComplete(() =>
+            {
+                targetText.maxVisibleCharacters = targetCharacters;
+                targetText.ForceMeshUpdate();
+            });
     }
 
     public void FadeAndScale(bool option)

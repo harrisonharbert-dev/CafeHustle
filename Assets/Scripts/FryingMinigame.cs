@@ -24,7 +24,6 @@ public class FryingMinigame : MonoBehaviour
     //QTE Settings
     private bool popUpActive = false;
     private float popUpDuration = 3f;
-    private float uiTransitionDuration = 0.3f;
     [SerializeField] private GameObject popUpUI;
     [SerializeField] private Image uiCounter;
 
