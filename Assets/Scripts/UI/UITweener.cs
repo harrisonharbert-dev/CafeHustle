@@ -70,6 +70,14 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         public float delay = 0f;
 
     }
+    [System.Serializable]
+    public class RotateSettings
+    {
+        public float rotateAmount = 5f;
+        public float duration = 0.3f;
+
+        public float delay = 0f;
+    }
 
     [System.Serializable]
     public class ColorSettings
@@ -98,12 +106,14 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [SerializeField] private SlideSettings slideSettings;
     [SerializeField] private ColorSettings colorSettings;
     [SerializeField] private TextSettings textSettings;
+    [SerializeField] private RotateSettings rotateSettings;
 
     //private references
     private CanvasGroup group;
     private RectTransform rect;
     private Vector3 scale;
     private Vector2 startingPos;
+    private Quaternion startingRotation;
     private Image image;
     private Color startingCol;
 
@@ -120,6 +130,7 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             group = GetComponent<CanvasGroup>();
             rect = GetComponent<RectTransform>();
             scale = transform.localScale;
+            startingRotation = rect.rotation;
             startingPos = rect.anchoredPosition;
             image = GetComponent<Image>();
             if (image != null)
@@ -132,6 +143,7 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             group = objectToAnimate.GetComponent<CanvasGroup>();
             rect = objectToAnimate.GetComponent<RectTransform>();
             scale = objectToAnimate.transform.localScale;
+            startingRotation = objectToAnimate.transform.rotation;
             startingPos = rect.anchoredPosition;
             image = objectToAnimate.GetComponent<Image>();
             if (image != null)
@@ -297,7 +309,20 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void ScaleUp(bool option)
     {
+        rect.DOComplete();
         Vector3 target = option ? scale + new Vector3(scaleSettings.scaleUpSize, scaleSettings.scaleUpSize, scaleSettings.scaleUpSize) : scale;
         rect.DOScale(target, scaleSettings.duration).SetDelay(scaleSettings.delay);
+    }
+
+    public void RotateUp(bool option)
+    {
+        rect.DOComplete();
+
+        float targetZ = option
+            ? startingRotation.eulerAngles.z + rotateSettings.rotateAmount
+            : startingRotation.eulerAngles.z;
+
+        Vector3 target = new Vector3(0f, 0f, targetZ);
+        rect.DORotate(target, rotateSettings.duration).SetDelay(rotateSettings.delay);
     }
 }
