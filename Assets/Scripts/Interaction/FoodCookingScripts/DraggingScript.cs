@@ -65,7 +65,7 @@ public class DraggingScript : MonoBehaviour,
 
     public bool CanBeFlipped;
     public bool Interactable;
-
+    public bool CanBeRotated;
     [HideInInspector]
     public FoodStats foodStatsScript;
 
@@ -133,7 +133,8 @@ public class DraggingScript : MonoBehaviour,
         if (dragging &&
             Input.GetMouseButton(1) &&
             isFood &&
-            !isFlipping)
+            !isFlipping &&
+            CanBeRotated)
         {
             RotateFoodModel();
         }

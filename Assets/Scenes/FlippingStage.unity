@@ -944,6 +944,7 @@ MonoBehaviour:
   dragging: 0
   CanBeFlipped: 0
   Interactable: 1
+  CanBeRotated: 1
   foodStatsScript: {fileID: 0}
   HasAReturnPoint: 0
   ReturnPoint: {fileID: 0}
@@ -1677,6 +1678,7 @@ MonoBehaviour:
   dragging: 0
   CanBeFlipped: 0
   Interactable: 1
+  CanBeRotated: 1
   foodStatsScript: {fileID: 0}
   HasAReturnPoint: 0
   ReturnPoint: {fileID: 0}
@@ -6431,6 +6433,10 @@ PrefabInstance:
       propertyPath: dragPlane
       value: 
       objectReference: {fileID: 2000631453}
+    - target: {fileID: 8456738784675561965, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
+      propertyPath: CanBeRotated
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8456738784675561965, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
       propertyPath: Interactable
       value: 1

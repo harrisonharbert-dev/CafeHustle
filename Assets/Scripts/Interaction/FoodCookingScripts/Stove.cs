@@ -17,20 +17,24 @@ public class Stove : MonoBehaviour
     public TextMeshProUGUI OliveOilText;
 
     private List<FoodStats> foodCurrentlyOnStove = new List<FoodStats>();
+
     private void Start()
     {
         OliveOilAmount = 100f;
         OliveOilMeter.fillAmount = OliveOilAmount / 100f;
+        UpdateOilText();
     }
+
     private void Update()
     {
         if (foodOnStove > 0 && OliveOilAmount > 0)
         {
-            OliveOilMeter.fillAmount -= Time.deltaTime * foodOnStove/20f;
+            OliveOilMeter.fillAmount -= Time.deltaTime * foodOnStove / 20f;
             OliveOilMeter.fillAmount = Mathf.Clamp01(OliveOilMeter.fillAmount);
 
             OliveOilAmount = Mathf.RoundToInt(OliveOilMeter.fillAmount * 100);
-            OliveOilText.text = "Oil Amount: " + OliveOilAmount + "%";
+
+            UpdateOilText();
 
             if (OliveOilAmount <= 0)
             {
@@ -39,47 +43,72 @@ public class Stove : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(UnityEngine.Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
+        // OLIVE OIL
+        // Keep the original detection that was working
         if (collision.gameObject.CompareTag("OliveOil"))
         {
-            OliveOilAmount = 100f; 
-            OliveOilMeter.fillAmount = OliveOilAmount / 100f;
-            Debug.Log("Olive oil added to stove. Amount: " + OliveOilAmount + "%");
+            Debug.Log("Olive Oil detected!");
+
+            OliveOil oliveOil = collision.gameObject.GetComponent<OliveOil>();
+
+            if (oliveOil != null)
+            {
+                oliveOil.SetStove(this);
+            }
+            else
+            {
+                Debug.LogWarning("OliveOil script is missing from the tagged OliveOil object!");
+            }
+
+            return;
         }
-        else
+
+        // FOOD
+        FoodStats food = collision.gameObject.GetComponentInParent<FoodStats>();
+        DraggingScript dragging = collision.gameObject.GetComponentInParent<DraggingScript>();
+
+        if (food == null || dragging == null || !dragging.isFood)
+            return;
+
+        if (!foodCurrentlyOnStove.Contains(food))
         {
-            FoodStats food = collision.gameObject.GetComponentInParent<FoodStats>();
-            DraggingScript dragging = collision.gameObject.GetComponentInParent<DraggingScript>();
+            foodCurrentlyOnStove.Add(food);
+            foodOnStove++;
+        }
 
-            if (food == null || dragging == null || !dragging.isFood)
-                return;
+        // No oil = don't cook
+        if (OliveOilAmount <= 0)
+            return;
 
-            if (!foodCurrentlyOnStove.Contains(food))
-            {
-                foodCurrentlyOnStove.Add(food);
-                foodOnStove++;
-            }
+        Debug.Log("Starting to cook: " + food.gameObject.name);
 
-            // No oil = don't cook
-            if (OliveOilAmount <= 0)
-                return;
+        food.StartCooking();
 
-            Debug.Log("Starting to cook: " + food.gameObject.name);
-
-            food.StartCooking();
-
-            if (foodOnStove == 1 &&
-                CookingVFX != null &&
-                CookingVFX.Length > 0)
-            {
-                CookingVFX[0]?.Invoke();
-            }
+        if (foodOnStove == 1 &&
+            CookingVFX != null &&
+            CookingVFX.Length > 0)
+        {
+            CookingVFX[0]?.Invoke();
         }
     }
 
-    private void OnCollisionStay(UnityEngine.Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
+        // OLIVE OIL
+        if (collision.gameObject.CompareTag("OliveOil"))
+        {
+            OliveOil oliveOil = collision.gameObject.GetComponent<OliveOil>();
+
+            if (oliveOil != null)
+            {
+                oliveOil.SetStove(this);
+            }
+
+            return;
+        }
+
         // No oil = cannot cook
         if (OliveOilAmount <= 0)
             return;
@@ -94,12 +123,29 @@ public class Stove : MonoBehaviour
         if (!food.isCooking && !dragging.dragging)
         {
             Debug.Log("Food still on stove - restarting cooking: " + food.gameObject.name);
+
             food.StartCooking();
         }
     }
 
-    private void OnCollisionExit(UnityEngine.Collision collision)
+    private void OnCollisionExit(Collision collision)
     {
+        // OLIVE OIL
+        if (collision.gameObject.CompareTag("OliveOil"))
+        {
+            Debug.Log("Olive Oil left stove!");
+
+            OliveOil oliveOil = collision.gameObject.GetComponent<OliveOil>();
+
+            if (oliveOil != null)
+            {
+                oliveOil.RemoveStove(this);
+            }
+
+            return;
+        }
+
+        // FOOD
         FoodStats food = collision.gameObject.GetComponentInParent<FoodStats>();
         DraggingScript dragging = collision.gameObject.GetComponentInParent<DraggingScript>();
 
@@ -123,6 +169,41 @@ public class Stove : MonoBehaviour
             CookingVFX.Length > 1)
         {
             CookingVFX[1]?.Invoke();
+        }
+    }
+
+    public void TopUpOil()
+    {
+        OliveOilAmount = 100f;
+        OliveOilMeter.fillAmount = 1f;
+
+        UpdateOilText();
+
+        Debug.Log("Olive oil topped up!");
+
+        // Restart food cooking
+        foreach (FoodStats food in foodCurrentlyOnStove)
+        {
+            if (food != null && !food.isCooking)
+            {
+                food.StartCooking();
+            }
+        }
+
+        if (foodOnStove > 0 &&
+            CookingVFX != null &&
+            CookingVFX.Length > 0)
+        {
+            CookingVFX[0]?.Invoke();
+        }
+    }
+
+    private void UpdateOilText()
+    {
+        if (OliveOilText != null)
+        {
+            OliveOilText.text =
+                "Oil Amount: " + Mathf.RoundToInt(OliveOilAmount) + "%";
         }
     }
 
