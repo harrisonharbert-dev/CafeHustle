@@ -14,9 +14,7 @@
 
 Penelope: When I heard there was a new person who had come to town, I just had to meet them
 Penelope: And young too! There’s no one in this town my age. They’re either old enough to croquet, or young enough to not know what croqueting is.
-
 Penelope: But anyways, name’s Penelope!
-
 Penelope: Though you can just call me Penny, that’s what most people ‘round here call me.
 
 Dawn: I’m Dawn.
@@ -26,7 +24,6 @@ Penelope: Dawn… that’s a nice name! Very hopeful.
 Dawn: Aha, thank you.
 
 Penelope: So what brings you to this dumpty little town?
-
     -> I needed a new start.
         Dawn: I needed a new start, and my Grandma left me this property in her will. So, I figured, why not?
     -> Grams gave me her house.
@@ -37,14 +34,13 @@ Penelope: So what brings you to this dumpty little town?
 Penelope: Well, fancy that. And here of all places. Did you even know this place existed before?
 
 Dawn: Not at all. Lawyers showed me on the map when they told me about it.
-
 Dawn: While you’re here, would you like anything to eat?
 
-Penelope: It all looks so nice! What do you recommend?
+Penelope: What do you reccommend?
 
-Dawn: Well, I was just working on a mean eggs and toast. Wanna try it?
+Dawn: Well, I know how to make a mean eggs and toast.
 
-Penelope: I haven’t had a chance to eat breakfast yet. So, show me what you’ve got!
+Penelope: That sounds good! I haven’t had a chance to eat breakfast yet.
 
 <<GoToDestination armature-lady CafeEntranceWaypoint>>
 <<set $penelope_TalkTo to 1>>
@@ -53,25 +49,23 @@ Penelope: I haven’t had a chance to eat breakfast yet. So, show me what you’
 
 title: Filler1_Penelope
 ---
-Penelope: The cafe looks... great!
-Penelope: Let's see that breakfast!
+Penelope: The cafe looks... cute!
+Penelope: I can't wait to see what you cook.
 ===
 
 
 title: AfterCooking_Penelope
 ---
 Penelope: Golly, this looks good. And it tastes good too!
-
 Penelope: It tastes… savoury and… sweet? What did you put in it?
 
-Dawn: Trade secret. Gotta keep Grams secrets under lock and key.
+Dawn: Trade secret, unfortunately.
 
-Penelope: Aw, man. Fair enough. Can I get a doggy bag? I would love to keep some for my mum to try.
+Penelope: Aw, man. Fair enough. Can I get a doggy bag? I would love to keep some for mum to try.
 
 Dawn: Sure thing. Here you go.
 
 Penelope: Well, I’ve gotta run now. It was nice meeting you Dawn!
-
 Penelope: I’ll pop back another time.
 
 Dawn: See ya, Penny.
