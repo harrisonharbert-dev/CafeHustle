@@ -8,6 +8,9 @@ public class TrayCheck : MonoBehaviour
 {
     public List<FoodStats> foodsOnTray = new List<FoodStats>();
 
+    // Keeps track of food physically touching the tray trigger
+    private HashSet<FoodStats> foodsTouchingTray = new HashSet<FoodStats>();
+
     public GameObject NextSectionUI;
 
     [Header("Tray Animation")]
@@ -69,27 +72,57 @@ public class TrayCheck : MonoBehaviour
         // so search upwards for FoodStats.
         FoodStats food = other.GetComponentInParent<FoodStats>();
 
-        if (food != null && !foodsOnTray.Contains(food))
+        if (food == null)
+            return;
+
+        // Food is currently physically touching the tray.
+        foodsTouchingTray.Add(food);
+
+        // Wait until player stops dragging before adding it.
+        if (!foodsOnTray.Contains(food))
         {
-            foodsOnTray.Add(food);
-
-            Debug.Log("Food added to tray: " + food.name);
-
-            CheckTrayRequirements();
+            StartCoroutine(WaitForFoodDrop(food));
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // Collider is on the child Food Model,
-        // so search upwards for FoodStats.
         FoodStats food = other.GetComponentInParent<FoodStats>();
 
-        if (food != null && foodsOnTray.Contains(food))
+        if (food == null)
+            return;
+
+        // Food is no longer physically touching the tray.
+        foodsTouchingTray.Remove(food);
+
+        if (foodsOnTray.Contains(food))
         {
             foodsOnTray.Remove(food);
 
             Debug.Log("Food removed from tray: " + food.name);
+
+            CheckTrayRequirements();
+        }
+    }
+
+    private IEnumerator WaitForFoodDrop(FoodStats food)
+    {
+        DraggingScript dragging = food.GetComponent<DraggingScript>();
+
+        // Wait until the player releases the food.
+        if (dragging != null)
+        {
+            yield return new WaitUntil(() => !dragging.dragging);
+        }
+
+        // Food must STILL be touching the tray when released.
+        if (food != null &&
+            foodsTouchingTray.Contains(food) &&
+            !foodsOnTray.Contains(food))
+        {
+            foodsOnTray.Add(food);
+
+            Debug.Log("Food added to tray: " + food.name);
 
             CheckTrayRequirements();
         }

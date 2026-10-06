@@ -333,8 +333,8 @@ public class DraggingScript : MonoBehaviour,
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (foodCollider != null)
-            foodCollider.enabled = false;
+        //if (foodCollider != null)
+           // foodCollider.enabled = false;
 
         transform.DOKill();
 
@@ -378,8 +378,8 @@ public class DraggingScript : MonoBehaviour,
     }
     private void DropFood()
     {
-        if (foodCollider != null)
-            foodCollider.enabled = true;
+        //if (foodCollider != null)
+           // foodCollider.enabled = true;
 
         transform.DOKill();
 

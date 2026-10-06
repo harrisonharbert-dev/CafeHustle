@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using System.Collections;
 
 public class OliveOil : MonoBehaviour
 {
@@ -14,10 +15,11 @@ public class OliveOil : MonoBehaviour
     private Sequence pourSequence;
 
     private Stove currentStove;
-
+    private DraggingScript draggingScript;
     private void Start()
     {
         defaultRotation = transform.localEulerAngles;
+        draggingScript = GetComponent<DraggingScript>();
     }
 
     private void Update()
@@ -28,10 +30,15 @@ public class OliveOil : MonoBehaviour
             if (currentStove != null)
             {
                 PourOil();
+                StartCoroutine(ReturnOil());
             }
         }
     }
-
+    IEnumerator ReturnOil()
+    {
+        yield return new WaitForSeconds(1.2f);
+        draggingScript.ReturnToPosition();
+    }
     public void SetStove(Stove stove)
     {
         currentStove = stove;

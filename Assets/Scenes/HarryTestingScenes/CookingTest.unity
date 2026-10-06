@@ -535,6 +535,10 @@ MonoBehaviour:
   flipDirection: 0
   isFood: 1
   foodModel: {fileID: 7420215920506845258}
+  foodLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  collisionPadding: 0.01
   jiggleDuration: 0.3
   jiggleStrength: 0.3
   jiggleVibrato: 10
@@ -577,9 +581,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 126
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!82 &71104834
 AudioSource:
   m_ObjectHideFlags: 0
@@ -855,6 +859,8 @@ MonoBehaviour:
   OliveOilMeter: {fileID: 3169712868450192654}
   OliveOilAmount: 0
   OliveOilText: {fileID: 1626454306}
+  stoveCollider: {fileID: 0}
+  detectionPadding: 0.15
 --- !u!64 &106914828
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1128,7 +1134,7 @@ Transform:
   m_GameObject: {fileID: 212405012}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.000658, y: 0, z: 0.00159}
+  m_LocalPosition: {x: -0.000658, y: -0, z: 0.00231}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1767,6 +1773,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bread
       objectReference: {fileID: 0}
+    - target: {fileID: 6611320203764467278, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
+      propertyPath: m_Constraints
+      value: 126
+      objectReference: {fileID: 0}
     - target: {fileID: 8150278299581867956, guid: a3236d7d8b380544187c31317b5a17a5, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.4819703
@@ -2402,6 +2412,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1609083044188591733}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &604120570
 GameObject:
   m_ObjectHideFlags: 0
@@ -2976,18 +2998,6 @@ MonoBehaviour:
   onCutFail:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1356066598}
-        m_TargetAssemblyTypeName: CharacterEmote, Assembly-CSharp
-        m_MethodName: PlayEmote
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: sad
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1802716773}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -4565,9 +4575,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 126
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &931613359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4715,6 +4725,10 @@ MonoBehaviour:
   flipDirection: 0
   isFood: 1
   foodModel: {fileID: 558827079558346282}
+  foodLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  collisionPadding: 0.01
   jiggleDuration: 0.3
   jiggleStrength: 0.3
   jiggleVibrato: 10
@@ -5290,6 +5304,10 @@ MonoBehaviour:
   flipDirection: 0
   isFood: 1
   foodModel: {fileID: 1503431449}
+  foodLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  collisionPadding: 0.01
   jiggleDuration: 0.3
   jiggleStrength: 0.3
   jiggleVibrato: 10
@@ -5818,10 +5836,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1687736655}
-        m_TargetAssemblyTypeName: AudioCaller, Assembly-CSharp
-        m_MethodName: callAudio
-        m_Mode: 5
+      - m_Target: {fileID: 1609083044188591733}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -5874,148 +5892,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3.4348774, z: 0.9999999}
   m_Center: {x: 0, y: 1.2174394, z: 0}
---- !u!1 &1008868920
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1008868925}
-  - component: {fileID: 1008868924}
-  - component: {fileID: 1008868923}
-  - component: {fileID: 1008868922}
-  - component: {fileID: 1008868921}
-  m_Layer: 6
-  m_Name: Upper_Hull
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!54 &1008868921
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008868920}
-  serializedVersion: 5
-  m_Mass: 0.2
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 0
-  m_CollisionDetection: 2
---- !u!64 &1008868922
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008868920}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
---- !u!33 &1008868923
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008868920}
-  m_Mesh: {fileID: 0}
---- !u!23 &1008868924
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008868920}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: e93a127ea20561b4e9bb465358adff43, type: 2}
-  - {fileID: 2100000, guid: 63e2e048da2781e4dbaa4cd483dd9ffc, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!4 &1008868925
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008868920}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.000012794975, y: 0.00000036507845, z: 0.000014132351, w: 1}
-  m_LocalPosition: {x: -8.823819, y: 0.24457413, z: -8.146817}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1009994042
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9196,9 +9072,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 126
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &2067429825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9331,6 +9207,10 @@ MonoBehaviour:
   flipDirection: 0
   isFood: 1
   foodModel: {fileID: 7685427700509315552}
+  foodLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  collisionPadding: 0.01
   jiggleDuration: 0.3
   jiggleStrength: 0.3
   jiggleVibrato: 10
@@ -10173,7 +10053,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1729282405531717329
 GameObject:
   m_ObjectHideFlags: 0
@@ -10568,6 +10448,8 @@ MonoBehaviour:
   OliveOilMeter: {fileID: 0}
   OliveOilAmount: 100
   OliveOilText: {fileID: 0}
+  stoveCollider: {fileID: 0}
+  detectionPadding: 0.15
 --- !u!114 &2535691226552937072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11961,9 +11843,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 126
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!1 &4978562165063284718
 GameObject:
   m_ObjectHideFlags: 0
@@ -12329,6 +12211,10 @@ MonoBehaviour:
   flipDirection: 0
   isFood: 1
   foodModel: {fileID: 807066793}
+  foodLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  collisionPadding: 0.01
   jiggleDuration: 0.3
   jiggleStrength: 0.3
   jiggleVibrato: 10
@@ -14716,4 +14602,3 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 335293242}
-  - {fileID: 1008868925}
