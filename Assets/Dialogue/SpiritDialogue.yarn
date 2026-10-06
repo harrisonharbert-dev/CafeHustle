@@ -6,7 +6,7 @@ title: ApproachingHouse
 <<play_emote player_emote drop>>
 
 Dawn: No wonder Grams never told me about this place.
-Dawn: Well, I'm pretty sure this is what she left me in the will. It’s gonna be a fixer upper, though.
+Dawn: It’s gonna be a fixer upper, though.
 ===
 
 
@@ -44,7 +44,7 @@ Spirit: Anne, is that you? You’ve gotten younger. And leaner.
 
 Dawn: That’s my Grandma you’re talking about. My name's Dawn.
 
-Spirit: Grandma? I didn’t think it had been <i>that</i> long.
+Spirit: Grandma? I didn’t think it had been <b>that</b> long.
 Spirit: It’s nice to meet you, Dawn.
     -> It's nice to meet you too!
         <<play_cutscene PlayerCutsceneAnimator character_wave>>
@@ -68,28 +68,42 @@ Spirit: But, now you’re here, maybe you can help!
     <<detour spiritHelp>>
 //
 
-Spirit: Anyways, we can make this a pleasant exchange! What were you planning to do here?
+Dawn: I don’t mean to sound rude, but do you have to live here? 
+Dawn: I'm not so sure about a little spirit hovering around me while I'm trying to get my bearings.
 
-Dawn: I’ve been thinking I want to work in a cafe. I like cooking and making coffee, and I would like to meet some new people.
+Spirit: I suppose that's fair. But, spirits need these spaces. They remind us of who we are, and they help us connect with humans so we don’t become <shake><b>lost</b></shake>. 
+Spirit: And you don't want to see a lost spirit, they are quite… <shake>haunting</shake>.
+Spirit: <wave>Brrrr.</wave> Anyways, we can make this a pleasant exchange! What were you planning on doing here?
 
-Spirit: Why don't we set up the old abandoned Cafe up again?
-Spirit: And when more spirits come back, they can teach you some new recipes too! You see, we nature spirits kinda have a knack for these things.
+Dawn: I’ve been thinking I want to work in a cafe. I like cooking and making coffee. Plus, I would like to meet some new people.
 
-Dawn: Wait, there’s gonna be more of you? Can’t it just be you?
+Spirit: Hm, then why don't we set up <b>Anne's Cafe</b> again?
 
-Spirit: Don’t worry, they’re nice! Well, most. 
-Spirit: When we start cleaning up and drawing more people to this spot, more of us will come home.
+Dawn: Anne had a cafe? <i>That must have been the second building mentioned in the will</i>...
+
+Spirit: Yes! That's how Anne kept the people and spirits <b>happy</b>! 
+Spirit: And when more spirits come back, <b>they can teach you some new recipes</b> too! You see, we nature spirits kinda have a <wave>knack</wave> for these things.
+
+Dawn: Wait, there’s gonna be <b>more</b> of you?
+
+Spirit: Don’t worry, they’re nice! <i>Well, most</i>. 
+Spirit: When we start <b>cleaning up</b> and <b>helping more people</b> here, more of us will come home!
 
 // Lead in to minigame
 Dawn: Great.
 
-Spirit: Now, let’s get to cooking! Your Grandma left a recipe book around here. I’ll grab it for you can I can teach you one of the recipes she loved to cook.
-Spirit: Well how about you show us your skills by whipping me up a delicious plate of <wave>Waffles</wave>?
+Spirit: Now, let’s get to cooking! Your Grandma left a recipe book around here. I’ll grab it for you. 
+Spirit: <fade>*The spirit whizzes around the room and conjures up a dusty recipe book.*</fade>
+Spirit: Hmmm, let's see here. How about you show us your skills by whipping me up a delicious plate of <grow>Waffles</grow>?
 
 Dawn: You're kidding me right?
 
-Spirit: Haha. No.
+Spirit: Haha. No. 
+Spirit: Grab that apron and the ingredients. I'll wait here for you.
 ===
+
+
+
 //
 // 1st Dialogue Lead-Offs -------------------------------------------------------
 //
@@ -102,41 +116,39 @@ title: spiritBackstory
     <<endif>>
 
     Spirit: I’m not a ghost. More a <wave>“spirit of nature”</wave>.
-    Spirit: And in regards to haunting; I'm far too <wave>cute</wave> to participate in such <sketchy>dubious</sketchy> activities.
+    Spirit: And in regards to haunting; I'm far too <swing>cute</swing> to participate in such <sketchy>dubious</sketchy> activities.
+    Spirit: Though, 
 
     Dawn: A "spirit of nature"? What's that?
 
-    Spirit: We are mediators between people and nature! Well used to be...
+    Spirit: We are mediators between people and nature! Well, used to be...
+    Spirit: Long ago, this town was a place of strong spiritual energy. The people worked together and made this place strong.
+    Spirit: But, when Anne left, people forgot about us and they started having their own troubles... 
+    Spirit: Because of that, many spirits started to move on.
+
     
 ===
 //
 //
 title: spiritLocationBackstory
 ---
-Dawn: What are you doing in Grams' house?
+    Dawn: What are you doing in Grams' house?
 
-Spirit: Well. I live here! Long ago, this town was a place of strong spiritual energy.
-Spirit: And nothing gets the flames going like a little spiritual energy.
-Spirit: But this place is long past its glory days, and that’s why the spirits who lived here left - more mould and mildew, less spiritual buzz, y’know.
-
-Dawn: Ah, I don’t mean to sound rude, but do you have to live here? I don’t want little spirits hovering around me whilst I try and put my life back together.
-
-Spirit: Spirits need these spaces. They remind us of who we are, and they help us connect with humans so we don’t become lost. And when we’re lost, we get… <wave>haunting</wave>.
+    Spirit: Well, I live here! Long ago, the people of this town all worked together and got along, and this town became one of strong spiritual energy. 
+    Spirit: We lived happily and Anne took care of us.
+    Spirit: But, this place is long past its glory days, and that’s why the spirits who lived here left. 
+    Spirit: More mould and mildew, less <wave>spiritual buzz</wave>, y’know.
 ===
 //
 //
 title: spiritHelp
 ---
-Dawn: You want my help? Why?
+    Dawn: You want my help? Why?
 
-Spirit: Long ago, this town was a place of strong spiritual energy.
-Spirit: We lived happily and Anne took care of us.
-Spirit: Over time, people just forgot about us...
-
-Dawn: Oh.
-Spirit: We need your help bringing spiritual energy back into this place - will you help us?
-
-Dawn: I'll consider it, little greenie.
+    Spirit: Long ago, this town was a place of strong spiritual energy. The people worked together and made this place strong.
+    Spirit: We lived happily and Anne took care of us.
+    Spirit: But, when Anne left, people forgot about us and they started having their own troubles... 
+    Spirit: Because of that, many spirits started to move on.
 ===
 
 
@@ -146,7 +158,7 @@ Dawn: I'll consider it, little greenie.
 
 title:SpiritFiller1
 ---
-Spirit: Once you've gotten those ingredients, I can teach you the recipe!
+Spirit: Once you've gotten those ingredients, you can get to cooking!
 ===
 
 
@@ -157,11 +169,30 @@ Spirit: Once you've gotten those ingredients, I can teach you the recipe!
 title: finishedIntroMinigame
 ---
 Spirit: Oh my! That looks <wave>delicious</wave>!
-Dawn: See? Easy.
-Spirit: Mmmm! It tastes amazing!
+
+Dawn: See? Easy as pie.
+
+Spirit: More like, waffles. Mmmm! It tastes amazing!
+Spirit: Actually, I'm feeling inspired. 
+Spirit: Hold up, I'm feeling <shake><b>really</b></shake> inspired.
+
+Dawn: Are you... okay?
+
 <<play_cutscene CutsceneAnimator seapancake-appear>>
-Spirit: Oh golly gosh! I look so hotty hot.
-Spirit: I bet you just wanna eat me all up.
+
+Spirit: Well, well, well. I forgot I could do this. 
+
+Dawn: Turn into food?
+
+Spirit: It only happens when we're feeling more in touch. All nature spirits can turn into embodiments of nature, processed or not. 
+Spirit: It helps us relate to you better.
+
+Dawn: So people don't get scared of floating balls of light?
+
+Spirit: Exactly!
+Spirit: Let's not wait, I'll meet you at the cafe! It's just down the road.
+Spirit: I'm sure the people here will be <sketchy><b>estatic</b></sketchy> to have something new here!
+
 <<view_model ModelViewerUI waffle>>
 ===
 
