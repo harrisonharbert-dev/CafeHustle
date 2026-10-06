@@ -23232,7 +23232,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Go to <color="orange">Grandma's House</color>.
+          m_StringArgument: Find <color="orange">Grandma's House</color>.
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 1121649321}
@@ -23244,7 +23244,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Littlelake
+          m_StringArgument: Settle In
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 309185735}
@@ -34354,6 +34354,8 @@ MonoBehaviour:
   OliveOilMeter: {fileID: 0}
   OliveOilAmount: 100
   OliveOilText: {fileID: 0}
+  stoveCollider: {fileID: 0}
+  detectionPadding: 0.15
 --- !u!1001 &3266700112490305495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35807,6 +35809,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
+      propertyPath: storyPoints.m_values.Array.data[2].events.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[3].events.m_PersistentCalls.m_Calls.Array.size
       value: 9
       objectReference: {fileID: 0}
@@ -35837,6 +35843,10 @@ PrefabInstance:
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[1].events.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
+      propertyPath: storyPoints.m_values.Array.data[2].events.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[3].events.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
@@ -35999,6 +36009,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1852778062}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
+      propertyPath: storyPoints.m_values.Array.data[2].events.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1121649321}
+    - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[3].events.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1121649321}
@@ -36139,6 +36153,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
+      propertyPath: storyPoints.m_values.Array.data[2].events.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[3].events.m_PersistentCalls.m_Calls.Array.data[4].m_CallState
       value: 2
       objectReference: {fileID: 0}
@@ -36257,6 +36275,10 @@ PrefabInstance:
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[1].events.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
       value: setInteractable
+      objectReference: {fileID: 0}
+    - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
+      propertyPath: storyPoints.m_values.Array.data[2].events.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: updateTitle
       objectReference: {fileID: 0}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[3].events.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
@@ -36389,6 +36411,10 @@ PrefabInstance:
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[1].events.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
       value: Interactable, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
+      propertyPath: storyPoints.m_values.Array.data[2].events.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: currentTaskManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[3].events.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
@@ -36539,6 +36565,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
+      propertyPath: storyPoints.m_values.Array.data[2].events.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[3].events.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
       value: 0
       objectReference: {fileID: 0}
@@ -36620,7 +36650,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[0].events.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_StringArgument
-      value: Grandma's House
+      value: Settle In
+      objectReference: {fileID: 0}
+    - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
+      propertyPath: storyPoints.m_values.Array.data[2].events.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_StringArgument
+      value: Get Ready
       objectReference: {fileID: 0}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[3].events.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
@@ -36688,6 +36722,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
       propertyPath: storyPoints.m_values.Array.data[1].events.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}
+      propertyPath: storyPoints.m_values.Array.data[2].events.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6991570947482521840, guid: cf82173823a0e6441959f0c0930fb61f, type: 3}

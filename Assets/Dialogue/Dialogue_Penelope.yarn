@@ -1,13 +1,15 @@
 ﻿title: Start_Penelope
 ---
+// Dialogue Jumper ---------------------------------------
 <<declare $penelope_TalkTo = 0>>
 
-//Dialogue Jumper
 <<if $penelope_TalkTo == 1>>
    <<jump Filler1_Penelope>>
 <<elseif $penelope_TalkTo == 2>>
    <<jump AfterCooking_Penelope>>
 <<endif>>
+//---------------------------------------
+
 
 
 Penelope: When I heard there was a new person who had come to town, I just had to meet them

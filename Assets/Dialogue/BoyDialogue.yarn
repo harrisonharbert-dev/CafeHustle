@@ -1,27 +1,39 @@
 ﻿title: boyDialogue
 ---
+// Dialogue Jumper ---------------------------------------
 <<declare $DanielTalkTo = 0>>
 
 <<if $DanielTalkTo == 1>>
   <<jump boyFiller1>>
 <<endif>>
+//---------------------------------------
 
 
 Daniel: Oh, hey! You must be the new person!
 <<play_cutscene CutsceneAnimator boy-wave>>
 Daniel: My name’s Daniel. What’s yours?
 
-Dawn: My name’s Dawn. What’re doing here?
+Dawn: My name’s Dawn. What’re doing at the front of the train station?
 
-Daniel: My parents have gone inside the station to say goodbye to a friend, so I’m riding my bike. Wanna join?
+Daniel: My parents have gone inside to say goodbye to a friend, so I’m playing with my bike. Wanna join?
 
-Dawn: I think I’m a bit big for your bike, but maybe another time when I get a bike of my own!
+Dawn: I think I’m a bit big to ride your bike, but if I get my own, sure!
+
+Daniel: Aw, okay. Well, bye Dawn! I'm gonna be waiting here for a while, so if you find a bike you should come back!
+
+Dawn: I think you're parents will come back before then. We can play another time. Bye Daniel!
+
 <<GoToDestination armature-boy WaypointTrainStationEntrance>>
 <<set $DanielTalkTo = 1>>
 ===
 
+
+
+//--------------------------------------------------------------------------------
+// Boy Filler after 1st Dialogue
+
 title:boyFiller1
 ---
 Daniel: Hi, again!
-Daniel: Good luck!
+Daniel: Good luck with whatever you're doing!
 ===
