@@ -23,6 +23,13 @@ public class RunDialogue : MonoBehaviour
 
     public void onDialogue(string name)
     {
+        if (dialogueRunner == null)
+        {
+            Debug.LogWarning($"DialogueRunner is not assigned on {this}.");
+            return;
+        }
+
+        dialogueRunner.Stop();
         dialogueRunner.StartDialogue(name);
     }
 
