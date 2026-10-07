@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -334,7 +335,7 @@ public class DraggingScript : MonoBehaviour,
     public void OnBeginDrag(PointerEventData eventData)
     {
         //if (foodCollider != null)
-           // foodCollider.enabled = false;
+        // foodCollider.enabled = false;
 
         transform.DOKill();
 
@@ -371,9 +372,15 @@ public class DraggingScript : MonoBehaviour,
     }
     public void ReturnToPosition()
     {
+        DropFood();
+        StartCoroutine(MoveFoodBack());
+    }
+
+    IEnumerator MoveFoodBack()
+    {
+        yield return new WaitForSeconds(0.5f);
         this.gameObject.transform.DOMove(ReturnPoint.position, 0.5f).SetEase(Ease.InOutSine).OnComplete(() =>
         {
-            DropFood();
         });
     }
     private void DropFood()

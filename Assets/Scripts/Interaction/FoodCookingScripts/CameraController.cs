@@ -23,12 +23,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //RestartScene
-        if (Input.GetKeyDown(KeyCode.R))
-        {
 
-            LoadScene("CookingTest");
-        }
 
     }
     public void LoadScene(string sceneName)
