@@ -1,0 +1,36 @@
+﻿title: SecondSpiritIntro
+---
+<<declare $secondspiritTalkTo = 0>>
+<<set $secondspiritTalkTo = 1>>
+
+
+<<play_cutscene PlayerCutsceneAnimator character_scared>>
+<<play_cutscene CutsceneAnimator spiky-spirit-appear>>
+<<play_emote_plain player_emote exclaim>>
+Spiky Spirit: <wave>Yawn...</wave> Hmm...? Who is it?
+Dawn: Not again!
+Spiky Spirit: Awfully rude you are... Who let you in?
+Spiky: bleh bleh bleh anyways oh you need ingredients for your breakfast meal? ok look in the storage room for some cooking grease then come back.
+===
+
+title: searchingStockRoomGrease
+---
+<<declare $foundGreaseItem = false>>
+
+Just a bunch of old stuff...
+Where to look?
+    -> Inside the boxes
+        Dawn: Nothing here but dust and cobwebs...
+    -> Behind the cans
+        Dawn: Ew... I think I saw a spider!
+    -> In the luggage
+        Something [o]glimmers[/o] inside...
+        Dawn: Oh there it is!
+        <<set_story StoryManager foundGrease>>
+        <<set $foundGreaseItem = true>>
+
+//Retry if didn't find
+<<if $foundGreaseItem == false>>
+    <<jump searchingStockRoomGrease>>
+<<endif>>
+===

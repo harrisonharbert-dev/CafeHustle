@@ -41,7 +41,7 @@ public class StoryManager : MonoBehaviour
         storyPoints.TryGetValue(name, out StoryPoint point);
         return point.storyState;
     }
-
+    [YarnCommand("set_story")]
     public void SetStoryPoint(string name)
     {
         if (!storyPoints.TryGetValue(name, out StoryPoint point)) return;
