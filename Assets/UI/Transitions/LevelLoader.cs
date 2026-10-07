@@ -44,6 +44,7 @@ public class LevelLoader : MonoBehaviour
         }
     }
     //Load scene
+    [YarnCommand("load_scene")]
     public void LoadNamedNonAdditiveScene(string sceneName)
     {
         StartCoroutine(LoadNonAdditiveScene(sceneName));
@@ -62,6 +63,7 @@ public class LevelLoader : MonoBehaviour
         }
     }
 
+    
     public void LoadSceneQuick(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
@@ -70,7 +72,7 @@ public class LevelLoader : MonoBehaviour
     // =========================================================
     // LOAD A MINIGAME ADDITIVELY
     // =========================================================
-
+    
     public void LoadNamedScene(string sceneName)
     {
         if (isLoading)
