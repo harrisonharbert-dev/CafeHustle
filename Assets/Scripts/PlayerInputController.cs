@@ -12,6 +12,7 @@ public class PlayerInputController : MonoBehaviour
 {
 
     //Move direction vector
+    [SerializeField] private bool useStartEvent;
     [HideInInspector] public Vector2 moveInput;
     private Rigidbody rigidBody;
     private Transform cameraTransform;
@@ -38,7 +39,7 @@ public class PlayerInputController : MonoBehaviour
 
     [Header("Ground / Slope Check")]
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float groundCheckDistance = 0.3f; // distance below capsule bottom to check
+    [SerializeField] private float groundCheckDistance = 0.1f; // distance below capsule bottom to check
     [SerializeField] private float groundCheckRadius = 0.25f;  // should roughly match capsule radius
     private bool isGrounded;
     private Vector3 groundNormal = Vector3.up;
@@ -101,7 +102,9 @@ public class PlayerInputController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if(useStartEvent) {
         onStartEvent.Invoke();
+        }
 
 
         //Hide cursor
@@ -207,7 +210,7 @@ public class PlayerInputController : MonoBehaviour
     [YarnCommand("player_look_at")]
     public void LookAt(GameObject target)
     {
-        transform.DODynamicLookAt(target.transform.position, 3f, AxisConstraint.Y);
+        transform.DOLookAt(target.transform.position, 0.3f, AxisConstraint.Y);
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -320,17 +323,13 @@ public class PlayerInputController : MonoBehaviour
 
     private void CheckGround()
     {
-        // Cast from the bottom of the capsule (or transform position if no capsule found)
-        Vector3 origin = transform.position;
-        float castDistance = groundCheckDistance;
+        Vector3 origin = transform.position + Vector3.up * (groundCheckRadius + 0.02f);
+        float castDistance = groundCheckDistance + 0.02f;
 
         if (capsuleCollider != null)
         {
-            // Bottom of the capsule in world space, pulled up slightly so the cast starts inside the collider
-            float bottomOffset = (capsuleCollider.height * 0.5f) - capsuleCollider.radius;
-            Vector3 localBottom = capsuleCollider.center - Vector3.up * bottomOffset;
-            origin = transform.TransformPoint(localBottom) + Vector3.up * 0.1f;
-            castDistance = groundCheckDistance + 0.1f;
+            Vector3 localBottom = capsuleCollider.center - Vector3.up * (capsuleCollider.height * 0.5f);
+            origin = transform.TransformPoint(localBottom) + Vector3.up * (groundCheckRadius + 0.02f);
         }
 
         if (Physics.SphereCast(origin, groundCheckRadius, Vector3.down, out RaycastHit hit, castDistance, groundLayer))

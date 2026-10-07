@@ -55,3 +55,19 @@ title:miscStorageShelf
 The shelves are stocked with many old cans.
 <<view_model ModelViewerUI can>>
 ===
+
+title: miscPathToLake
+---
+The gate is shut tight.
+===
+
+title: wateringTomato
+---
+This tomato plant is looking a bit dry...
+Some water and it should be as good as ever!
+    -> Water it
+        <<play_cutscene PlayerCutsceneAnimator character_water>>
+        <<set_story StoryManager wateredTomatoes>>
+        Dawn: It looks as good as can be!
+        Dawn: Some ripe tomatoes as well!
+===

@@ -10,9 +10,9 @@ title: SecondSpiritIntro
 <<declare $secondspiritTalkTo = 0>>
 
 <<if $secondspiritTalkTo == 1>>
-    <<jump SpiritFiller1>>
+    <<jump SecondSpirit_Filler_1>>
 <<elseif $secondspiritTalkTo == 2>>
-    <<jump finishedIntroMinigame>>
+    <<jump SecondSpirit_1stDialogue>>
 <<endif>>
 //---------------------------------------
 
@@ -39,6 +39,7 @@ Dawn: It seems they think the same thing. Anyways, I've got to get to cooking. D
 
 Green Spirit: Cooking grease? Oh, yeah, look in the pantry. That's where Anne kept all her "food".
 Green Spirit: Now, please, leave me be.
+
 
 // Dialogue Progress Set
 <<set $secondspiritTalkTo = 1>>
@@ -91,9 +92,9 @@ title: SecondSpirit_1stDialogue
 ---
 // Branch off intro if you have met or not
 <<if $secondSpiritMet == true>>
-    <<detour SpiritFiller1>>
+    <<detour SecondSpirit_1stDialogue_Met>>
 <<elseif $secondSpiritMet == false>>
-    <<detour finishedIntroMinigame>>
+    <<detour SecondSpirit_1stDialogue_NotMet>>
 <<endif>>
 
 
@@ -117,16 +118,18 @@ Green Spirit: <wave>Involuntary</wave>? Perhaps for weaker-willed spirits.
 Green Spirit: I suppose it's been a while. Give me one moment and I'll show you.
 
 //Spirit Transforms here
+<<play_cutscene CutsceneAnimator bacon-appear>>
 
 Green Spirit: See, voluntary.
 Green Spirit: Nostalgic. I've always had a weakness for Anne's egg and bacon.
-
+<<play_cutscene CutsceneAnimator bacon-wave>>
 Dawn: Huh. Do you have with any new recipes?
 
 Green Spirit: Do I look like a recipe book?
 Green Spirit: Though, there is a dish that I've quite missed...
 Green Spirit: You know what, today's you're lucky day. I very rarely bless humans with my expertise.
 Green Spirit: But, first, you'll need to find some ingredients for me. I believe there are some eggs at the thing they call a "lake", nearby.
+<<set_story StoryManager talkedSpiritBreakfast>>
 ===
 //
 // 1st Dialogue Branch -------------------------------------------------------

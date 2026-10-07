@@ -18,6 +18,8 @@ public class StoryManager : MonoBehaviour
 
     public SerializableDictionary<string, StoryPoint> storyPoints;
 
+    private readonly Dictionary<string, bool> observedStoryStates = new Dictionary<string, bool>();
+    private readonly List<UnityEvent> pendingStoryEvents = new List<UnityEvent>();
 
 
     public static StoryManager instance { get; private set; }
@@ -33,6 +35,42 @@ public class StoryManager : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject); // Keeps this object alive between scenes
+
+        if (storyPoints != null)
+        {
+            foreach (KeyValuePair<string, StoryPoint> entry in storyPoints)
+            {
+                observedStoryStates[entry.Key] = entry.Value.storyState;
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (storyPoints == null) return;
+
+        pendingStoryEvents.Clear();
+        foreach (KeyValuePair<string, StoryPoint> entry in storyPoints)
+        {
+            if (!observedStoryStates.TryGetValue(entry.Key, out bool observedState))
+            {
+                observedStoryStates[entry.Key] = entry.Value.storyState;
+                continue;
+            }
+
+            if (observedState == entry.Value.storyState) continue;
+
+            observedStoryStates[entry.Key] = entry.Value.storyState;
+            if (entry.Value.storyState && entry.Value.events != null)
+            {
+                pendingStoryEvents.Add(entry.Value.events);
+            }
+        }
+
+        foreach (UnityEvent storyEvent in pendingStoryEvents)
+        {
+            storyEvent.Invoke();
+        }
     }
 
 
@@ -49,6 +87,7 @@ public class StoryManager : MonoBehaviour
         if(point.storyState == true) return;
         point.storyState = true;
         storyPoints[name] = point;
+        observedStoryStates[name] = true;
         point.events?.Invoke();
     }
 
@@ -58,6 +97,7 @@ public class StoryManager : MonoBehaviour
 
         point.storyState = true;
         storyPoints[name] = point;
+        observedStoryStates[name] = true;
 
         if (point.prerequisiteID != null)
         {

@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using System.Collections;
 using DG.Tweening;
 using Unity.VisualScripting;
+using TMPEffects.Modifiers;
 
 public class CarryObject : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class CarryObject : MonoBehaviour
     public string itemID;
     [SerializeField] private Vector3 carryRotation;
     [SerializeField] private Vector3 carryPosition;
+    [SerializeField] private Quaternion placeRotation;
 
 
     [Header("Interaction Prompt")]
@@ -144,6 +146,7 @@ public class CarryObject : MonoBehaviour
         yield return new WaitForSeconds(delay);
         onDeliverEvent.Invoke();
         InteractPrompt.instance.Refresh();
+        
 
         if (PlayerInputController.instance.deliveryZonePos != null)
 
@@ -155,6 +158,7 @@ public class CarryObject : MonoBehaviour
         {
             PlayerInputController.instance.SetCurrentCarry(null);
             InteractPrompt.instance.SetPromptVisibility(false);
+            gameObject.transform.rotation = placeRotation;
             if (!isPlaceObject)
             {
                 Destroy(gameObject);

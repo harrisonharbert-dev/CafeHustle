@@ -91,4 +91,7 @@ Penelope: Well, I’ve gotta run now. It was nice meeting you Dawn!
 Penelope: I’ll pop back another time.
 
 Dawn: See ya, Penny.
+<<GoToDestination armature-lady CarWaypoint>>
+<<view_model ModelViewerUI breakfast>>
+<<set_story StoryManager talkedPennyBreakfast>>
 ===

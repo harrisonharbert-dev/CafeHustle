@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using Antlr4.Runtime.Atn;
+using Yarn.Unity;
 
 public class LevelLoader : MonoBehaviour
 {
@@ -59,6 +60,11 @@ public class LevelLoader : MonoBehaviour
             SceneManager.LoadScene(sceneName);
 
         }
+    }
+
+    public void LoadSceneQuick(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
     }
 
     // =========================================================
