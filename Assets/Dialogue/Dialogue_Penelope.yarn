@@ -11,7 +11,6 @@
 //---------------------------------------
 
 
-
 Penelope: When I heard there was a new person who had come to town, I just had to meet them
 Penelope: And young too! There’s no one in this town my age. They’re either old enough to croquet, or young enough to not know what croqueting is.
 Penelope: But anyways, name’s Penelope!
@@ -47,6 +46,21 @@ Penelope: That sounds good! I haven’t had a chance to eat breakfast yet.
 ===
 
 
+//--------------------------------------------------------------------------------
+// Walked Past Pre-Dialogue
+
+title: PenelopeWalkedPast
+---
+Penelope: Hey, wait!
+Penelope: Where are you going?
+<<jump Start_Penelope>>
+===
+
+
+
+//--------------------------------------------------------------------------------
+// After 1st Dialogue
+
 title: Filler1_Penelope
 ---
 Penelope: The cafe looks... cute!
@@ -54,13 +68,10 @@ Penelope: I'll be waiting here!
 Penelope: I can't wait to see what you cook.
 ===
 
-title: PenelopeWalkedPast
----
-Penelope: Hey, you!
-Penelope: Where are you going?
-<<jump Start_Penelope>>
-===
 
+
+//--------------------------------------------------------------------------------
+// 2nd Dialogue
 
 title: AfterCooking_Penelope
 ---

@@ -1,0 +1,149 @@
+﻿//--------------------------------------------------------------------------------
+// Pre-Dialogue Intro
+
+title: SecondSpiritIntro
+---
+// Variables ---------------------------------------------
+<<declare $secondSpiritMet = false>>
+
+// Dialogue Jumper ---------------------------------------
+<<declare $secondspiritTalkTo = 0>>
+
+<<if $secondspiritTalkTo == 1>>
+    <<jump SpiritFiller1>>
+<<elseif $secondspiritTalkTo == 2>>
+    <<jump finishedIntroMinigame>>
+<<endif>>
+//---------------------------------------
+
+
+<<play_cutscene PlayerCutsceneAnimator character_scared>>
+<<play_cutscene CutsceneAnimator spiky-spirit-appear>>
+<<play_emote_plain player_emote exclaim>>
+
+Green Spirit: <wave>Yawn...</wave> Hmm...? Who is it?
+
+Dawn: Not again!
+
+Green Spirit: Awfully rude you are... Who let you in?
+
+Dawn: I own this place! 
+
+Green Spirit: Wait, Anne? No, you don't look like her. Who are you?
+
+Dawn: I could ask the same thing. I really wasn't expecting to see more of you today.
+
+Green Spirit: You must be talking about Maple. Gosh, I thought they left a long time ago.
+
+Dawn: It seems they think the same thing. Anyways, I've got to get to cooking. Do you know where the cooking grease is?
+
+Green Spirit: Cooking grease? Oh, yeah, look in the pantry. That's where Anne kept all her "food".
+Green Spirit: Now, please, leave me be.
+
+// Dialogue Progress Set
+<<set $secondspiritTalkTo = 1>>
+<<set $secondSpiritMet = true>>
+===
+
+
+
+//--------------------------------------------------------------------------------
+// After Pre-Dialogue
+
+title: SecondSpirit_Filler_1
+---
+Green Spirit: Don't you have stuff to do? <wave>Off you go</wave>.
+===
+
+
+
+//--------------------------------------------------------------------------------
+// Stock room?
+
+title: searchingStockRoomGrease
+---
+<<declare $foundGreaseItem = false>>
+
+Just a bunch of old stuff...
+Where to look?
+    -> Inside the boxes
+        Dawn: Nothing here but dust and cobwebs...
+    -> Behind the cans
+        Dawn: Ew... I think I saw a spider!
+    -> In the luggage
+        Something [o]glimmers[/o] inside...
+        Dawn: Oh there it is!
+        <<set_story StoryManager foundGrease>>
+        <<set $foundGreaseItem = true>>
+
+//Retry if didn't find
+<<if $foundGreaseItem == false>>
+    <<jump searchingStockRoomGrease>>
+<<endif>>
+===
+
+
+
+//--------------------------------------------------------------------------------
+// 1st Dialogue
+
+title: SecondSpirit_1stDialogue
+---
+// Branch off intro if you have met or not
+<<if $secondSpiritMet == true>>
+    <<detour SpiritFiller1>>
+<<elseif $secondSpiritMet == false>>
+    <<detour finishedIntroMinigame>>
+<<endif>>
+
+
+Green Spirit: You sure do cook like her. I could smell it from the other end of the house.
+Green Spirit: She could always lure me back with her cooking.
+
+Dawn: Well, I'm glad you like it.
+Dawn: Are you... going to transform too?
+
+Green Spirit: Transform?
+
+<<if $secondSpiritMet == false>>
+    Green Spirit: Oh, you must have met Maple.
+<<endif>>
+
+Green Spirit: Would you like me to change form?
+
+Dawn: Ah, well, I thought it was an involuntary thing.
+
+Green Spirit: <wave>Involuntary</wave>? Perhaps for weaker-willed spirits.
+Green Spirit: I suppose it's been a while. Give me one moment and I'll show you.
+
+//Spirit Transforms here
+
+Green Spirit: See, voluntary.
+Green Spirit: Nostalgic. I've always had a weakness for Anne's egg and bacon.
+
+Dawn: Huh. Do you have with any new recipes?
+
+Green Spirit: Do I look like a recipe book?
+Green Spirit: Though, there is a dish that I've quite missed...
+Green Spirit: You know what, today's you're lucky day. I very rarely bless humans with my expertise.
+Green Spirit: But, first, you'll need to find some ingredients for me. I believe there are some eggs at the thing they call a "lake", nearby.
+===
+//
+// 1st Dialogue Branch -------------------------------------------------------
+//
+title: SecondSpirit_1stDialogue_Met
+---
+Green Spirit: I see you've cooked up a storm.
+===
+//
+//
+title: SecondSpirit_1stDialogue_NotMet
+---
+Green Spirit: <wave>Yawn</wave>. That smells good...
+Green Spirit: Gosh, Anne, you've finally come back.
+Green Spirit: No, wait, you don't look like her. Who are you?
+
+Dawn: I'm Dawn, her Granddaughter.
+
+Green Spirit: Granddaughter... That makes sense.
+===
