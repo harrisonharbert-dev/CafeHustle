@@ -21,7 +21,9 @@ public class OliveOil : MonoBehaviour
 
     private Stove currentStove;
     private Stream currentStream;
+
     public DraggingScript draggingScript;
+
     private void Start()
     {
         defaultRotation = transform.localEulerAngles;
@@ -37,9 +39,18 @@ public class OliveOil : MonoBehaviour
                 PourOil();
             }
         }
+
         if (draggingScript.dragging == false)
         {
             EndPour();
+        }
+
+        // Keep stream attached to nozzle position
+        // WITHOUT copying the bottle's rotation
+        if (currentStream != null)
+        {
+            currentStream.transform.position = origin.position;
+            currentStream.transform.rotation = Quaternion.identity;
         }
     }
 
@@ -106,11 +117,13 @@ public class OliveOil : MonoBehaviour
         if (currentStream != null)
             return;
 
+        // Spawn in world space.
+        // Do NOT parent it to the bottle because we don't want
+        // the bottle rotation affecting the stream.
         GameObject streamObject = Instantiate(
             streamPrefab,
             origin.position,
-            Quaternion.identity,
-            origin
+            Quaternion.identity
         );
 
         currentStream = streamObject.GetComponent<Stream>();
@@ -122,6 +135,10 @@ public class OliveOil : MonoBehaviour
 
             Debug.Log("Started oil stream");
         }
+        else
+        {
+            Destroy(streamObject);
+        }
     }
 
     private void EndPour()
@@ -132,10 +149,7 @@ public class OliveOil : MonoBehaviour
             currentStream = null;
         }
 
-
         isPouring = false;
-
-        Debug.Log("Stopped oil stream");
     }
 
     public void SetStove(Stove stove)

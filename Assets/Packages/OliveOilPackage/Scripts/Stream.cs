@@ -10,6 +10,7 @@ public class Stream : MonoBehaviour
     private Coroutine particleRoutine;
 
     private Vector3 targetPosition;
+    private bool isEnding;
 
     [Header("Stream")]
     public float streamSpeed = 8f;
@@ -19,26 +20,38 @@ public class Stream : MonoBehaviour
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
+
+        // Prevent bottle rotation from affecting stream direction
+        lineRenderer.useWorldSpace = true;
+        lineRenderer.positionCount = 2;
+
         splashParticle = GetComponentInChildren<ParticleSystem>();
 
         if (splashParticle != null)
             splashParticle.gameObject.SetActive(false);
-    }
 
-    private void Start()
-    {
-        MoveToPosition(0, transform.position);
-        MoveToPosition(1, transform.position);
+        lineRenderer.SetPosition(0, transform.position);
+        lineRenderer.SetPosition(1, transform.position);
     }
 
     public void Begin()
     {
+        if (pourRoutine != null)
+            return;
+
+        isEnding = false;
+
         pourRoutine = StartCoroutine(BeginPour());
         particleRoutine = StartCoroutine(UpdateParticle());
     }
 
     public void End()
     {
+        if (isEnding)
+            return;
+
+        isEnding = true;
+
         if (pourRoutine != null)
             StopCoroutine(pourRoutine);
 
@@ -55,13 +68,27 @@ public class Stream : MonoBehaviour
     {
         while (true)
         {
+            Vector3 startPosition = transform.position;
+
             targetPosition = FindEndPoint();
 
-            // Top follows bottle opening
-            MoveToPosition(0, transform.position);
+            // Always follow bottle opening
+            lineRenderer.SetPosition(0, startPosition);
 
-            // Bottom moves down toward stove
-            AnimateToPosition(1, targetPosition, streamSpeed);
+            // Keep stream directly below opening
+            Vector3 bottomPosition = lineRenderer.GetPosition(1);
+
+            Vector3 newPosition = Vector3.MoveTowards(
+                bottomPosition,
+                targetPosition,
+                streamSpeed * Time.deltaTime
+            );
+
+            // Lock horizontal position to bottle opening
+            newPosition.x = startPosition.x;
+            newPosition.z = startPosition.z;
+
+            lineRenderer.SetPosition(1, newPosition);
 
             yield return null;
         }
@@ -69,14 +96,11 @@ public class Stream : MonoBehaviour
 
     private IEnumerator EndPour()
     {
-        // Stop following the bottle.
-        // Move the TOP of the oil downward toward the bottom.
         Vector3 bottomPosition = lineRenderer.GetPosition(1);
 
         while (!HasReachedPosition(0, bottomPosition))
         {
             AnimateToPosition(0, bottomPosition, endSpeed);
-
             yield return null;
         }
 
@@ -91,10 +115,10 @@ public class Stream : MonoBehaviour
             {
                 splashParticle.transform.position = targetPosition;
 
-                bool reachedSurface =
-                    HasReachedPosition(1, targetPosition);
+                bool reachedSurface = HasReachedPosition(1, targetPosition);
 
-                splashParticle.gameObject.SetActive(reachedSurface);
+                if (splashParticle.gameObject.activeSelf != reachedSurface)
+                    splashParticle.gameObject.SetActive(reachedSurface);
             }
 
             yield return null;
@@ -111,22 +135,14 @@ public class Stream : MonoBehaviour
         return ray.GetPoint(maxDistance);
     }
 
-    private void MoveToPosition(int index, Vector3 position)
-    {
-        lineRenderer.SetPosition(index, position);
-    }
-
     private void AnimateToPosition(int index, Vector3 position, float speed)
     {
         Vector3 currentPoint = lineRenderer.GetPosition(index);
 
-        Vector3 newPosition = Vector3.MoveTowards(
-            currentPoint,
-            position,
-            Time.deltaTime * speed
+        lineRenderer.SetPosition(
+            index,
+            Vector3.MoveTowards(currentPoint, position, Time.deltaTime * speed)
         );
-
-        lineRenderer.SetPosition(index, newPosition);
     }
 
     private bool HasReachedPosition(int index, Vector3 position)

@@ -323,11 +323,7 @@ public class Stove : MonoBehaviour
 
     public void TopUpOil()
     {
-        OliveOilAmount = 100f;
-
-        OliveOilMeter.fillAmount = 1f;
-
-        UpdateOilText();
+      
 
         // Oil becomes fully visible.
         if (oilMaterial != null)
@@ -336,9 +332,16 @@ public class Stove : MonoBehaviour
                 "_OilAlpha",
                 MaxOilAlpha
             );
-
-            AnimateOilFill();
+            if (OliveOilAmount <= 0)
+            {
+                AnimateOilFill();
+            }
         }
+        OliveOilAmount = 100f;
+
+        OliveOilMeter.fillAmount = 1f;
+
+        UpdateOilText();
 
         Debug.Log("Olive oil topped up!");
 
