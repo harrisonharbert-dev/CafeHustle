@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
@@ -7,11 +8,12 @@ public class MainMenu : MonoBehaviour
     [Tooltip("Destroys every DontDestroyOnLoad object before restarting, so nothing " +
              "from the previous run (or its destroyed state) carries over.")]
     [SerializeField] private bool destroyPersistentObjects = true;
+    [SerializeField] private UnityEvent loadSceneEvent;
 
     public void MainScene()
     {
         ResetGameState();
-        SceneManager.LoadScene("TrainScene");
+        loadSceneEvent?.Invoke();
     }
 
     // ============================================================

@@ -545,6 +545,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 417174719}
   m_CullTransparentMesh: 1
+--- !u!114 &419575304 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5252946027398247222, guid: 06353ee0d5cb23943b3f832ae7be31d7, type: 3}
+  m_PrefabInstance: {fileID: 1947778787}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a71c27a92ade9934e93079f054008a0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
 --- !u!1 &555166229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1362,6 +1373,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
   destroyPersistentObjects: 1
+  loadSceneEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 419575304}
+        m_TargetAssemblyTypeName: LevelLoader, Assembly-CSharp
+        m_MethodName: LoadNamedNonAdditiveScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: TrainScene
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1558009572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1374,7 +1400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RectMask2D
-  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Padding: {x: -15, y: -15, z: -15, w: -15}
   m_Softness: {x: 0, y: 0}
 --- !u!1 &1827472358
 GameObject:

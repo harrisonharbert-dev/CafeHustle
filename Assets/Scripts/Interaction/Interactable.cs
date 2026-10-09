@@ -187,7 +187,7 @@ public class Interactable : MonoBehaviour
             if (useDialogueCamera)
             {
                 PlayerInputController.instance.onDialogueCamera(gameObject);
-                if (isNPC && npc != null && PlayerInputController.instance.isValidDialogueLocation() && checkDistanceToPlayer())
+                if (isNPC && npc != null && PlayerInputController.instance.isValidDialogueLocation())
                 {
                     npc.GoToDestination(PlayerInputController.instance.NPCDialogueLocation);
                 }
@@ -211,19 +211,6 @@ public class Interactable : MonoBehaviour
     public void updateCurrentStoryPoint(string name)
     {
         currentStoryPoint = name;
-    }
-
-    bool checkDistanceToPlayer()
-    {
-        Vector3 offset = PlayerInputController.instance.transform.position - transform.position;
-        float distance = offset.sqrMagnitude;
-
-        if (distance < 3f)
-        {
-            return true;
-        }
-
-        return false;
     }
 
     private void OnTriggerEnter(Collider other)
