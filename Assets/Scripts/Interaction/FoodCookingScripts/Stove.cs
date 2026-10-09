@@ -19,33 +19,31 @@ public class Stove : MonoBehaviour
 
     [Header("Oil Plane")]
     public Renderer OilPlane;
-
     [Tooltip("Maximum size of the oil puddle.")]
     public float MaxOilRadius = 0.72f;
-
     [Tooltip("How long oil takes to spread across the pan.")]
     public float OilFillDuration = 1f;
-
     [Tooltip("Maximum alpha when the pan has oil.")]
     [Range(0f, 1f)]
     public float MaxOilAlpha = 0.6f;
 
     [Header("Food Detection")]
     [SerializeField] private Collider stoveCollider;
-
     [SerializeField] private float detectionPadding = 0.15f;
 
-    private List<FoodStats> foodCurrentlyOnStove = new List<FoodStats>();
-
+    private readonly List<FoodStats> foodCurrentlyOnStove = new List<FoodStats>();
     private Material oilMaterial;
     private Tween oilFillTween;
+    private bool wasOilEmpty;
+    public float Speed;
 
     private void Start()
     {
         if (stoveCollider == null)
             stoveCollider = GetComponent<Collider>();
 
-        OliveOilMeter.fillAmount = OliveOilAmount / 100f;
+        if (OliveOilMeter != null)
+            OliveOilMeter.fillAmount = Mathf.Clamp01(OliveOilAmount / 100f);
 
         UpdateOilText();
 
@@ -53,7 +51,6 @@ public class Stove : MonoBehaviour
         {
             oilMaterial = OilPlane.material;
 
-            // If starting with oil, show it fully spread.
             if (OliveOilAmount > 0)
             {
                 oilMaterial.SetFloat("_Fill", MaxOilRadius);
@@ -63,52 +60,70 @@ public class Stove : MonoBehaviour
             {
                 oilMaterial.SetFloat("_Fill", 0f);
                 oilMaterial.SetFloat("_OilAlpha", 0f);
+                wasOilEmpty = true;
             }
         }
+        else
+        {
+            wasOilEmpty = OliveOilAmount <= 0;
+        }
     }
-
+    void DrainSpeed()
+    {
+        switch (foodOnStove)
+        {
+            case (1):
+                Speed = 0.0005f;
+                break;
+            case (2):
+                Speed = 0.001f;
+                break;
+            case (3):
+                Speed = 0.0015f;
+                break;
+            case (4):
+                Speed = 0.002f;
+                break;
+            case (5):
+                Speed = 0.0025f;
+                break;
+            case (6):
+                Speed = 0.03f;
+                break;
+            default:
+                Speed = 0f;
+                break;
+        }
+    }
     private void Update()
     {
         CheckTrackedFood();
-
         foodOnStove = foodCurrentlyOnStove.Count;
 
-        // ========================================================
-        // DRAIN OIL
-        // ========================================================
-
-        if (foodOnStove > 0 && OliveOilAmount > 0)
+        // Drain oil while food is on the stove.
+        if (foodOnStove > 0 && OliveOilAmount > 0 && OliveOilMeter != null)
         {
-            OliveOilMeter.fillAmount -=
-                Time.deltaTime * foodOnStove * 0.05f;
-
-            OliveOilMeter.fillAmount =
-                Mathf.Clamp01(OliveOilMeter.fillAmount);
-
-            OliveOilAmount =
-                OliveOilMeter.fillAmount * 100f;
+            DrainSpeed();
+            OliveOilMeter.fillAmount -= Time.deltaTime * Speed;
+            OliveOilMeter.fillAmount = Mathf.Clamp01(OliveOilMeter.fillAmount);
+            OliveOilAmount = OliveOilMeter.fillAmount * 100f;
 
             UpdateOilText();
-
-            // IMPORTANT:
-            // Do NOT change _Fill while draining.
-            // Only fade the oil.
             UpdateOilAlpha();
 
-            if (OliveOilAmount <= 0)
+            if (OliveOilAmount <= 0.01f)
             {
-                OliveOilAmount = 0;
+                OliveOilAmount = 0f;
+                OliveOilMeter.fillAmount = 0f;
+                wasOilEmpty = true;
 
+                UpdateOilText();
                 UpdateOilAlpha();
-
                 StopAllFoodCooking();
             }
         }
 
-        // ========================================================
-        // KEEP FOOD COOKING
-        // ========================================================
-
+        // Cook food only when oil is available.
         if (OliveOilAmount > 0)
         {
             foreach (FoodStats food in foodCurrentlyOnStove)
@@ -116,19 +131,12 @@ public class Stove : MonoBehaviour
                 if (food == null)
                     continue;
 
-                DraggingScript dragging =
-                    food.GetComponent<DraggingScript>();
+                DraggingScript dragging = food.GetComponent<DraggingScript>();
 
-                if (dragging == null)
-                    continue;
-
-                if (!dragging.dragging && !food.isCooking)
+                if (dragging != null && !dragging.dragging && !food.isCooking)
                 {
                     food.StartCooking();
-
-                    Debug.Log(
-                        "Restarting cooking: " + food.name
-                    );
+                    Debug.Log("Restarting cooking: " + food.name);
                 }
             }
         }
@@ -136,131 +144,43 @@ public class Stove : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // ========================================================
-        // OLIVE OIL
-        // ========================================================
-
-        if (collision.gameObject.CompareTag("OliveOil"))
-        {
-            OliveOil oliveOil =
-                collision.gameObject.GetComponent<OliveOil>();
-
-            if (oliveOil != null)
-                oliveOil.SetStove(this);
-
-            return;
-        }
-
-        // ========================================================
-        // FOOD
-        // ========================================================
-
-        FoodStats food =
-            collision.gameObject.GetComponentInParent<FoodStats>();
-
-        DraggingScript dragging =
-            collision.gameObject.GetComponentInParent<DraggingScript>();
-
-        if (food == null ||
-            dragging == null ||
-            !dragging.isFood)
-        {
-            return;
-        }
-
-        AddFood(food);
+        TryAddFood(collision);
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        // ========================================================
-        // OLIVE OIL
-        // ========================================================
+        TryAddFood(collision);
+    }
 
-        if (collision.gameObject.CompareTag("OliveOil"))
-        {
-            OliveOil oliveOil =
-                collision.gameObject.GetComponent<OliveOil>();
+    private void TryAddFood(Collision collision)
+    {
+        FoodStats food = collision.gameObject.GetComponentInParent<FoodStats>();
+        DraggingScript dragging = collision.gameObject.GetComponentInParent<DraggingScript>();
 
-            if (oliveOil != null)
-                oliveOil.SetStove(this);
-
+        if (food == null || dragging == null || !dragging.isFood)
             return;
-        }
-
-        // ========================================================
-        // FOOD
-        // ========================================================
-
-        FoodStats food =
-            collision.gameObject.GetComponentInParent<FoodStats>();
-
-        DraggingScript dragging =
-            collision.gameObject.GetComponentInParent<DraggingScript>();
-
-        if (food == null ||
-            dragging == null ||
-            !dragging.isFood)
-        {
-            return;
-        }
 
         AddFood(food);
     }
 
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("OliveOil"))
-        {
-            OliveOil oliveOil =
-                collision.gameObject.GetComponent<OliveOil>();
-
-            if (oliveOil != null)
-                oliveOil.RemoveStove(this);
-        }
-    }
-
-    // ============================================================
-    // ADD FOOD
-    // ============================================================
-
     private void AddFood(FoodStats food)
     {
-        if (foodCurrentlyOnStove.Contains(food))
+        if (food == null || foodCurrentlyOnStove.Contains(food))
             return;
 
         foodCurrentlyOnStove.Add(food);
-
         foodOnStove = foodCurrentlyOnStove.Count;
 
-        Debug.Log(
-            "Food added to stove: " +
-            food.name +
-            " | Total: " +
-            foodOnStove
-        );
+        Debug.Log("Food added to stove: " + food.name + " | Total: " + foodOnStove);
 
-        DraggingScript dragging =
-            food.GetComponent<DraggingScript>();
+        DraggingScript dragging = food.GetComponent<DraggingScript>();
 
-        if (OliveOilAmount > 0 &&
-            dragging != null &&
-            !dragging.dragging)
-        {
+        if (OliveOilAmount > 0 && dragging != null && !dragging.dragging)
             food.StartCooking();
-        }
 
-        if (foodOnStove == 1 &&
-            CookingVFX != null &&
-            CookingVFX.Length > 0)
-        {
+        if (foodOnStove == 1 && CookingVFX != null && CookingVFX.Length > 0 && OliveOilAmount > 0)
             CookingVFX[0]?.Invoke();
-        }
     }
-
-    // ============================================================
-    // CHECK TRACKED FOOD
-    // ============================================================
 
     private void CheckTrackedFood()
     {
@@ -268,7 +188,6 @@ public class Stove : MonoBehaviour
             return;
 
         Bounds stoveBounds = stoveCollider.bounds;
-
         stoveBounds.Expand(detectionPadding);
 
         for (int i = foodCurrentlyOnStove.Count - 1; i >= 0; i--)
@@ -281,67 +200,60 @@ public class Stove : MonoBehaviour
                 continue;
             }
 
-            DraggingScript dragging =
-                food.GetComponent<DraggingScript>();
+            DraggingScript dragging = food.GetComponent<DraggingScript>();
 
-            // Don't remove while being dragged.
+            // Keep tracking food while it is being dragged.
             if (dragging != null && dragging.dragging)
                 continue;
 
-            Collider foodCollider =
-                food.GetComponentInChildren<Collider>();
+            Collider[] foodColliders = food.GetComponentsInChildren<Collider>();
+            bool stillOnStove = false;
 
-            if (foodCollider == null)
-                continue;
-
-            if (!stoveBounds.Intersects(foodCollider.bounds))
+            foreach (Collider foodCollider in foodColliders)
             {
-                Debug.Log(
-                    "Food actually left stove: " +
-                    food.name
-                );
+                if (foodCollider != null && stoveBounds.Intersects(foodCollider.bounds))
+                {
+                    stillOnStove = true;
+                    break;
+                }
+            }
 
+            if (!stillOnStove)
+            {
+                Debug.Log("Food actually left stove: " + food.name);
                 food.StopCooking();
-
                 foodCurrentlyOnStove.RemoveAt(i);
             }
         }
 
         foodOnStove = foodCurrentlyOnStove.Count;
 
-        if (foodOnStove == 0 &&
-            CookingVFX != null &&
-            CookingVFX.Length > 1)
-        {
+        if (foodOnStove == 0 && CookingVFX != null && CookingVFX.Length > 1)
             CookingVFX[1]?.Invoke();
-        }
     }
 
-    // ============================================================
-    // TOP UP OIL
-    // ============================================================
-
+    // Called by OliveOil after the pouring animation finishes.
     public void TopUpOil()
     {
-      
+        bool oilWasEmpty = OliveOilAmount <= 0 || wasOilEmpty;
 
-        // Oil becomes fully visible.
-        if (oilMaterial != null)
-        {
-            oilMaterial.SetFloat(
-                "_OilAlpha",
-                MaxOilAlpha
-            );
-            if (OliveOilAmount <= 0)
-            {
-                AnimateOilFill();
-            }
-        }
         OliveOilAmount = 100f;
+        wasOilEmpty = false;
 
-        OliveOilMeter.fillAmount = 1f;
+        if (OliveOilMeter != null)
+            OliveOilMeter.fillAmount = 1f;
 
         UpdateOilText();
+
+        if (oilMaterial != null)
+        {
+            oilMaterial.SetFloat("_OilAlpha", MaxOilAlpha);
+
+            if (oilWasEmpty)
+                AnimateOilFill();
+            else
+                oilMaterial.SetFloat("_Fill", MaxOilRadius);
+        }
 
         Debug.Log("Olive oil topped up!");
 
@@ -350,28 +262,15 @@ public class Stove : MonoBehaviour
             if (food == null)
                 continue;
 
-            DraggingScript dragging =
-                food.GetComponent<DraggingScript>();
+            DraggingScript dragging = food.GetComponent<DraggingScript>();
 
-            if (dragging != null &&
-                !dragging.dragging &&
-                !food.isCooking)
-            {
+            if (dragging != null && !dragging.dragging && !food.isCooking)
                 food.StartCooking();
-            }
         }
 
-        if (foodOnStove > 0 &&
-            CookingVFX != null &&
-            CookingVFX.Length > 0)
-        {
+        if (foodOnStove > 0 && CookingVFX != null && CookingVFX.Length > 0)
             CookingVFX[0]?.Invoke();
-        }
     }
-
-    // ============================================================
-    // OIL FILL ANIMATION
-    // ============================================================
 
     private void AnimateOilFill()
     {
@@ -380,86 +279,51 @@ public class Stove : MonoBehaviour
 
         oilFillTween?.Kill();
 
-        // Start puddle from the centre.
-        oilMaterial.SetFloat(
-            "_Fill",
-            0f
-        );
+        oilMaterial.SetFloat("_Fill", 0f);
 
-        // Spread outward.
         oilFillTween = oilMaterial.DOFloat(
             MaxOilRadius,
             "_Fill",
             OilFillDuration
-        )
-        .SetEase(Ease.OutSine);
+        ).SetEase(Ease.OutSine);
     }
-
-    // ============================================================
-    // OIL ALPHA
-    // ============================================================
 
     private void UpdateOilAlpha()
     {
         if (oilMaterial == null)
             return;
 
-        float oilPercent =
-            Mathf.Clamp01(
-                OliveOilAmount / 100f
-            );
+        float oilPercent = Mathf.Clamp01(OliveOilAmount / 100f);
+        float alpha = oilPercent * MaxOilAlpha;
 
-        float alpha =
-            oilPercent * MaxOilAlpha;
-
-        oilMaterial.SetFloat(
-            "_OilAlpha",
-            alpha
-        );
+        oilMaterial.SetFloat("_OilAlpha", alpha);
     }
-
-    // ============================================================
-    // UI
-    // ============================================================
 
     private void UpdateOilText()
     {
         if (OliveOilText != null)
-        {
-            OliveOilText.text =
-                "Oil Amount: " +
-                Mathf.RoundToInt(OliveOilAmount) +
-                "%";
-        }
+            OliveOilText.text = "Oil Amount: " + Mathf.RoundToInt(OliveOilAmount) + "%";
     }
-
-    // ============================================================
-    // STOP COOKING
-    // ============================================================
 
     private void StopAllFoodCooking()
     {
-        Debug.Log(
-            "Oil empty - stopping all food cooking."
-        );
+        Debug.Log("Oil empty - stopping all food cooking.");
 
         foreach (FoodStats food in foodCurrentlyOnStove)
         {
             if (food != null)
-            {
                 food.StopCooking();
-            }
         }
 
-        if (CookingVFX != null &&
-            CookingVFX.Length > 1)
-        {
+        if (CookingVFX != null && CookingVFX.Length > 1)
             CookingVFX[1]?.Invoke();
-        }
     }
 
     private void OnDestroy()
     {
         oilFillTween?.Kill();
+
+        if (oilMaterial != null)
+            Destroy(oilMaterial);
     }
 }

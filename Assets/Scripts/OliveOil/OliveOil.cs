@@ -3,11 +3,18 @@ using DG.Tweening;
 
 public class OliveOil : MonoBehaviour
 {
+    [Header("Stove Target")]
+    public Stove targetStove;
+    public Transform pourPosition;
+
+    [Header("Movement")]
+    public float MoveSpeed = 0.6f;
+
     [Header("Rotation")]
     public Vector3 RotateAmount = new Vector3(0, 0, 90);
-
-    [Header("Animation")]
     public float RotateSpeed = 0.3f;
+
+    [Header("Pouring")]
     public float HoldTime = 1f;
 
     [Header("Pour VFX")]
@@ -16,38 +23,30 @@ public class OliveOil : MonoBehaviour
 
     public bool isPouring = false;
 
+    private Vector3 defaultPosition;
     private Vector3 defaultRotation;
-    private Sequence pourSequence;
 
-    private Stove currentStove;
+    private Sequence pourSequence;
     private Stream currentStream;
 
-    public DraggingScript draggingScript;
+    private bool isAnimating = false;
 
     private void Start()
     {
-        defaultRotation = transform.localEulerAngles;
+        defaultPosition = transform.position;
+        defaultRotation = transform.eulerAngles;
+    }
+
+    private void OnMouseDown()
+    {
+        PourOil();
     }
 
     private void Update()
     {
-        // Right click while bottle is on stove
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (currentStove != null)
-            {
-                PourOil();
-            }
-        }
-
-        if (draggingScript.dragging == false)
-        {
-            EndPour();
-        }
-
-        // Keep stream attached to nozzle position
-        // WITHOUT copying the bottle's rotation
-        if (currentStream != null)
+        // Keep the stream attached to the bottle nozzle.
+        // The stream itself does not inherit bottle rotation.
+        if (currentStream != null && origin != null)
         {
             currentStream.transform.position = origin.position;
             currentStream.transform.rotation = Quaternion.identity;
@@ -56,32 +55,46 @@ public class OliveOil : MonoBehaviour
 
     private void PourOil()
     {
-        // Prevent spam
-        if (pourSequence != null && pourSequence.IsActive())
+        // Prevent repeated clicks during the animation.
+        if (isAnimating)
             return;
 
-        Stove stoveToFill = currentStove;
+        Stove stoveToFill = targetStove;
+
+        if (stoveToFill == null || pourPosition == null)
+        {
+            Debug.LogWarning("OliveOil: Assign Target Stove and Pour Position!");
+            return;
+        }
+
+        isAnimating = true;
 
         Vector3 pourRotation = defaultRotation + RotateAmount;
 
         pourSequence = DOTween.Sequence();
 
-        // Rotate bottle into pouring position
+        // Move the bottle above the stove.
         pourSequence.Append(
-            transform.DOLocalRotate(pourRotation, RotateSpeed)
+            transform.DOMove(pourPosition.position, MoveSpeed)
                 .SetEase(Ease.InOutSine)
         );
 
-        // Start oil stream
+        // Tilt the bottle.
+        pourSequence.Append(
+            transform.DORotate(pourRotation, RotateSpeed)
+                .SetEase(Ease.InOutSine)
+        );
+
+        // Start pouring oil.
         pourSequence.AppendCallback(() =>
         {
             StartPour();
         });
 
-        // Stay tilted
+        // Keep pouring for the selected duration.
         pourSequence.AppendInterval(HoldTime);
 
-        // Add oil to stove
+        // Refill the stove.
         pourSequence.AppendCallback(() =>
         {
             if (stoveToFill != null)
@@ -91,20 +104,36 @@ public class OliveOil : MonoBehaviour
             }
         });
 
-        // Stop stream
+        // Stop the oil stream.
         pourSequence.AppendCallback(() =>
         {
             EndPour();
         });
 
-        // Rotate bottle back
+        // Return the bottle upright.
         pourSequence.Append(
-            transform.DOLocalRotate(defaultRotation, RotateSpeed)
+            transform.DORotate(defaultRotation, RotateSpeed)
                 .SetEase(Ease.InOutSine)
         );
 
+        // Return to the original position.
+        pourSequence.Append(
+            transform.DOMove(defaultPosition, MoveSpeed)
+                .SetEase(Ease.InOutSine)
+        );
+
+        // Allow the bottle to be clicked again.
         pourSequence.OnComplete(() =>
         {
+            isAnimating = false;
+            pourSequence = null;
+        });
+
+        // Recover cleanly if the animation is interrupted.
+        pourSequence.OnKill(() =>
+        {
+            EndPour();
+            isAnimating = false;
             pourSequence = null;
         });
     }
@@ -117,9 +146,6 @@ public class OliveOil : MonoBehaviour
         if (currentStream != null)
             return;
 
-        // Spawn in world space.
-        // Do NOT parent it to the bottle because we don't want
-        // the bottle rotation affecting the stream.
         GameObject streamObject = Instantiate(
             streamPrefab,
             origin.position,
@@ -132,7 +158,6 @@ public class OliveOil : MonoBehaviour
         {
             currentStream.Begin();
             isPouring = true;
-
             Debug.Log("Started oil stream");
         }
         else
@@ -146,23 +171,11 @@ public class OliveOil : MonoBehaviour
         if (currentStream != null)
         {
             currentStream.End();
+            Destroy(currentStream.gameObject);
             currentStream = null;
         }
 
         isPouring = false;
-    }
-
-    public void SetStove(Stove stove)
-    {
-        currentStove = stove;
-    }
-
-    public void RemoveStove(Stove stove)
-    {
-        if (currentStove == stove)
-        {
-            currentStove = null;
-        }
     }
 
     private void OnDestroy()

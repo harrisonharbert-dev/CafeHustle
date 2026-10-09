@@ -73,6 +73,9 @@ public class DraggingScript : MonoBehaviour,
     private bool isFlipping;
     private bool flipInputLocked;
 
+    // True while the cursor is over this object.
+    private bool pointerOver;
+
     private Tween flipTween;
     private Tween jiggleTween;
     public bool HasAReturnPoint;
@@ -154,6 +157,19 @@ public class DraggingScript : MonoBehaviour,
 
         if (dragging && Input.GetMouseButtonUp(0))
             DropFood();
+    }
+
+    // ============================================================
+    // HOVER STATE
+    // ============================================================
+
+    // The food counts as hovered while the cursor is over it OR while
+    // it is being dragged (the food lags behind the cursor, so the
+    // pointer can briefly leave it mid-drag).
+    private void UpdateHoverState()
+    {
+        if (foodStatsScript != null)
+            foodStatsScript.IsHovering = pointerOver || dragging;
     }
 
     // ============================================================
@@ -342,6 +358,7 @@ public class DraggingScript : MonoBehaviour,
         Jiggle();
 
         dragging = true;
+        UpdateHoverState();
 
         if (rb != null)
             rb.useGravity = false;
@@ -370,6 +387,7 @@ public class DraggingScript : MonoBehaviour,
         else
             DropFood();
     }
+
     public void ReturnToPosition()
     {
         DropFood();
@@ -383,16 +401,18 @@ public class DraggingScript : MonoBehaviour,
         {
         });
     }
+
     private void DropFood()
     {
         //if (foodCollider != null)
-           // foodCollider.enabled = true;
+        // foodCollider.enabled = true;
 
         transform.DOKill();
 
         Jiggle();
 
         dragging = false;
+        UpdateHoverState();
 
         if (rb != null)
             rb.useGravity = true;
@@ -433,11 +453,17 @@ public class DraggingScript : MonoBehaviour,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        pointerOver = true;
+        UpdateHoverState();
+
         onHoverEvent?.Invoke();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        pointerOver = false;
+        UpdateHoverState();
+
         onHoverExitEvent?.Invoke();
     }
 

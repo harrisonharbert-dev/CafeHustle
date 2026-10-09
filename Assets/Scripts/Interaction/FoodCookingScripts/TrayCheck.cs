@@ -175,7 +175,7 @@ public class TrayCheck : MonoBehaviour
                 if (sideOneRatio > maxCookRatio ||
                     sideTwoRatio > maxCookRatio)
                 {
-                    SetEmote(foodName + " is burnt!");
+                    SetEmote(foodName + " is burnt on one side!");
                     return false;
                 }
 
@@ -183,7 +183,7 @@ public class TrayCheck : MonoBehaviour
                 if (sideOneRatio < minCookRatio ||
                     sideTwoRatio < minCookRatio)
                 {
-                    SetEmote(foodName + " is undercooked!");
+                    SetEmote(foodName + " is undercooked on on side!");
                     return false;
                 }
             }

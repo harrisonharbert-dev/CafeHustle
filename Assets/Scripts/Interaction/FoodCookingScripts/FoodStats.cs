@@ -22,6 +22,7 @@ public class FoodStats : MonoBehaviour
     // ============================================================
 
     [Header("Cooking")]
+    [Tooltip("Seconds of cooking (per side) until the food is fully cooked.")]
     public float cookingTime;
     [SerializeField] private float cookingProgress;
 
@@ -35,14 +36,42 @@ public class FoodStats : MonoBehaviour
 
     [Header("Cooking State")]
     public bool isCooking;
-    public bool IsHovering;
+
+    [SerializeField] private bool isHovering;
+
+    // The food the cursor is currently on (read by CookingProgressBar).
+    // Set through IsHovering, which DraggingScript updates.
+    public static FoodStats HoveredFood { get; private set; }
+
+    public bool IsHovering
+    {
+        get => isHovering;
+        set
+        {
+            isHovering = value;
+
+            if (value)
+                HoveredFood = this;
+            else if (HoveredFood == this)
+                HoveredFood = null;
+        }
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics()
+    {
+        HoveredFood = null;
+    }
 
     // ============================================================
     // BURN
     // ============================================================
 
     [Header("Burn")]
-    [SerializeField] private float burnThreshold = 1.5f;
+    [Tooltip("SECONDS of cooking (per side) at which the food burns and becomes unusable. " +
+             "Anything between Cooking Time and this is overcooking. " +
+             "Example: Cooking Time 10, Burn Threshold 15.")]
+    [SerializeField] private float burnThreshold = 15f;
 
     public Material BurntMaterial;
 
@@ -114,10 +143,15 @@ public class FoodStats : MonoBehaviour
     public bool SideTwoCooked =>
         sideTwoProgress >= cookingTime;
 
+    // True only while the food is properly cooked. A burnt food is
+    // never "fully cooked", so it can't be served or used.
     public bool FullyCooked
     {
         get
         {
+            if (IsBurnt)
+                return false;
+
             if (requiresTwoSides)
                 return SideOneCooked && SideTwoCooked;
 
@@ -125,8 +159,16 @@ public class FoodStats : MonoBehaviour
         }
     }
 
+    // Seconds of cooking at which the food burns.
+    // This is the burnThreshold value from the Inspector. It can never
+    // be lower than cookingTime.
+    public float BurnTime =>
+        Mathf.Max(burnThreshold, cookingTime);
+
+    // Once burnt, the food stays burnt for good (even if flipped).
     public bool IsBurnt =>
-        cookingProgress >= burnThreshold;
+        foodBurntEventTriggered ||
+        (BurnTime > 0f && cookingProgress >= BurnTime);
 
     public float CookRatio
     {
@@ -136,6 +178,55 @@ public class FoodStats : MonoBehaviour
                 return 0f;
 
             return cookingProgress / cookingTime;
+        }
+    }
+
+    // Seconds the side that is currently cooking has been on the heat.
+    public float ActiveProgress =>
+        requiresTwoSides
+            ? (currentSide == 1 ? sideOneProgress : sideTwoProgress)
+            : cookingProgress;
+
+    // Active side's progress toward being COOKED, clamped 0-1.
+    // 0 = raw, 1 = fully cooked (reached cookingTime).
+    public float DisplayCookRatio
+    {
+        get
+        {
+            if (cookingTime <= 0f)
+                return 0f;
+
+            return Mathf.Clamp01(ActiveProgress / cookingTime);
+        }
+    }
+
+    // How far through the OVERCOOKING window the active side is, 0-1.
+    // 0 = not overcooked (still cooking, or just cooked)
+    // 1 = reached the burn threshold (burnt).
+    // Example: cookingTime 10, burnThreshold 15 -> 0 at 10s, 1 at 15s.
+    public float OvercookRatio
+    {
+        get
+        {
+            float window = BurnTime - cookingTime;
+
+            if (window <= 0f)
+                return 0f;
+
+            return Mathf.Clamp01((ActiveProgress - cookingTime) / window);
+        }
+    }
+
+    // Active side's progress toward BURNING, clamped 0-1.
+    // 0 = raw, 1 = burnt (reached burnThreshold).
+    public float BurnProgressRatio
+    {
+        get
+        {
+            if (BurnTime <= 0f)
+                return 0f;
+
+            return Mathf.Clamp01(ActiveProgress / BurnTime);
         }
     }
 
@@ -172,6 +263,16 @@ public class FoodStats : MonoBehaviour
 
         // Make sure both sides visually start at 0.
         UpdateBothSides();
+    }
+
+    // ============================================================
+    // DISABLE
+    // ============================================================
+
+    private void OnDisable()
+    {
+        if (HoveredFood == this)
+            HoveredFood = null;
     }
 
     // ============================================================
@@ -243,8 +344,7 @@ public class FoodStats : MonoBehaviour
 
         if (requiresTwoSides)
         {
-            // IMPORTANT:
-            // Each side now keeps its OWN cooking appearance.
+            // Each side keeps its OWN cooking appearance.
 
             float side1 =
                 sideOneProgress / cookingTime;
@@ -352,7 +452,8 @@ public class FoodStats : MonoBehaviour
         if (foodBurntEventTriggered)
             return;
 
-        if (cookingProgress >= burnThreshold)
+        if (BurnTime > 0f &&
+            cookingProgress >= BurnTime)
         {
             foodBurntEventTriggered = true;
 
@@ -432,9 +533,7 @@ public class FoodStats : MonoBehaviour
             !canFlip)
             return;
 
-        // IMPORTANT:
-        // There is NO animation here anymore.
-        //
+        // There is NO animation here.
         // DraggingScript is responsible for the visual 180 degree
         // flip. FoodStats only changes which side is cooking.
 
@@ -474,22 +573,9 @@ public class FoodStats : MonoBehaviour
     // READY
     // ============================================================
 
+    // False if the food is burnt (FullyCooked is false when burnt).
     public bool IsFoodReady()
     {
         return FullyCooked;
-    }
-
-    // ============================================================
-    // MOUSE
-    // ============================================================
-
-    public void OnMouseEnter()
-    {
-        IsHovering = true;
-    }
-
-    public void OnMouseExit()
-    {
-        IsHovering = false;
     }
 }

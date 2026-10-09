@@ -13,6 +13,7 @@ public class CameraController : MonoBehaviour
     public static bool transitioning;
     public UnityEvent onStageComplete;
     public UnityEvent[] DialoguePrompts;
+    public int StageIndex = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -53,12 +54,17 @@ public class CameraController : MonoBehaviour
 
     IEnumerator DelayedStage(int stageIndex)
     {
+        StageIndex = stageIndex;
         yield return new WaitForSeconds(2f);
         Cameras[stageIndex - 1].SetActive(false);
         Cameras[stageIndex].SetActive(true);
         DialoguePrompts[stageIndex - 1].Invoke();
         if (stageIndex == 1)
         {
+            GameObject Tomato1 = GameObject.Find("Upper_Hull");
+            GameObject Tomato2 = GameObject.Find("Lower_Hull");
+            Destroy(Tomato1);
+            Destroy(Tomato2);
             FoodHotBar.SetActive(true);
         }
         else
