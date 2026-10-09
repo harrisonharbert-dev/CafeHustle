@@ -136,7 +136,7 @@ public class MinigameSessionManager : MonoBehaviour
     IEnumerator EndDelay()
     {
         yield return new WaitForSeconds(1f);
-        if (Progress + item.failBonus <= 1.2f)
+        if (Progress + item.failBonus <= 1.5f)
         {
             onMinigameComplete?.Invoke();
             Debug.Log("Minigame completed successfully");

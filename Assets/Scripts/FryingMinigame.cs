@@ -23,7 +23,8 @@ public class FryingMinigame : MonoBehaviour
 
     //QTE Settings
     private bool popUpActive = false;
-    private float popUpDuration = 3f;
+    [SerializeField] private float popUpDuration = 3f;
+    [SerializeField] private Vector2 targetMinMax = new Vector2(0.55f, 0.85f);
     [SerializeField] private GameObject popUpUI;
     [SerializeField] private Image uiCounter;
 
@@ -49,14 +50,14 @@ public class FryingMinigame : MonoBehaviour
     {
         DOTween.Clear();
         //show UI
-        uiCounter.fillAmount = 1f;
+        uiCounter.fillAmount = 0f;
         popUpUI.SetActive(true);
 
         popUpActive = true;
 
         //Count down
 
-        uiCounter.DOFillAmount(0f, popUpDuration).SetEase(Ease.Linear)
+        uiCounter.DOFillAmount(1f, popUpDuration).SetEase(Ease.Linear)
         .OnComplete(() =>
         {
             popUpUI.SetActive(false);
@@ -87,9 +88,28 @@ public class FryingMinigame : MonoBehaviour
             DOTween.Clear();
             popUpUI.SetActive(false);
             popUpActive = false;
-            onFlipFood(cookingFoodPrefab);
-            onWinEvent?.Invoke();
-            Debug.Log("Yay you flipped it");
+
+            if(isWithinTargetLimit())
+            {
+                onFlipFood(cookingFoodPrefab);
+                onWinEvent?.Invoke();
+                Debug.Log("Yay you flipped it");
+            }
+            else
+            {
+                onFailEvent?.Invoke();
+            }
+
+            
         }
+    }
+
+    bool isWithinTargetLimit()
+    {
+        if (uiCounter.fillAmount > targetMinMax.x && uiCounter.fillAmount < targetMinMax.y)
+        { 
+            return true;
+        }
+        return false;
     }
 }

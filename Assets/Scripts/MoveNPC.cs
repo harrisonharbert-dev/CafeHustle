@@ -66,8 +66,9 @@ public class MoveNPC : MonoBehaviour
     public void GoToDestination(Transform newDestination)
     {
         destination = newDestination;
+        StopFollowTarget();
 
-        if (destination != null && navMeshAgent != null)
+        if (destination != null && navMeshAgent != null && navMeshAgent.isActiveAndEnabled && navMeshAgent.isOnNavMesh)
         {
             hasPendingDestination = true;
             navMeshAgent.SetDestination(destination.position);

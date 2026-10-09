@@ -26,6 +26,8 @@ title: FirstSpiritIntro
     <<jump SpiritFiller1>>
 <<elseif $spiritTalkTo == 2>>
     <<jump finishedIntroMinigame>>
+<<elseif $spiritTalkTo == 3>>
+    <<jump SpiritFiller2>>
 <<endif>>
 //---------------------------------------
 
@@ -171,9 +173,7 @@ Spirit: The cafe is just down the road, over the bridge.
 
 title: finishedIntroMinigame
 ---
-<<if $spiritTalkTo == 3>>
-    <<jump SpiritFiller2>>
-<<endif>>
+
 Spirit: Oh my! That looks <wave>delicious</wave>!
 
 Dawn: See? Easy as pie.

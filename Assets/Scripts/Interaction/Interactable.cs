@@ -61,6 +61,8 @@ public class Interactable : MonoBehaviour
     [SerializeField] private dialogueType dialogueOption;
 
     [HideInInspector] public bool useDialogue;
+    public bool isNPC;
+    [HideInInspector] public MoveNPC npc;
 
 
 
@@ -114,6 +116,10 @@ public class Interactable : MonoBehaviour
             Debug.LogWarning($"[Interactable] No interact prompt UI on {this}");
         }
 
+        if (isNPC)
+        {
+            npc = gameObject.GetComponent<MoveNPC>();
+        }
     }
 
     public void setInteractable(bool option)
@@ -181,6 +187,10 @@ public class Interactable : MonoBehaviour
             if (useDialogueCamera)
             {
                 PlayerInputController.instance.onDialogueCamera(gameObject);
+                if (isNPC && npc != null && PlayerInputController.instance.isValidDialogueLocation() && checkDistanceToPlayer())
+                {
+                    npc.GoToDestination(PlayerInputController.instance.NPCDialogueLocation);
+                }
             }
         }
 
@@ -201,6 +211,19 @@ public class Interactable : MonoBehaviour
     public void updateCurrentStoryPoint(string name)
     {
         currentStoryPoint = name;
+    }
+
+    bool checkDistanceToPlayer()
+    {
+        Vector3 offset = PlayerInputController.instance.transform.position - transform.position;
+        float distance = offset.sqrMagnitude;
+
+        if (distance < 3f)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private void OnTriggerEnter(Collider other)

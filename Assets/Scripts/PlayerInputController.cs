@@ -54,7 +54,8 @@ public class PlayerInputController : MonoBehaviour
     private float footstepTimer;
 
 
-    public bool lockMovement = false;
+    [HideInInspector]public bool lockMovement = false;
+    public Transform NPCDialogueLocation;
 
 
 
@@ -193,8 +194,15 @@ public class PlayerInputController : MonoBehaviour
         moveInput = new Vector2(0f, 0f);
 
     }
-
-
+    public bool isValidDialogueLocation()
+    {
+        //Raycast out in front and check if collides with Obstacle.
+        if (Physics.SphereCast(transform.position,1f,transform.forward,out RaycastHit hit, 3f, obstructionMask))
+        {
+            return false;
+        }
+        return true;
+    }
     public void onDialogueCamera(GameObject target)
     {
         dialogueCamera.Priority = 1;
@@ -211,6 +219,7 @@ public class PlayerInputController : MonoBehaviour
     public void LookAt(GameObject target)
     {
         transform.DOLookAt(target.transform.position, 0.3f, AxisConstraint.Y);
+        dialogueCamera.LookAt = target.transform;
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -225,7 +234,7 @@ public class PlayerInputController : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if (currentInteractable.isInRange && !lockMovement && context.performed && currentInteractable != null && currentInteractable.interactType == Interactable.interactableType.interactableWithInput)
+        if (currentInteractable != null && currentInteractable.isInRange && !lockMovement && context.performed && currentInteractable.interactType == Interactable.interactableType.interactableWithInput)
         {
             InteractPrompt.instance.SetPromptVisibility(false);
             transform.DOLookAt(currentInteractable.transform.position, interactRotationDuration, AxisConstraint.Y).OnComplete(() =>
