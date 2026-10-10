@@ -106,6 +106,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _BURNCONTROL: 0.126
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BlendOp: 0
@@ -127,6 +128,7 @@ Material:
     - _ISBURN: 1
     - _Metallic: 0
     - _Mode: 0
+    - _Noise_Scale: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueControl: 0
@@ -149,8 +151,8 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Fresnel_Falloff: {r: -1, g: 1, b: 0, a: 0}
-    - _Gradient_Height_Falloff: {r: 0.5, g: 0.75, b: 0, a: 0}
-    - _Noise_Contrast: {r: 0, g: 1, b: 0, a: 0}
+    - _Gradient_Height_Falloff: {r: 0.15, g: 1, b: 0, a: 0}
+    - _Noise_Contrast: {r: -0.5, g: 1, b: 0, a: 0}
     - _Noise_Falloff: {r: -0.5, g: 1, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Texture_Scroll: {r: 0, g: -0.5, b: 0, a: 0}
