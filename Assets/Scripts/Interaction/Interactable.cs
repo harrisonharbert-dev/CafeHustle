@@ -1,13 +1,13 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.VFX;
 using Yarn.Unity;
 using Yarn.Unity.Attributes;
-
 
 public class Interactable : MonoBehaviour
 {
@@ -39,6 +39,7 @@ public class Interactable : MonoBehaviour
     public interactableType interactType;
     [SerializeField] private bool playOnce;
     [SerializeField] private bool lookAtPlayerWhenInteract;
+    [SerializeField] private bool isInteractable = true;
 
     private bool played;
 
@@ -79,16 +80,32 @@ public class Interactable : MonoBehaviour
     [Header("Interaction Prompt")]
     [SerializeField] private PromptText promptText;
     [SerializeField] private PromptKey promptKey;
+
     [SerializeField] private InteractPrompt3D prompt;
-    [SerializeField] private bool isInteractable = true;
+    [Space(10)]
+    [SerializeField] private bool autoGeneratePrompt = false;
+    [SerializeField] private float promptHeight = 0.5f;
+    [SerializeField] private InteractPrompt3D.iconType iconType;
+    [Space(10)]
+
     [SerializeField] private interactableZoneIndicator zoneIndicator;
     [SerializeField] private VisualEffect hintVFX;
 
 
+    private GameObject promptPrefab;
+
+    void Awake()
+    {
+        if (autoGeneratePrompt)
+        {
+            promptPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Interactables/InteractPrompt3D.prefab");
+            InitializePrompt();
+        }
+    }
     public void Start()
     {
         dialogueRunner = GameObject.FindGameObjectWithTag("DialogueRunner").GetComponent<DialogueRunner>();
-        
+
         switch (dialogueOption)
         {
             case dialogueType.none:
@@ -112,11 +129,15 @@ public class Interactable : MonoBehaviour
         {
             zoneIndicator.changeIndicatorVisibility(true);
         }
+        else if (zoneIndicator != null && !isInteractable)
+        {
+            zoneIndicator.changeIndicatorVisibility(false);
+        }
 
         if (hintVFX != null && isInteractable)
         {
             hintVFX.Play();
-        } 
+        }
 
         else if (hintVFX != null && !isInteractable)
         {
@@ -132,6 +153,24 @@ public class Interactable : MonoBehaviour
         {
             npc = gameObject.GetComponent<MoveNPC>();
         }
+
+
+        
+    }
+
+    void InitializePrompt()
+    {
+        if (prompt != null) return;
+
+        Bounds bounds = gameObject.GetComponent<Renderer>().bounds;
+
+        float topY = bounds.max.y + promptHeight;
+
+        Vector3 topCenterPoint = new Vector3(bounds.center.x, topY, bounds.center.z);
+
+        prompt = Instantiate(promptPrefab, topCenterPoint, Quaternion.identity, transform).GetComponent<InteractPrompt3D>();
+        prompt.SetIcon(iconType);
+        prompt.onUI(false);
     }
 
     public void setInteractable(bool option)
@@ -155,7 +194,7 @@ public class Interactable : MonoBehaviour
         {
             hintVFX.Stop();
         }
-         else if (hintVFX != null && option == true)
+        else if (hintVFX != null && option == true)
         {
             hintVFX.Play();
         }
@@ -195,7 +234,7 @@ public class Interactable : MonoBehaviour
 
         if (lookAtPlayerWhenInteract)
         {
-            transform.DOLookAt(PlayerInputController.instance.transform.position, 1f,AxisConstraint.Y);
+            transform.DOLookAt(PlayerInputController.instance.transform.position, 1f, AxisConstraint.Y);
         }
 
 

@@ -10,7 +10,7 @@ public class MoveNPC : MonoBehaviour
     private NavMeshAgent navMeshAgent;
     [SerializeField] private bool UseAnimator;
     private bool isFollowing;
-    private bool isLookingAtPlayer;
+    [SerializeField] private bool isLocked = false;
     private bool hasPendingDestination;
     [SerializeField] private Animator animator;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -31,6 +31,8 @@ public class MoveNPC : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(isLocked) return;
+
         if (isFollowing == true)
         {
             if (destination != null)
@@ -65,6 +67,7 @@ public class MoveNPC : MonoBehaviour
     [YarnCommand("GoToDestination")]
     public void GoToDestination(Transform newDestination)
     {
+        if(isLocked) return;
         destination = newDestination;
         StopFollowTarget();
 
@@ -78,6 +81,13 @@ public class MoveNPC : MonoBehaviour
             hasPendingDestination = false;
         }
     }
+
+    [YarnCommand("lock_movement")]
+    public void lockMovement(bool option)
+    {
+        isLocked = option;
+    }
+    
 
     public virtual void OnDestinationReached()
     {

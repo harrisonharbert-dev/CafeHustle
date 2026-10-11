@@ -33,10 +33,12 @@ title: FirstSpiritIntro
 
 
 <<set $spiritTalkTo = 1>>
+<<lock_movement armature-spirit-round true>>
 <<play_cutscene PlayerCutsceneAnimator character_scared>>
 <<play_cutscene CutsceneAnimator spirit-appear>>
 <<play_emote_plain player_emote exclaim>>
 Dawn: It that a… <shake>ghost?!</shake>
+<<lock_movement armature-spirit-round false>>
 Dawn: Nup, nope, I’m out of here. Sorry Grams. <sketchy><b>This is just too much.<sketchy></b>.
 
 Spirit: <shake>Wait, wait!</shake>

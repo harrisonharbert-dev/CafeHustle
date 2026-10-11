@@ -89,7 +89,7 @@ Where to look?
         Dawn: It's completely empty here!
 
 <<if $foundFlourItem == false>>
-Dawn: Hmm... it wasn't there, let me have another look.
-<<jump findFlour>>
+    Dawn: Hmm... it wasn't there, let me have another look.
+    <<jump findFlour>>
 <<endif>>
 ===

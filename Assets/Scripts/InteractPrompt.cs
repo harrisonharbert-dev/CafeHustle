@@ -2,10 +2,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
-using CsvHelper.Configuration.Attributes;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 
 
 
@@ -107,6 +107,12 @@ public class InteractPrompt : MonoBehaviour
         bool isInDialogue = PlayerInputController.instance.isinDialogue;
         bool isInDeliveryZone = PlayerInputController.instance.inCarryDeliveryZone;
 
+        if (PlayerInputController.instance.isDelivering)
+        {
+            SetPromptVisibility(false);
+            return;
+        }
+
         //If player is in dialogue, hide
         if (isInDialogue)
         {
@@ -143,7 +149,6 @@ public class InteractPrompt : MonoBehaviour
                 {
                     UpdateUIInfo(Interactable.PromptText.Drop, Interactable.PromptKey.F);
                 }
-                ;
                 break;
 
 

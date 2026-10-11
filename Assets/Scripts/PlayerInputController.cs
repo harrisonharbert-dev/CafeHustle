@@ -8,6 +8,7 @@ using System.Collections;
 
 
 
+
 public class PlayerInputController : MonoBehaviour
 {
 
@@ -56,6 +57,7 @@ public class PlayerInputController : MonoBehaviour
 
     [HideInInspector]public bool lockMovement = false;
     public Transform NPCDialogueLocation;
+    private float NPCDialogueDistance = 3.5f;
 
 
 
@@ -75,6 +77,7 @@ public class PlayerInputController : MonoBehaviour
     [HideInInspector] public GameObject deliveryZonePos;
     public bool inCarryDeliveryZone;
     public string currentCarryItemID;
+    [HideInInspector] public bool isDelivering;
 
     [Header("Unity Events")]
     [SerializeField] private UnityEvent onStartEvent;
@@ -197,10 +200,13 @@ public class PlayerInputController : MonoBehaviour
     public bool isValidDialogueLocation()
     {
         //Raycast out in front and check if collides with Obstacle.
-        if (Physics.SphereCast(transform.position,1f,transform.forward,out RaycastHit hit, 3f, obstructionMask))
+        if (Physics.SphereCast(transform.position,.2f,transform.forward,out RaycastHit hit, 3f, obstructionMask))
         {
+            NPCDialogueLocation.position = hit.point;
             return false;
         }
+
+        NPCDialogueLocation.localPosition = new Vector3(0f,0f,NPCDialogueDistance);
         return true;
     }
     public void onDialogueCamera(GameObject target)
@@ -248,7 +254,7 @@ public class PlayerInputController : MonoBehaviour
 
     public void Grab(InputAction.CallbackContext context)
     {
-        if (currentCarryObject.isInRange && !lockMovement && context.performed && currentCarryObject != null)
+        if (currentCarryObject != null && currentCarryObject.isInRange && !lockMovement && context.performed)
         {
             transform.DOLookAt(currentCarryObject.transform.position, interactRotationDuration, AxisConstraint.Y).OnComplete(() =>
             {
@@ -256,9 +262,13 @@ public class PlayerInputController : MonoBehaviour
             });
         }
     }
-
     public void useItem()
     {
+        if (currentCarryObject == null)
+        {
+            return;
+        }
+
         currentCarryObject.isInRange = true;
         switch (playerState)
         {
@@ -287,16 +297,20 @@ public class PlayerInputController : MonoBehaviour
                 }
                 else
                 {
-                    currentCarryObject.SetDeliver();
+                    CarryObject deliveredObject = currentCarryObject;
+                    deliveredObject.SetDeliver();
                     clearHeldItem();
+                    SetCurrentCarry(null);
                 }
                 break;
 
             case playState.carryingNonDroppable:
                 if (inCarryDeliveryZone)
                 {
-                    currentCarryObject.SetDeliver();
+                    CarryObject deliveredObject = currentCarryObject;
+                    deliveredObject.SetDeliver();
                     clearHeldItem();
+                    SetCurrentCarry(null);
                 }
                 break;
         }
@@ -355,6 +369,7 @@ public class PlayerInputController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        isValidDialogueLocation();
         Shader.SetGlobalVector("_PlayerPosition", transform.position + Vector3.up);
 
         if (lockMovement)

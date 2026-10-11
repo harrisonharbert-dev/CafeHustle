@@ -151,11 +151,22 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 startingCol = image.color;
             }
         }
+
+        
+    }
+
+    void Start()
+    {
+       if(gameObject.activeSelf == false) {
+            group.alpha = 0f;
+       }
+        
     }
 
 
     void OnEnable()
     {
+
         onVisibleEvent?.Invoke();
 
     }

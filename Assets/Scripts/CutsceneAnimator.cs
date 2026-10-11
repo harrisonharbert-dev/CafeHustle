@@ -11,10 +11,11 @@ public class CutsceneAnimator : MonoBehaviour
 {
 
 
-    private PlayableDirector director;
+    public PlayableDirector director;
     public SerializableDictionary<string, TimelineAsset> timelineAssets;
 
     private TimelineAsset currentAsset;
+    private TimelineAsset queuedAsset;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -27,30 +28,54 @@ public class CutsceneAnimator : MonoBehaviour
     [YarnCommand("play_cutscene")]
     public void playEmote(string name)
     {
+        if (!checkIsPlaying())
+        {
 
 
-        timelineAssets.TryGetValue(name, out TimelineAsset currentAsset);
-        director.playableAsset = currentAsset;
-        director.Play();
+            timelineAssets.TryGetValue(name, out TimelineAsset currentAsset);
+            playDirector(currentAsset);
 
-        if (PlayerInputController.instance.playerState == PlayerInputController.playState.none || PlayerInputController.instance.playerState == PlayerInputController.playState.carryingNonDroppable) return;
-        PlayerInputController.instance.useDrop();
+            if (PlayerInputController.instance.playerState == PlayerInputController.playState.none || PlayerInputController.instance.playerState == PlayerInputController.playState.carryingNonDroppable) return;
+            PlayerInputController.instance.useDrop();
+        } 
+        else
+        {
+            timelineAssets.TryGetValue(name, out TimelineAsset queuedAsset);
+            StartCoroutine(queueCutscene(queuedAsset));
+        }
     }
     //Play as emote, drop held item
 
+    void playDirector(TimelineAsset asset)
+    {
+        director.playableAsset = asset;
+        director.Play();
+    }
 
+    bool checkIsPlaying()
+    {
+        if (director.state == PlayState.Playing)
+        {
+            return true;
+        }
+
+        return false;
+    }
 
     public void playAction(string name)
     {
-        // Get current asset to be played
-        timelineAssets.TryGetValue(name, out TimelineAsset currentAsset);
-        director.playableAsset = currentAsset;
-        //pause player movement
-        float duration = (float)director.playableAsset.duration;
-        StartCoroutine(pausePlayerMovement(duration + 0.1f));
+        if (!checkIsPlaying())
+        {
+            // Get current asset to be played
+            timelineAssets.TryGetValue(name, out TimelineAsset currentAsset);
+            director.playableAsset = currentAsset;
+            //pause player movement
+            float duration = (float)director.playableAsset.duration;
+            StartCoroutine(pausePlayerMovement(duration + 0.1f));
 
-        //
-        director.Play();
+            //
+            director.Play();
+        }
     }
     //play as action so it works with delivery zones
 
@@ -62,11 +87,20 @@ public class CutsceneAnimator : MonoBehaviour
         PlayerInputController.instance.SetMovementLock(true);
 
         yield return new WaitForSeconds(duration);
-        
+
         if (PlayerInputController.instance.isinDialogue == false)
         {
             PlayerInputController.instance.SetMovementLock(false);
         }
 
+    }
+
+    private IEnumerator queueCutscene(TimelineAsset asset)
+    {
+
+        yield return new WaitUntil(()=> director.state != PlayState.Playing);
+
+        playDirector(asset);
+        
     }
 }

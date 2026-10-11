@@ -32,6 +32,8 @@ public class CarryObject : MonoBehaviour
     [SerializeField] private interactableZoneIndicator zoneIndicator;
 
     //Private References
+    [SerializeField] private GameObject appearVFX;
+    private GameObject vfx;
 
 
     private string carryingTag = "isCarrying";
@@ -40,6 +42,7 @@ public class CarryObject : MonoBehaviour
     private float throwDelay = 0.75f;
     [HideInInspector] public bool isInRange;
     private CutsceneAnimator playerCutscene;
+    [HideInInspector] public bool deliveryStarted;
 
     private void Start()
     {
@@ -63,6 +66,23 @@ public class CarryObject : MonoBehaviour
         {
             Debug.LogWarning($"[CarryObject] Missing zone indicator on {this}");
         }
+        else if (zoneIndicator != null)
+        {
+            zoneIndicator.changeIndicatorVisibility(false);
+        }
+    }
+
+    void OnEnable()
+    {
+        if (appearVFX != null)
+        {
+            vfx = Instantiate(appearVFX, this.transform);
+        }
+    }
+
+    void OnDisable()
+    {
+        Destroy(vfx);
     }
 
 
@@ -87,7 +107,7 @@ public class CarryObject : MonoBehaviour
             zonePrompt.onUI(false);
             zoneIndicator.changeIndicatorVisibility(true);
         }
-        
+
 
 
         CharacterAnimationController.instance.SetTrigger(carryingTag);
@@ -125,6 +145,14 @@ public class CarryObject : MonoBehaviour
 
     public void SetDeliver()
     {
+        if (deliveryStarted)
+        {
+            return;
+        }
+
+        InteractPrompt.instance.SetPromptVisibility(false);
+        deliveryStarted = true;
+        PlayerInputController.instance.isDelivering = true;
         playerCutscene.playAction(throwAnimation);
         CharacterAnimationController.instance.SetTrigger(carryingTag);
         StartCoroutine(Throw(throwDelay));
@@ -138,7 +166,8 @@ public class CarryObject : MonoBehaviour
         {
             zonePrompt.onUI(false);
         }
-        if(zoneIndicator != null) { 
+        if (zoneIndicator != null)
+        {
             zoneIndicator.changeIndicatorVisibility(false);
         }
 
@@ -147,8 +176,8 @@ public class CarryObject : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         onDeliverEvent.Invoke();
-        InteractPrompt.instance.Refresh();
         
+
 
         if (PlayerInputController.instance.deliveryZonePos != null)
 
@@ -158,7 +187,10 @@ public class CarryObject : MonoBehaviour
 
         transform.DOLocalJump(Vector3.zero, jumpPower, 1, transitionDuration).OnComplete(() =>
         {
-            PlayerInputController.instance.SetCurrentCarry(null);
+            PlayerInputController player = PlayerInputController.instance;
+            player.SetCurrentCarry(null);
+            player.isDelivering = false;
+            InteractPrompt.instance.Refresh();
             InteractPrompt.instance.SetPromptVisibility(false);
             gameObject.transform.rotation = placeRotation;
             if (!isPlaceObject)
