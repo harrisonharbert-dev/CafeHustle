@@ -361,7 +361,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1874971003}
         m_TargetAssemblyTypeName: CharacterEmote, Assembly-CSharp
-        m_MethodName: PlayEmote
+        m_MethodName: PlayEmotePlain
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -398,7 +398,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: sad
+          m_StringArgument: drop
           m_BoolArgument: 0
         m_CallState: 2
   FoodCooking:
@@ -794,6 +794,8 @@ MonoBehaviour:
   stoveCollider: {fileID: 106914828}
   detectionPadding: 0.15
   Speed: 0
+  hintVFX: {fileID: 1359278708}
+  hintThreshold: 15
 --- !u!64 &106914828
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3207,6 +3209,18 @@ MonoBehaviour:
           m_StringArgument: CompletedCutting
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1221258268}
+        m_TargetAssemblyTypeName: UnityEngine.VFX.VisualEffect, UnityEngine
+        m_MethodName: SendEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: OnSparkle
+          m_BoolArgument: 0
+        m_CallState: 2
   onCutFail:
     m_PersistentCalls:
       m_Calls: []
@@ -4465,6 +4479,18 @@ PrefabInstance:
       propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2708954969354811108, guid: 06353ee0d5cb23943b3f832ae7be31d7, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 59.999996
+      objectReference: {fileID: 0}
+    - target: {fileID: 2708954969354811108, guid: 06353ee0d5cb23943b3f832ae7be31d7, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 59.999996
+      objectReference: {fileID: 0}
+    - target: {fileID: 2708954969354811108, guid: 06353ee0d5cb23943b3f832ae7be31d7, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 59.999996
+      objectReference: {fileID: 0}
     - target: {fileID: 2953148510990469529, guid: 06353ee0d5cb23943b3f832ae7be31d7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.01601
@@ -4839,7 +4865,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1752705339}
         m_TargetAssemblyTypeName: CharacterEmote, Assembly-CSharp
-        m_MethodName: PlayEmote
+        m_MethodName: PlayEmotePlain
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4876,7 +4902,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: sad
+          m_StringArgument: drop
           m_BoolArgument: 0
         m_CallState: 2
   FoodCooking:
@@ -5439,6 +5465,7 @@ RectTransform:
   m_Children:
   - {fileID: 2000744158}
   - {fileID: 1684983191}
+  - {fileID: 1359278709}
   m_Father: {fileID: 8230361096746298598}
   m_LocalEulerAnglesHint: {x: 0, y: -146.273, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -6449,6 +6476,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1221258267}
   - {fileID: 1356066594}
   - {fileID: 704073186}
   - {fileID: 811816517}
@@ -6729,6 +6757,85 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f83749553712a734382d4d7bcad983bc, type: 3}
+--- !u!1001 &1221258266
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1061399704}
+    m_Modifications:
+    - target: {fileID: 6887924693169104103, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_Name
+      value: SparkleVFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.0010413554
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.0010413554
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.0010413555
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.598
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -9.418
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+--- !u!4 &1221258267 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7643358884778632526, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+  m_PrefabInstance: {fileID: 1221258266}
+  m_PrefabAsset: {fileID: 0}
+--- !u!2083052967 &1221258268 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 2677662240567868337, guid: 021ffe4d4f6ff2246b2aecf387096742, type: 3}
+  m_PrefabInstance: {fileID: 1221258266}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1230186132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7410,6 +7517,89 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a5b76949dd07b7439314015205daccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!1001 &1359278707
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 972878455}
+    m_Modifications:
+    - target: {fileID: 1752073353936875327, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_Name
+      value: VFX-Glimmer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013594581014097519, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Value
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013594581014097519, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[4].m_Value
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013594581014097519, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Value
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013594581014097519, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Value
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.019
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+--- !u!2083052967 &1359278708 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 5013594581014097519, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+  m_PrefabInstance: {fileID: 1359278707}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1359278709 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5736606538940059648, guid: cf45c1089b1f59e458907c3143b753a8, type: 3}
+  m_PrefabInstance: {fileID: 1359278707}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1482865995 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5739900078000194757, guid: f83749553712a734382d4d7bcad983bc, type: 3}
@@ -9510,9 +9700,9 @@ MonoBehaviour:
   FoodFlip:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1748720229}
+      - m_Target: {fileID: 1752705339}
         m_TargetAssemblyTypeName: CharacterEmote, Assembly-CSharp
-        m_MethodName: PlayEmote
+        m_MethodName: PlayEmotePlain
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9549,7 +9739,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: sad
+          m_StringArgument: drop
           m_BoolArgument: 0
         m_CallState: 2
   FoodCooking:
@@ -10459,7 +10649,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1729282405531717329
 GameObject:
   m_ObjectHideFlags: 0
@@ -10515,9 +10705,9 @@ MonoBehaviour:
   FoodFlip:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 997328153}
+      - m_Target: {fileID: 1752705339}
         m_TargetAssemblyTypeName: CharacterEmote, Assembly-CSharp
-        m_MethodName: PlayEmote
+        m_MethodName: PlayEmotePlain
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10554,7 +10744,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: sad
+          m_StringArgument: drop
           m_BoolArgument: 0
         m_CallState: 2
   FoodCooking:

@@ -134,9 +134,11 @@ public class CarryObject : MonoBehaviour
             Destroy(prompt);
         }
 
-        if (zoneIndicator != null && zonePrompt != null)
+        if (zonePrompt != null)
         {
             zonePrompt.onUI(false);
+        }
+        if(zoneIndicator != null) { 
             zoneIndicator.changeIndicatorVisibility(false);
         }
 

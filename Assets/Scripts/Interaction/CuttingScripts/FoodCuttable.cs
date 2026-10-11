@@ -288,8 +288,8 @@ public class FoodCuttable : MonoBehaviour
 
         // Freeze the tomato piece so cutting it
         // doesn't knock it across the board.
-        rb.constraints =
-            RigidbodyConstraints.FreezeAll;
+        //rb.constraints =
+        //    RigidbodyConstraints.FreezeAll;
 
         // -----------------------------
         // DRAGGING

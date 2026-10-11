@@ -377,11 +377,15 @@ public class DraggingScript : MonoBehaviour,
                 target,
                 moveSpeed * Time.deltaTime
             );
+
+            rb.constraints =
+            RigidbodyConstraints.FreezeAll;
         }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        rb.constraints = RigidbodyConstraints.None;
         if (HasAReturnPoint && ReturnPoint != null)
             ReturnToPosition();
         else

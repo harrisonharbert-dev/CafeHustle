@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.VFX;
 
 public class OliveOil : MonoBehaviour
 {

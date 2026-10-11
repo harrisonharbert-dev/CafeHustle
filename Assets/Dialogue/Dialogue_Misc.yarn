@@ -69,3 +69,27 @@ Some water and it should be as good as ever!
         Dawn: It looks as good as can be!
         Dawn: Some ripe tomatoes as well!
 ===
+
+title:findFlour
+---
+<<declare $foundFlourItem = false>>
+
+An old cupboard with many decrepid things...
+Surely the [o]flour[/o] isn't hiding here... right?
+Where to look?
+    -> Top Shelf!
+        <<set_story StoryManager foundFlour>>
+        <<set $foundFlourItem = true>>
+        You barely reach the [o]glimmering[/o] item behind on the top shelf.
+        Dawn: There it is!
+    -> Bottom Shelf!
+        Nothing here except old jars and cans
+        Dawn: It's not here...
+    -> In the drawer!
+        Dawn: It's completely empty here!
+
+<<if $foundFlourItem == false>>
+Dawn: Hmm... it wasn't there, let me have another look.
+<<jump findFlour>>
+<<endif>>
+===

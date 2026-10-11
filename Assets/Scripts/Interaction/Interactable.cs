@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 using Yarn.Unity;
 using Yarn.Unity.Attributes;
 
@@ -81,12 +82,13 @@ public class Interactable : MonoBehaviour
     [SerializeField] private InteractPrompt3D prompt;
     [SerializeField] private bool isInteractable = true;
     [SerializeField] private interactableZoneIndicator zoneIndicator;
+    [SerializeField] private VisualEffect hintVFX;
 
 
     public void Start()
     {
         dialogueRunner = GameObject.FindGameObjectWithTag("DialogueRunner").GetComponent<DialogueRunner>();
-
+        
         switch (dialogueOption)
         {
             case dialogueType.none:
@@ -111,9 +113,19 @@ public class Interactable : MonoBehaviour
             zoneIndicator.changeIndicatorVisibility(true);
         }
 
-        if (prompt == null)
+        if (hintVFX != null && isInteractable)
         {
-            Debug.LogWarning($"[Interactable] No interact prompt UI on {this}");
+            hintVFX.Play();
+        } 
+
+        else if (hintVFX != null && !isInteractable)
+        {
+            hintVFX.Stop();
+        }
+
+        if (prompt != null)
+        {
+            prompt.onUI(false);
         }
 
         if (isNPC)
@@ -139,6 +151,14 @@ public class Interactable : MonoBehaviour
             zoneIndicator.changeIndicatorVisibility(option);
         }
 
+        if (hintVFX != null && option == false)
+        {
+            hintVFX.Stop();
+        }
+         else if (hintVFX != null && option == true)
+        {
+            hintVFX.Play();
+        }
         if (isInRange && option == true)
         {
             setEnter();

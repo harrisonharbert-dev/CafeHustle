@@ -21,6 +21,11 @@ public class InteractPrompt3D : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        onUI(false);
+    }
+
 
 
 

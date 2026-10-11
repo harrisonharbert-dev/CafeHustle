@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.VFX;
+using UnityEditor.Experimental.GraphView;
 
 public class Stove : MonoBehaviour
 {
@@ -37,6 +39,11 @@ public class Stove : MonoBehaviour
     private bool wasOilEmpty;
     public float Speed;
 
+    //Show vfx if oil level is below a certain amount
+    [SerializeField] private VisualEffect hintVFX;
+    [SerializeField] private float hintThreshold;
+    private bool hintVFXActive;
+
     private void Start()
     {
         if (stoveCollider == null)
@@ -46,6 +53,7 @@ public class Stove : MonoBehaviour
             OliveOilMeter.fillAmount = Mathf.Clamp01(OliveOilAmount / 100f);
 
         UpdateOilText();
+        UpdateHintVFX();
 
         if (OilPlane != null)
         {
@@ -73,33 +81,62 @@ public class Stove : MonoBehaviour
         switch (foodOnStove)
         {
             case (1):
-                Speed = 0.0005f;
+                Speed = 0.005f;
                 break;
             case (2):
-                Speed = 0.001f;
+                Speed = 0.01f;
                 break;
             case (3):
-                Speed = 0.0015f;
+                Speed = 0.015f;
                 break;
             case (4):
-                Speed = 0.002f;
+                Speed = 0.02f;
                 break;
             case (5):
-                Speed = 0.0025f;
+                Speed = 0.025f;
                 break;
             case (6):
-                Speed = 0.03f;
+                Speed = 0.3f;
                 break;
             default:
                 Speed = 0f;
                 break;
         }
     }
-    private void Update()
+
+    void UpdateHintVFX()
+    {
+        Debug.Log($"{OliveOilAmount}..{hintThreshold}");
+        if (OliveOilAmount > hintThreshold)
+        {
+            if (hintVFXActive)
+            {
+                hintVFX.Stop();
+                hintVFXActive = false;
+            }
+
+            return;
+        }
+        else if (OliveOilAmount < hintThreshold)
+        {
+            if (!hintVFXActive)
+            {
+                hintVFX.Play();
+                hintVFXActive = true;
+            }
+
+            return;
+        }
+
+
+
+    }
+
+    private void FixedUpdate()
     {
         CheckTrackedFood();
         foodOnStove = foodCurrentlyOnStove.Count;
-
+        UpdateHintVFX();
         // Drain oil while food is on the stove.
         if (foodOnStove > 0 && OliveOilAmount > 0 && OliveOilMeter != null)
         {
@@ -110,6 +147,7 @@ public class Stove : MonoBehaviour
 
             UpdateOilText();
             UpdateOilAlpha();
+            
 
             if (OliveOilAmount <= 0.01f)
             {
