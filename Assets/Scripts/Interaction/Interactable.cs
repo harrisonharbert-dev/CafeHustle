@@ -1,7 +1,9 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -94,7 +96,8 @@ public class Interactable : MonoBehaviour
 
     private GameObject promptPrefab;
 
-    void Awake()
+#if UNITY_EDITOR
+    void OnValidate()
     {
         if (autoGeneratePrompt)
         {
@@ -102,6 +105,7 @@ public class Interactable : MonoBehaviour
             InitializePrompt();
         }
     }
+#endif
     public void Start()
     {
         dialogueRunner = GameObject.FindGameObjectWithTag("DialogueRunner").GetComponent<DialogueRunner>();

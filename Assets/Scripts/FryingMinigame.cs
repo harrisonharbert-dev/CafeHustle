@@ -70,8 +70,6 @@ public class FryingMinigame : MonoBehaviour
     // Update is called once per frame      
     public void onFlipFood(GameObject food)
     {
-        
-
         food.transform.DOLocalJump(Vector3.zero, flipHeight, flipNums, flipDuration);
         food.transform.DOLocalRotate(flipRotation, flipDuration, RotateMode.FastBeyond360);
     }

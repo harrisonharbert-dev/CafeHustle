@@ -152,15 +152,19 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             }
         }
 
-        
+        Debug.Log($"{this.gameObject.activeInHierarchy}");
+        if (this.gameObject.activeInHierarchy == false)
+        {
+            group.alpha = 0f;
+
+        }
+
+
     }
 
     void Start()
     {
-       if(gameObject.activeSelf == false) {
-            group.alpha = 0f;
-       }
-        
+
     }
 
 
@@ -176,14 +180,6 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         onDisableEvent?.Invoke();
     }
 
-
-    public bool checkForActiveTweens()
-    {
-        bool isTweening = DOTween.IsTweening(rect, true) || DOTween.IsTweening(group, true) || DOTween.IsTweening(image, true);
-        return isTweening;
-    }
-
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         onHoverEvent?.Invoke();
@@ -193,7 +189,6 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         onLeaveEvent?.Invoke();
     }
-
     public void Fade(bool option)
     {
         float target = option ? 1f : 0f;
