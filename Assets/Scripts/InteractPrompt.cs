@@ -31,6 +31,10 @@ public class InteractPrompt : MonoBehaviour
     [SerializeField] private Sprite eSprite;
     [SerializeField] private Sprite fSprite;
 
+    [Header("Unity Events")]
+    [SerializeField] private UnityEvent onVisibleEvent;
+    [SerializeField] private UnityEvent onHiddenEvent;
+
     public static InteractPrompt instance { get; private set; }
 
 
@@ -92,9 +96,13 @@ public class InteractPrompt : MonoBehaviour
 
     public void SetPromptVisibility(bool value)
     {
-        foreach (Transform child in gameObject.transform)
+        if (value == true)
         {
-            child.gameObject.SetActive(value);
+            onVisibleEvent?.Invoke();
+        }
+        else if (value == false)
+        {
+            onHiddenEvent?.Invoke();
         }
     }
 

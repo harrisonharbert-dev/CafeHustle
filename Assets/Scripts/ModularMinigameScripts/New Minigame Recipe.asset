@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e20ac2672899afe4d940f841e1521e7e, type: 3}
+  m_Name: New Minigame Recipe
+  m_EditorClassIdentifier: Assembly-CSharp::MinigameRecipe
+  centerItem: {fileID: 919132149155446097, guid: 45aaf060129792f44a6581775a10a480, type: 3}
+  centerItemScale: {x: 0.5, y: 0.5, z: 0.5}
+  centerItemHeightOffset: 0.15
+  leftItem: {fileID: 919132149155446097, guid: b9a9c154a4a44e8439dfc6ffa1a917d2, type: 3}
+  leftItemScale: {x: 0.5, y: 0.5, z: 0.5}
+  leftItemHeightOffset: 0.15
+  rightItem: {fileID: 919132149155446097, guid: 2714cb3e4e450984dab356c74a25ece6, type: 3}
+  rightItemScale: {x: 0.5, y: 0.5, z: 0.5}
+  rightItemHeightOffset: 0.15

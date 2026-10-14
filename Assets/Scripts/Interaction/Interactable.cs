@@ -1,6 +1,8 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -104,8 +106,43 @@ public class Interactable : MonoBehaviour
             promptPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Interactables/InteractPrompt3D.prefab");
             InitializePrompt();
         }
+        else
+        {
+            if (prompt != null)
+            {
+                GameObject promptToDestroy = prompt.gameObject;
+                prompt = null;
+
+                EditorApplication.delayCall += () =>
+                {
+                    if (promptToDestroy != null)
+                    {
+                        DestroyImmediate(promptToDestroy);
+                    }
+                };
+            }
+        }
     }
 #endif
+
+    [ContextMenu("Quick Setup")]
+    void AddTrigger()
+    {
+        if(prompt == null)
+        {
+            autoGeneratePrompt = true;
+            OnValidate();
+        }
+
+        TryGetComponent<SphereCollider>(out SphereCollider sphere);
+        TryGetComponent<BoxCollider>(out BoxCollider box);
+        if(sphere != null && sphere.isTrigger == true || box != null && box.isTrigger == true) return;
+
+        SphereCollider newCollider = this.AddComponent<SphereCollider>();
+        newCollider.isTrigger = true;
+        newCollider.radius = 2f;
+        newCollider.center = Vector3.zero;
+    }
     public void Start()
     {
         dialogueRunner = GameObject.FindGameObjectWithTag("DialogueRunner").GetComponent<DialogueRunner>();
@@ -159,7 +196,7 @@ public class Interactable : MonoBehaviour
         }
 
 
-        
+
     }
 
     void InitializePrompt()
@@ -312,7 +349,6 @@ public class Interactable : MonoBehaviour
         {
             case interactableType.interactableWithTrigger:
                 //Invoke action immediately if its set with trigger
-                InteractPrompt.instance.Refresh();
                 InvokeEvent();
                 break;
 

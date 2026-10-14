@@ -3,6 +3,7 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using Unity.VisualScripting;
 using UnityEngine.Events;
 using Yarn.Unity;
@@ -103,9 +104,9 @@ public class ModelViewerHandler : MonoBehaviour
         {
             return;
         }
-        
+
         //Destroy any pre-existing model instances
-        if(modelInstance != null)
+        if (modelInstance != null)
         {
             Destroy(modelInstance);
         }
@@ -134,7 +135,6 @@ public class ModelViewerHandler : MonoBehaviour
         }
 
         //Show
-        StartCoroutine(WaitForInput());
         viewerContainer.SetActive(true);
         isViewerOpen = true;
 
@@ -148,23 +148,23 @@ public class ModelViewerHandler : MonoBehaviour
         }
     }
 
-    public void CloseViewModel()
+    public void Close()
     {
         Destroy(modelInstance);
         viewerContainer.SetActive(false);
-
-        StopCoroutine(WaitForInput());
 
         onHideEvent?.Invoke();
         isViewerOpen = false;
     }
 
-
-    IEnumerator WaitForInput()
+    public void CloseViewModel(InputAction.CallbackContext context)
     {
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Escape));
-
-        CloseViewModel();
+        if (isViewerOpen && context.performed)
+        {
+            Close();
+        }
     }
+
+
 
 }

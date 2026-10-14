@@ -34,6 +34,7 @@ public class DialogueAudioController : ActionMarkupHandler
     public colors dialogueNameColors;
     public Image dialogueNameImage;
     private DialogueVoiceProfile currentProfile;
+    private bool skipAudioPlayedThisLine;
 
     [Header("Punctuation Settings")]
     [Tooltip("Pause (in seconds) after a comma, semicolon, or colon.")]
@@ -168,6 +169,7 @@ public class DialogueAudioController : ActionMarkupHandler
     public override void OnPrepareForLine(MarkupParseResult line, TMP_Text text)
     {
         characterCounter = 0;
+        skipAudioPlayedThisLine = false;
         onNewLineEvent?.Invoke();
         if (continueButton != null)
         {
@@ -208,9 +210,23 @@ public class DialogueAudioController : ActionMarkupHandler
             skipButton.SetActive(false);
         }
     }
+    private void PlaySkipAudioOnce()
+    {
+        if (skipAudioPlayedThisLine)
+        {
+            return;
+        }
 
+        var profile = currentProfile != null ? currentProfile : defaultProfile;
+        if (profile == null || profile.audioClips == null || profile.audioClips.Length == 0)
+        {
+            return;
+        }
 
-
+        skipAudioPlayedThisLine = true;
+        audioSource.pitch = Random.Range(profile.pitchMin, profile.pitchMax);
+        audioSource.PlayOneShot(profile.audioClips[Random.Range(0, profile.audioClips.Length)]);
+    }
 
 
     public override async YarnTask OnCharacterWillAppear(
@@ -218,8 +234,11 @@ public class DialogueAudioController : ActionMarkupHandler
         MarkupParseResult line,
         CancellationToken cancellationToken)
     {
+
+
         if (cancellationToken.IsCancellationRequested)
         {
+            PlaySkipAudioOnce();
             return;
         }
 
@@ -240,6 +259,7 @@ public class DialogueAudioController : ActionMarkupHandler
 
             if (cancellationToken.IsCancellationRequested)
             {
+                PlaySkipAudioOnce();
                 return;
             }
         }

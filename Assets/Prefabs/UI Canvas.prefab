@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 9167202577563739148}
   - component: {fileID: 692781036343351567}
   - component: {fileID: 5640609902313678236}
+  - component: {fileID: 5366600025832311846}
   m_Layer: 5
   m_Name: InteractPrompt
   m_TagString: InteractPrompt
@@ -138,7 +139,6 @@ RectTransform:
   m_Children:
   - {fileID: 2669217026650238231}
   - {fileID: 2464640917214610911}
-  - {fileID: 1465648731226600245}
   m_Father: {fileID: 1597859936947205789}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -170,12 +170,89 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed01051c66be324988484cc393626b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractPrompt
-  fadeDuration: 0.2
-  tweener: {fileID: 104438142612505094}
+  tweener: {fileID: 0}
   interactPromptText: {fileID: 8417827620685075559}
   interactImage: {fileID: 3865017651951832933}
   eSprite: {fileID: 21300000, guid: 5e68675d521d04f499e2b892eddb7bf9, type: 3}
   fSprite: {fileID: 21300000, guid: c4030df07a705dd41975534bd974179d, type: 3}
+  onVisibleEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5366600025832311846}
+        m_TargetAssemblyTypeName: InOutUITweener, Assembly-CSharp
+        m_MethodName: SlideIn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6697492524928614482}
+        m_TargetAssemblyTypeName: InOutUITweener, Assembly-CSharp
+        m_MethodName: SlideIn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6724845583559308018}
+        m_TargetAssemblyTypeName: InOutUITweener, Assembly-CSharp
+        m_MethodName: SlideIn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onHiddenEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5366600025832311846}
+        m_TargetAssemblyTypeName: InOutUITweener, Assembly-CSharp
+        m_MethodName: SlideOut
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6697492524928614482}
+        m_TargetAssemblyTypeName: InOutUITweener, Assembly-CSharp
+        m_MethodName: SlideOut
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6724845583559308018}
+        m_TargetAssemblyTypeName: InOutUITweener, Assembly-CSharp
+        m_MethodName: SlideOut
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &692781036343351567
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -214,6 +291,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5366600025832311846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630334489902016905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02289af17cdfe07419eb4360ee4c8c74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InOutUITweener
+  duration: 0.45
+  slideDirection: {x: 0, y: 25}
+  easeType: 6
+  delay: 0
 --- !u!1 &726593077047015333
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,7 +367,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   textTask: {fileID: 1320849561954831906}
+  titleTask: {fileID: 0}
   container: {fileID: 2982274247911214144}
+  typewriterDuration: 1
   onUpdateTask:
     m_PersistentCalls:
       m_Calls:
@@ -314,7 +409,7 @@ GameObject:
   - component: {fileID: 2659186737891175494}
   - component: {fileID: 3865017651951832933}
   - component: {fileID: 8551202762028608194}
-  - component: {fileID: 1223642697033235586}
+  - component: {fileID: 6697492524928614482}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -391,7 +486,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &1223642697033235586
+--- !u!114 &6697492524928614482
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -400,102 +495,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1431376469042355875}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c810a09d16b91004bacac0644e979ba2, type: 3}
+  m_Script: {fileID: 11500000, guid: 02289af17cdfe07419eb4360ee4c8c74, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UITweener
-  objectToAnimate: {fileID: 0}
-  fadeSettings:
-    duration: 0.5
-    delay: 0
-  scaleSettings:
-    duration: 0
-    delay: 0
-  punchSettings:
-    Punch: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    elasticity: 0
-    delay: 0
-  shakeSettings:
-    shake: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    randomness: 0
-    fadeOut: 0
-    randomnessMode: 0
-    delay: 0
-  slideSettings:
-    distance: {x: 0, y: -15, z: 0}
-    duration: 0.5
-    delay: 0
-  colorSettings:
-    targetColor: {r: 0, g: 0, b: 0, a: 0}
-    duration: 0
-    delay: 0
-  textSettings:
-    text: {fileID: 0}
-    duration: 0
-    delay: 0
-  onVisibleEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1223642697033235586}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Fade
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1223642697033235586}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Slide
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  onDisableEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1223642697033235586}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Fade
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1223642697033235586}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Slide
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onHoverEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onLeaveEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: Assembly-CSharp::InOutUITweener
+  duration: 0.45
+  slideDirection: {x: 0, y: 0}
+  easeType: 6
+  delay: 0.3
 --- !u!1 &2063423293866894615
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,6 +611,7 @@ MonoBehaviour:
   scaleSettings:
     duration: 0
     delay: 0
+    scaleUpSize: 0.1
   punchSettings:
     Punch: {x: 0, y: 0, z: 0}
     duration: 0
@@ -630,6 +637,10 @@ MonoBehaviour:
   textSettings:
     text: {fileID: 0}
     duration: 0
+    delay: 0
+  rotateSettings:
+    rotateAmount: 5
+    duration: 0.3
     delay: 0
   onVisibleEvent:
     m_PersistentCalls:
@@ -701,172 +712,6 @@ Transform:
   - {fileID: 7759004564326177046}
   m_Father: {fileID: 8883712778789445000}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3560238721602380978
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1465648731226600245}
-  - component: {fileID: 1240859280069067271}
-  - component: {fileID: 104438142612505094}
-  m_Layer: 0
-  m_Name: Tweener
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1465648731226600245
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3560238721602380978}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6116648771719483009}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &1240859280069067271
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3560238721602380978}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!114 &104438142612505094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3560238721602380978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c810a09d16b91004bacac0644e979ba2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UITweener
-  objectToAnimate: {fileID: 630334489902016905}
-  fadeSettings:
-    duration: 0.3
-    delay: 0
-  scaleSettings:
-    duration: 0
-    delay: 0
-  punchSettings:
-    Punch: {x: 0.1, y: 0.1, z: 0.1}
-    duration: 0.3
-    vibrato: 10
-    elasticity: 1
-    delay: 0
-  shakeSettings:
-    shake: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    randomness: 0
-    fadeOut: 0
-    randomnessMode: 0
-    delay: 0
-  slideSettings:
-    distance: {x: 0, y: -15, z: 0}
-    duration: 0.3
-    delay: 0
-  colorSettings:
-    targetColor: {r: 0, g: 0, b: 0, a: 0}
-    duration: 0
-    delay: 0
-  textSettings:
-    text: {fileID: 0}
-    duration: 0
-    delay: 0
-  onVisibleEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 104438142612505094}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Fade
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 104438142612505094}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Slide
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 104438142612505094}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Punch
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  onDisableEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 104438142612505094}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Fade
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 104438142612505094}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Slide
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onHoverEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onLeaveEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &4079740903188040663
 GameObject:
   m_ObjectHideFlags: 0
@@ -975,6 +820,7 @@ MonoBehaviour:
   scaleSettings:
     duration: 0.3
     delay: 0
+    scaleUpSize: 0.1
   punchSettings:
     Punch: {x: 0.15, y: 0.15, z: 0.15}
     duration: 0.3
@@ -1000,6 +846,10 @@ MonoBehaviour:
   textSettings:
     text: {fileID: 0}
     duration: 0
+    delay: 0
+  rotateSettings:
+    rotateAmount: 5
+    duration: 0.3
     delay: 0
   onVisibleEvent:
     m_PersistentCalls:
@@ -1049,7 +899,7 @@ GameObject:
   - component: {fileID: 8881749451072054352}
   - component: {fileID: 8417827620685075559}
   - component: {fileID: 2463195704739599679}
-  - component: {fileID: 441331634045924888}
+  - component: {fileID: 6724845583559308018}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1188,7 +1038,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &441331634045924888
+--- !u!114 &6724845583559308018
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1197,102 +1047,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4462206933965743799}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c810a09d16b91004bacac0644e979ba2, type: 3}
+  m_Script: {fileID: 11500000, guid: 02289af17cdfe07419eb4360ee4c8c74, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UITweener
-  objectToAnimate: {fileID: 0}
-  fadeSettings:
-    duration: 0.5
-    delay: 0
-  scaleSettings:
-    duration: 0
-    delay: 0
-  punchSettings:
-    Punch: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    elasticity: 0
-    delay: 0
-  shakeSettings:
-    shake: {x: 0, y: 0, z: 0}
-    duration: 0
-    vibrato: 0
-    randomness: 0
-    fadeOut: 0
-    randomnessMode: 0
-    delay: 0
-  slideSettings:
-    distance: {x: 0, y: -15, z: 0}
-    duration: 0.5
-    delay: 0
-  colorSettings:
-    targetColor: {r: 0, g: 0, b: 0, a: 0}
-    duration: 0
-    delay: 0
-  textSettings:
-    text: {fileID: 0}
-    duration: 0
-    delay: 0
-  onVisibleEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 441331634045924888}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Fade
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 441331634045924888}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Slide
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  onDisableEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 441331634045924888}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Fade
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 441331634045924888}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: Slide
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onHoverEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onLeaveEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: Assembly-CSharp::InOutUITweener
+  duration: 0.45
+  slideDirection: {x: 0, y: 0}
+  easeType: 6
+  delay: 0.3
 --- !u!1 &4549047011855562822
 GameObject:
   m_ObjectHideFlags: 0
@@ -1498,6 +1259,7 @@ MonoBehaviour:
   scaleSettings:
     duration: 0
     delay: 0
+    scaleUpSize: 0.1
   punchSettings:
     Punch: {x: 0.1, y: 0.1, z: 0.1}
     duration: 0.3
@@ -1523,6 +1285,10 @@ MonoBehaviour:
   textSettings:
     text: {fileID: 0}
     duration: 0
+    delay: 0
+  rotateSettings:
+    rotateAmount: 5
+    duration: 0.3
     delay: 0
   onVisibleEvent:
     m_PersistentCalls:
@@ -1730,6 +1496,7 @@ MonoBehaviour:
   scaleSettings:
     duration: 0
     delay: 0
+    scaleUpSize: 0.1
   punchSettings:
     Punch: {x: 0, y: 0, z: 0}
     duration: 0
@@ -1756,6 +1523,10 @@ MonoBehaviour:
     text: {fileID: 1320849561954831906}
     duration: 0.6
     delay: 1.2
+  rotateSettings:
+    rotateAmount: 5
+    duration: 0.3
+    delay: 0
   onVisibleEvent:
     m_PersistentCalls:
       m_Calls:
@@ -1924,6 +1695,7 @@ MonoBehaviour:
   scaleSettings:
     duration: 0.3
     delay: 0
+    scaleUpSize: 0.1
   punchSettings:
     Punch: {x: 0.15, y: 0.15, z: 0.15}
     duration: 0.3
@@ -1949,6 +1721,10 @@ MonoBehaviour:
   textSettings:
     text: {fileID: 0}
     duration: 0
+    delay: 0
+  rotateSettings:
+    rotateAmount: 5
+    duration: 0.3
     delay: 0
   onVisibleEvent:
     m_PersistentCalls:

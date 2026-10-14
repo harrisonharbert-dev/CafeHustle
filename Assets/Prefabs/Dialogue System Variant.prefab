@@ -95,6 +95,10 @@ MonoBehaviour:
     text: {fileID: 0}
     duration: 0
     delay: 0
+  rotateSettings:
+    rotateAmount: 5
+    duration: 0.3
+    delay: 0
   onVisibleEvent:
     m_PersistentCalls:
       m_Calls:
@@ -663,6 +667,10 @@ MonoBehaviour:
   textSettings:
     text: {fileID: 0}
     duration: 0
+    delay: 0
+  rotateSettings:
+    rotateAmount: 5
+    duration: 0.3
     delay: 0
   onVisibleEvent:
     m_PersistentCalls:
@@ -1306,6 +1314,7 @@ MonoBehaviour:
         m_CallState: 2
   nameText: {fileID: 8576589233754137225}
   continueButton: {fileID: 799991349983002438}
+  skipButton: {fileID: 0}
   dialogueNameColors:
     pink: {fileID: 21300000, guid: d156127c7cc2e5a4b944ac8d9454f99e, type: 3}
     blue: {fileID: 21300000, guid: e0c952c92c070f74fa9137d5af09195c, type: 3}
@@ -2044,18 +2053,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactType: 0
   playOnce: 0
+  lookAtPlayerWhenInteract: 0
+  isInteractable: 1
   isInRange: 0
   interactAction:
     m_PersistentCalls:
       m_Calls: []
   dialogueOption: 0
   useDialogue: 0
+  isNPC: 0
+  npc: {fileID: 0}
   useDialogueCamera: 0
   dialogueName: 
+  useSetStoryPointOnUse: 0
+  currentStoryPoint: 
   promptText: 0
   promptKey: 0
-  isInteractable: 1
+  prompt: {fileID: 0}
+  autoGeneratePrompt: 0
+  promptHeight: 0.5
+  iconType: 0
   zoneIndicator: {fileID: 0}
+  hintVFX: {fileID: 0}
 --- !u!1 &8086544224007163289
 GameObject:
   m_ObjectHideFlags: 0
@@ -2550,10 +2569,23 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedComponents:
+    - {fileID: 5631960947711222610, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+    - {fileID: 5245871638740753736, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+    - {fileID: 5388125597959360137, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 2033595003883611236, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7900835547017186162, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7799689805800839556}
+    - targetCorrespondingSourceObject: {fileID: 7900835547017186162, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7387434939514633158}
+    - targetCorrespondingSourceObject: {fileID: 7900835547017186162, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8211587083743557621}
   m_SourcePrefab: {fileID: 100100000, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
 --- !u!224 &510120241278148424 stripped
 RectTransform:
@@ -2565,9 +2597,200 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9005802889234636071, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
   m_PrefabInstance: {fileID: 4545968420105257016}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 5959368555701570378}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c72af21cd06074f41a2537a712c24213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: YarnSpinner.Unity::Yarn.Unity.OptionItem
+--- !u!1 &5959368555701570378 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7900835547017186162, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+  m_PrefabInstance: {fileID: 4545968420105257016}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7799689805800839556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959368555701570378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82558c8760a5edf4fa8f609ce8e44714, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReactionUITweener
+  duration: 0.3
+  hoverScale: 0.1
+  rotateStrength: 10
+  punchStrength: {x: 0.1, y: 0.1, z: 0.1}
+  easeType: 6
+--- !u!114 &7387434939514633158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959368555701570378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7799689805800839556}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: OnScale
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 8211587083743557621}
+          m_TargetAssemblyTypeName: AudioCaller, Assembly-CSharp
+          m_MethodName: callAudio
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: paper
+            m_BoolArgument: 1
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7799689805800839556}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: OnScale
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7799689805800839556}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: Punch
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8211587083743557621}
+          m_TargetAssemblyTypeName: AudioCaller, Assembly-CSharp
+          m_MethodName: callAudio
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: ui-click
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7799689805800839556}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: OnScale
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 8211587083743557621}
+          m_TargetAssemblyTypeName: AudioCaller, Assembly-CSharp
+          m_MethodName: callAudio
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: paper
+            m_BoolArgument: 1
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7799689805800839556}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: OnScale
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 15
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7799689805800839556}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: Punch
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8211587083743557621}
+          m_TargetAssemblyTypeName: AudioCaller, Assembly-CSharp
+          m_MethodName: callAudio
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: ui-click
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &8211587083743557621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959368555701570378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d484fa90e62de7c4cb0e852d0f5df0c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioCaller
