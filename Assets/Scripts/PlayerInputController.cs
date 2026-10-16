@@ -5,6 +5,8 @@ using Unity.Cinemachine;
 using Yarn.Unity;
 using UnityEngine.Events;
 using System.Collections;
+using System;
+using System.Collections.Generic;
 
 
 
@@ -17,7 +19,8 @@ public class PlayerInputController : MonoBehaviour
     [HideInInspector] public Vector2 moveInput;
     private Rigidbody rigidBody;
     private Transform cameraTransform;
-    private Renderer obstructionRenderer;
+    private HashSet<Renderer> obstructionRenderers = new HashSet<Renderer>();
+    private HashSet<Renderer> hitObstructionRenderers = new HashSet<Renderer>();
     private MaterialPropertyBlock obstructionPropertyBlock;
     private static readonly int obstructionSizeId = Shader.PropertyToID("_Size");
     private const float obstructionFadeDuration = 0.25f;
@@ -55,7 +58,7 @@ public class PlayerInputController : MonoBehaviour
     private float footstepTimer;
 
 
-    [HideInInspector]public bool lockMovement = false;
+    [HideInInspector] public bool lockMovement = false;
     public Transform NPCDialogueLocation;
     private float NPCDialogueDistance = 3.5f;
 
@@ -106,8 +109,9 @@ public class PlayerInputController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if(useStartEvent) {
-        onStartEvent.Invoke();
+        if (useStartEvent)
+        {
+            onStartEvent.Invoke();
         }
 
 
@@ -138,11 +142,13 @@ public class PlayerInputController : MonoBehaviour
     public void SetCurrentInteractable(Interactable newTarget)
     {
         currentInteractable = newTarget;
+
     }
 
     public void SetCurrentCarry(CarryObject newTarget)
     {
         currentCarryObject = newTarget;
+
         switch (playerState)
         {
             case playState.none:
@@ -162,6 +168,7 @@ public class PlayerInputController : MonoBehaviour
     {
         isinDialogue = option;
 
+
         if (option == false && currentInteractable != null && currentInteractable.useDialogueCamera)
         {
             //Wait for camera transition back then re-enable movement. Change float time to match
@@ -177,6 +184,7 @@ public class PlayerInputController : MonoBehaviour
     {
         isViewingModel = option;
 
+
         SetMovementLock(option);
     }
 
@@ -189,6 +197,7 @@ public class PlayerInputController : MonoBehaviour
     {
         lockMovement = option;
 
+
         if (isinDialogue || isViewingModel)
         {
             lockMovement = true;
@@ -200,13 +209,13 @@ public class PlayerInputController : MonoBehaviour
     public bool isValidDialogueLocation()
     {
         //Raycast out in front and check if collides with Obstacle.
-        if (Physics.SphereCast(transform.position,.2f,transform.forward,out RaycastHit hit, 3f, obstructionMask))
+        if (Physics.SphereCast(transform.position, .2f, transform.forward, out RaycastHit hit, 3f, obstructionMask))
         {
             NPCDialogueLocation.position = hit.point;
             return false;
         }
 
-        NPCDialogueLocation.localPosition = new Vector3(0f,0f,NPCDialogueDistance);
+        NPCDialogueLocation.localPosition = new Vector3(0f, 0f, NPCDialogueDistance);
         return true;
     }
     public void onDialogueCamera(GameObject target)
@@ -269,6 +278,8 @@ public class PlayerInputController : MonoBehaviour
             return;
         }
 
+
+
         currentCarryObject.isInRange = true;
         switch (playerState)
         {
@@ -317,13 +328,12 @@ public class PlayerInputController : MonoBehaviour
     }
     void clearHeldItem()
     {
-
         playerState = playState.none;
         currentCarryItemID = null;
-        InteractPrompt.instance.Refresh();
     }
     public void useDrop()
     {
+
         currentCarryObject.SetDrop();
         InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.PickUp, Interactable.PromptKey.F);
         playerState = playState.none;
@@ -367,6 +377,19 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 
+    void OnShowMouse(bool option)
+    {
+        if (option == true)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else if (option == false)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
     private void FixedUpdate()
     {
         isValidDialogueLocation();
@@ -374,8 +397,14 @@ public class PlayerInputController : MonoBehaviour
 
         if (lockMovement)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if (InputIconManager.instance.CurrentDevice == InputIconManager.DeviceType.KeyboardMouse)
+            {
+                OnShowMouse(true);
+            }
+            else
+            {
+                OnShowMouse(false);
+            }
             moveInput = new Vector2(0f, 0f);
             currentVelocity = Vector3.zero;
             rigidBody.linearVelocity = Vector3.Project(rigidBody.linearVelocity, Vector3.up);
@@ -383,8 +412,7 @@ public class PlayerInputController : MonoBehaviour
         }
         else
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            OnShowMouse(false);
         }
 
         CheckGround();
@@ -444,53 +472,13 @@ public class PlayerInputController : MonoBehaviour
         Shader.SetGlobalVector("_PlayerScreenPos", normalizedScreenPos);
 
         //Raycast Obstacles
-        Vector3 dir = transform.position - cameraTransform.position;
-        Renderer hitRenderer = null;
-
-        if (Physics.Raycast(cameraTransform.position, dir.normalized, out RaycastHit hit, dir.magnitude, obstructionMask))
-        {
-            Renderer renderer = hit.collider.GetComponent<Renderer>();
-            if (renderer != null && renderer.sharedMaterial != null && renderer.sharedMaterial.HasProperty(obstructionSizeId))
-            {
-                hitRenderer = renderer;
-            }
-        }
-
-        if (hitRenderer != obstructionRenderer)
-        {
-            if (obstructionRenderer != null)
-            {
-                TweenObstructionSize(obstructionRenderer, 0f);
-            }
-
-            obstructionRenderer = hitRenderer;
-
-            if (obstructionRenderer != null)
-            {
-                TweenObstructionSize(obstructionRenderer, 0.3f);
-            }
-        }
     }
 
-    private void TweenObstructionSize(Renderer targetRenderer, float targetSize)
+    void OnTriggerEnter(Collider other)
     {
-        DOTween.Kill(targetRenderer);
+        if (other.isTrigger == true)
+        {
 
-        obstructionPropertyBlock.Clear();
-        targetRenderer.GetPropertyBlock(obstructionPropertyBlock);
-        float startSize = obstructionPropertyBlock.HasFloat(obstructionSizeId)
-            ? obstructionPropertyBlock.GetFloat(obstructionSizeId)
-            : targetRenderer.sharedMaterial.GetFloat(obstructionSizeId);
-
-        DOTween.To(() => startSize, value => SetObstructionSize(targetRenderer, value), targetSize, obstructionFadeDuration)
-            .SetTarget(targetRenderer);
-    }
-
-    private void SetObstructionSize(Renderer targetRenderer, float size)
-    {
-        obstructionPropertyBlock.Clear();
-        targetRenderer.GetPropertyBlock(obstructionPropertyBlock);
-        obstructionPropertyBlock.SetFloat(obstructionSizeId, size);
-        targetRenderer.SetPropertyBlock(obstructionPropertyBlock);
+        }
     }
 }

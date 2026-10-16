@@ -547,10 +547,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2362495564473364110}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 100}
+  m_SizeDelta: {x: 1320, y: 288}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2362495564286498917
 CanvasRenderer:
@@ -891,10 +891,10 @@ RectTransform:
   - {fileID: 6430076263572989627}
   m_Father: {fileID: 2984607521270461654}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 80}
-  m_SizeDelta: {x: -800, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -460}
+  m_SizeDelta: {x: 1120, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2362495564473364104
 MonoBehaviour:
@@ -2070,7 +2070,6 @@ MonoBehaviour:
   promptText: 0
   promptKey: 0
   prompt: {fileID: 0}
-  autoGeneratePrompt: 0
   promptHeight: 0.5
   iconType: 0
   zoneIndicator: {fileID: 0}
@@ -2568,6 +2567,42 @@ PrefabInstance:
     - target: {fileID: 7900835547017186162, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9005802889234636071, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      propertyPath: m_Colors.m_NormalColor.b
+      value: 0.709
+      objectReference: {fileID: 0}
+    - target: {fileID: 9005802889234636071, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      propertyPath: m_Colors.m_NormalColor.g
+      value: 0.709
+      objectReference: {fileID: 0}
+    - target: {fileID: 9005802889234636071, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      propertyPath: m_Colors.m_NormalColor.r
+      value: 0.709
+      objectReference: {fileID: 0}
+    - target: {fileID: 9005802889234636071, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9005802889234636071, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9005802889234636071, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9005802889234636071, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9005802889234636071, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9005802889234636071, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5631960947711222610, guid: 39a2faa8939212042b15a67b35ad95a8, type: 3}

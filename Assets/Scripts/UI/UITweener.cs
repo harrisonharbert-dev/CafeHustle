@@ -152,7 +152,6 @@ public class UITweener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             }
         }
 
-        Debug.Log($"{this.gameObject.activeInHierarchy}");
         if (this.gameObject.activeInHierarchy == false)
         {
             group.alpha = 0f;

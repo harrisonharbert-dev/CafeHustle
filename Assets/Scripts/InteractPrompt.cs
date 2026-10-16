@@ -1,11 +1,9 @@
 using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 using DG.Tweening;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using UnityEngine.Playables;
 
 
 
@@ -18,22 +16,27 @@ public class InteractPrompt : MonoBehaviour
 
 
     private CanvasGroup canvasGroup;
-    public UITweener tweener;
 
     [Header("UI")]
     [Space(10)]
+    [SerializeField, Min(0.01f)] private float pollInterval = 0.1f;
+
 
     [SerializeField] private TextMeshProUGUI interactPromptText;
     [SerializeField] private Image interactImage;
 
 
     [Header("Key Sprites")]
-    [SerializeField] private Sprite eSprite;
-    [SerializeField] private Sprite fSprite;
+    [SerializeField] private InputIconDisplay inputIconImage;
+    [SerializeField] private InputIconSet eSprite;
+    [SerializeField] private InputIconSet fSprite;
 
     [Header("Unity Events")]
     [SerializeField] private UnityEvent onVisibleEvent;
     [SerializeField] private UnityEvent onHiddenEvent;
+
+    private bool promptVisibleState;
+
 
     public static InteractPrompt instance { get; private set; }
 
@@ -58,8 +61,18 @@ public class InteractPrompt : MonoBehaviour
         {
             canvasGroup.alpha = 0f;
         }
+
+        StartCoroutine(PollState());
     }
 
+    private IEnumerator PollState()
+    {
+        while (true)
+        {
+            Refresh();
+            yield return new WaitForSecondsRealtime(pollInterval);
+        }
+    }
 
     private string GetPromptText(Interactable.PromptText type)
     {
@@ -77,25 +90,25 @@ public class InteractPrompt : MonoBehaviour
         };
     }
 
-    private Sprite GetKeySprite(Interactable.PromptKey key)
-    {
-        return key switch
-        {
-            Interactable.PromptKey.E => eSprite,
-            Interactable.PromptKey.F => fSprite,
-            _ => null
-        };
-    }
-
-
     public void UpdateUIInfo(Interactable.PromptText textType, Interactable.PromptKey keyType)
     {
         interactPromptText.text = GetPromptText(textType);
-        interactImage.sprite = GetKeySprite(keyType);
+
+        if (keyType == Interactable.PromptKey.E)
+        {
+            inputIconImage.OnChangeIconSet(eSprite);
+        }
+        else if (keyType == Interactable.PromptKey.F)
+        {
+            inputIconImage.OnChangeIconSet(fSprite);
+        }
     }
 
     public void SetPromptVisibility(bool value)
     {
+        if (promptVisibleState == value) return;
+        promptVisibleState = value;
+
         if (value == true)
         {
             onVisibleEvent?.Invoke();
@@ -114,6 +127,7 @@ public class InteractPrompt : MonoBehaviour
         bool currentCarryObject = PlayerInputController.instance.currentCarryObject != null;
         bool isInDialogue = PlayerInputController.instance.isinDialogue;
         bool isInDeliveryZone = PlayerInputController.instance.inCarryDeliveryZone;
+        bool isViewingModel = PlayerInputController.instance.isViewingModel;
 
         if (PlayerInputController.instance.isDelivering)
         {
@@ -122,7 +136,7 @@ public class InteractPrompt : MonoBehaviour
         }
 
         //If player is in dialogue, hide
-        if (isInDialogue)
+        if (isInDialogue || isViewingModel)
         {
             SetPromptVisibility(false);
             return;

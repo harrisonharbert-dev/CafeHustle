@@ -16,7 +16,7 @@ public class InOutUITweener : MonoBehaviour
     [SerializeField] private bool slideOut;
 
     [Header("Properties")]
-
+    [SerializeField] private bool animateWithActive = false;
     [Space(30)]
     [SerializeField] private float duration = 0.45f;
     [SerializeField] private Vector2 slideDirection;
@@ -48,7 +48,21 @@ public class InOutUITweener : MonoBehaviour
         targetRotation = initialRotation * Quaternion.Euler(0f, 0f, rotationAmount);
         
     }
+    void OnEnable()
+    {
+        if(animateWithActive)
+        {
+            AnimateIn();
+        }
+    }
 
+    void OnDisable()
+    {
+        if(animateWithActive)
+        {
+            AnimateOut();
+        }
+    }
     public void AnimateIn()
     {
         DOTween.Complete(InTweenId);
@@ -69,10 +83,6 @@ public class InOutUITweener : MonoBehaviour
 
         Sequence InSequence = DOTween.Sequence();
 
-        //Add delays and set id
-        InSequence.SetDelay(delay);
-        InSequence.SetId(InTweenId);
-
         //Fade in applies to all
         InSequence.Join(canvasGroup.DOFade(1f, duration).SetEase(easeType));
 
@@ -82,6 +92,10 @@ public class InOutUITweener : MonoBehaviour
         if (slideIn) {InSequence.Join(rect.DOAnchorPos(initialPos, duration).SetEase(easeType));}
 
         if (rotateIn) { InSequence.Join(rect.DOLocalRotateQuaternion(initialRotation, duration).SetEase(easeType)); }
+
+        // Apply the delay after adding the tweens so it delays the entire sequence.
+        InSequence.SetDelay(delay);
+        InSequence.SetId(InTweenId);
 
     }
 
@@ -106,9 +120,7 @@ public class InOutUITweener : MonoBehaviour
 
         Sequence OutSequence = DOTween.Sequence();
 
-        //Add delays and set id
-        OutSequence.SetDelay(delay);
-        OutSequence.SetId(InTweenId);
+        
 
         //Fade in applies to all
         OutSequence.Join(canvasGroup.DOFade(0f, duration).SetEase(easeType));
@@ -119,6 +131,10 @@ public class InOutUITweener : MonoBehaviour
         if (slideIn) {OutSequence.Join(rect.DOAnchorPos(initialPos + slideDirection, duration).SetEase(easeType));}
 
         if (rotateIn) { OutSequence.Join(rect.DOLocalRotateQuaternion(targetRotation, duration).SetEase(easeType)); }
+
+        //Add delays and set id
+        OutSequence.SetDelay(delay);
+        OutSequence.SetId(InTweenId);
         
     }
 }

@@ -132,6 +132,30 @@ PrefabInstance:
       propertyPath: continueButton
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2362495564212602165, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
+      propertyPath: m_margin.w
+      value: -105.33061
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362495564212602165, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
+      propertyPath: m_margin.x
+      value: -542.39764
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362495564212602165, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
+      propertyPath: m_margin.y
+      value: -65.21721
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362495564212602165, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
+      propertyPath: m_margin.z
+      value: -595.76483
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362495564212602165, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
+      propertyPath: m_overflowMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362495564212602165, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2362495564212602170, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -182,7 +206,7 @@ PrefabInstance:
       objectReference: {fileID: 6427802671526975361}
     - target: {fileID: 2362495564473364106, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
       propertyPath: m_Alpha
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2362495564473364110, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
       propertyPath: m_SizeDelta.x
@@ -210,7 +234,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2362495564473364110, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 900
+      value: 352
       objectReference: {fileID: 0}
     - target: {fileID: 3286632827128603991, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
       propertyPath: m_SizeDelta.x
@@ -330,7 +354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7857817554892559010, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
       propertyPath: m_Name
-      value: Dialogue System Variant Variant
+      value: PopUpDialogue
       objectReference: {fileID: 0}
     - target: {fileID: 7857817554892559010, guid: 1775b9f497d38594382c55bedd03b336, type: 3}
       propertyPath: m_IsActive

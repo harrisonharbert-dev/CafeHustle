@@ -2,9 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using DG.Tweening;
-using CsvHelper.Configuration.Attributes;
 
 public class updateRoofState : MonoBehaviour
 {
@@ -28,9 +26,9 @@ public class updateRoofState : MonoBehaviour
 
     void Start()
     {
-        foreach(var entry in materials)
+        foreach (var entry in materials)
         {
-            entry.SetFloat("_ALPHA",1f);
+            entry.SetFloat("_ALPHA", 1f);
         }
     }
 
@@ -43,13 +41,12 @@ public class updateRoofState : MonoBehaviour
             entry.DOFloat(0f, "_ALPHA", transitionDuration);
         }
 
-
-        foreach (var entry in walls)
+        for (int i = 0; i < walls.Count; i++)
         {
+            var entry = walls[i];
             if (entry.skinnedMesh == null) continue;
 
-            transitionBlendshape(entry.skinnedMesh, entry.blendshapeIndex, 100f, transitionDuration);
-
+            TransitionBlendshape(entry.skinnedMesh, entry.blendshapeIndex, 100f, transitionDuration, i);
         }
     }
 
@@ -61,33 +58,23 @@ public class updateRoofState : MonoBehaviour
             entry.DOFloat(1f, "_ALPHA", transitionDuration);
         }
 
-        foreach (var entry in walls)
+        for (int i = 0; i < walls.Count; i++)
         {
+            var entry = walls[i];
             if (entry.skinnedMesh == null) continue;
 
-            transitionBlendshape(entry.skinnedMesh, entry.blendshapeIndex, 0f, transitionDuration);
-
+            TransitionBlendshape(entry.skinnedMesh, entry.blendshapeIndex, 0f, transitionDuration, i);
         }
     }
 
-    void transitionBlendshape(SkinnedMeshRenderer mesh, int index, float targetweight, float duration)
+    void TransitionBlendshape(SkinnedMeshRenderer mesh, int blendshapeIndex, float targetWeight, float duration, int listIndex)
     {
-        StartCoroutine(transitionRoutine(mesh, index, targetweight, duration));
-    }
-    private IEnumerator transitionRoutine(SkinnedMeshRenderer mesh, int index, float targetweight, float duration)
-    {
-        float startWeight = mesh.GetBlendShapeWeight(index);
+        DOTween.Kill(listIndex);
+        Sequence sequence = DOTween.Sequence();
 
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-
-            float weight = Mathf.Lerp(startWeight, targetweight, t);
-            mesh.SetBlendShapeWeight(index, weight);
-
-            yield return null;
-        }
+        sequence.SetId(listIndex);
+        sequence.Join(DOTween.To(() => mesh.GetBlendShapeWeight(blendshapeIndex),
+            weight => mesh.SetBlendShapeWeight(blendshapeIndex, weight),
+            targetWeight, duration));
     }
 }

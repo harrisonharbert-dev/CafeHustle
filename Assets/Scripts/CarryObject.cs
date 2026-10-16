@@ -190,8 +190,6 @@ public class CarryObject : MonoBehaviour
             PlayerInputController player = PlayerInputController.instance;
             player.SetCurrentCarry(null);
             player.isDelivering = false;
-            InteractPrompt.instance.Refresh();
-            InteractPrompt.instance.SetPromptVisibility(false);
             gameObject.transform.rotation = placeRotation;
             if (!isPlaceObject)
             {
@@ -217,7 +215,6 @@ public class CarryObject : MonoBehaviour
             if (PlayerInputController.instance.playerState == PlayerInputController.playState.none)
             {
                 PlayerInputController.instance.SetCurrentCarry(this);
-                InteractPrompt.instance.Refresh();
                 if (prompt != null)
                 {
                     prompt.onUI(true);
@@ -236,7 +233,6 @@ public class CarryObject : MonoBehaviour
             if (PlayerInputController.instance.playerState == PlayerInputController.playState.none)
             {
                 PlayerInputController.instance.SetCurrentCarry(null);
-                InteractPrompt.instance.Refresh();
                 if (prompt != null)
                 {
                     prompt.onUI(false);

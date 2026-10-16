@@ -32,7 +32,6 @@ public class DeliveryZone : MonoBehaviour
             PlayerInputController.instance.inCarryDeliveryZone = true;
             PlayerInputController.instance.deliveryZonePos = gameObject;
             InteractPrompt.instance.UpdateUIInfo(Interactable.PromptText.Deliver, Interactable.PromptKey.F);
-            InteractPrompt.instance.Refresh();
 
             prompt.onUI(true);
 
@@ -46,7 +45,6 @@ public class DeliveryZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerInputController.instance.inCarryDeliveryZone = false;
-            InteractPrompt.instance.Refresh();
             switch (PlayerInputController.instance.playerState)
             {
                 case PlayerInputController.playState.carryingObject:

@@ -97,11 +97,33 @@ public class Debugger : MonoBehaviour
 
         // 2. Commands with Parameters
         parameterizedCommands.Add("skip_story", SkipStory);
+        parameterizedCommands.Add("tp",Teleport);
+        simpleCommands.Add("superspeed",SuperSpeed);
+        simpleCommands.Add("defaultspeed",DefaultSpeed);
     }
 
     void SkipStory(string name)
     {
         StoryManager.instance.SkipStoryPoint(name);
+    }
+
+    void SuperSpeed()
+    {
+        PlayerInputController.instance.moveSpeed.walking = 10f;
+        PlayerInputController.instance.moveSpeed.running = 20f;
+    }
+
+    void DefaultSpeed()
+    {
+        PlayerInputController.instance.moveSpeed.walking = 4f;
+        PlayerInputController.instance.moveSpeed.running = 7f;
+    }
+
+    void Teleport(string name)
+    {
+        GameObject target = GameObject.Find(name);
+        PlayerInputController.instance.transform.position = target.transform.position;
+
     }
 
         public void ProcessCommand()

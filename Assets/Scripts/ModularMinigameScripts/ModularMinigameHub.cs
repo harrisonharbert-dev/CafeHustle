@@ -18,9 +18,9 @@ public class ModularMinigameHub : MonoBehaviour
     private GameObject rightItem;
 
 
-    [ContextMenu("Set Up Table")]
-    void SetUpTable()
+    void SetUpTable(MinigameRecipe recipe)
     {
+        loadedRecipe = recipe;
         StartCoroutine(SetUpTableRoutine());
     }
 

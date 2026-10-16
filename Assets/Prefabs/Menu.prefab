@@ -90,7 +90,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1823075534419000172
 Transform:
   m_ObjectHideFlags: 0
@@ -196,8 +196,8 @@ GameObject:
   - component: {fileID: 689268003821512728}
   - component: {fileID: 99578150799631030}
   - component: {fileID: 5378154338619952784}
-  - component: {fileID: 2184562079113714618}
-  - component: {fileID: 1436650455418109987}
+  - component: {fileID: 4839705400741579658}
+  - component: {fileID: 3720112211885002443}
   m_Layer: 5
   m_Name: Recipe Card
   m_TagString: Untagged
@@ -275,7 +275,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &2184562079113714618
+--- !u!114 &4839705400741579658
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -284,60 +284,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 202359893294376239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c810a09d16b91004bacac0644e979ba2, type: 3}
+  m_Script: {fileID: 11500000, guid: 82558c8760a5edf4fa8f609ce8e44714, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UITweener
-  objectToAnimate: {fileID: 0}
-  fadeSettings:
-    duration: 0.3
-    delay: 0
-  scaleSettings:
-    duration: 0.3
-    delay: 0
-    scaleUpSize: 0.1
-  punchSettings:
-    Punch: {x: 0.15, y: 0.15, z: 0.15}
-    duration: 0.3
-    vibrato: 10
-    elasticity: 1
-    delay: 0
-  shakeSettings:
-    shake: {x: 0.15, y: 0.15, z: 0.15}
-    duration: 0.3
-    vibrato: 10
-    randomness: 90
-    fadeOut: 1
-    randomnessMode: 0
-    delay: 0
-  slideSettings:
-    distance: {x: 0, y: -15, z: 0}
-    duration: 0.3
-    delay: 0
-  colorSettings:
-    targetColor: {r: 1, g: 1, b: 1, a: 0}
-    duration: 0.3
-    delay: 0
-  textSettings:
-    text: {fileID: 0}
-    duration: 0
-    delay: 0
-  rotateSettings:
-    rotateAmount: 5
-    duration: 0.3
-    delay: 0
-  onVisibleEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onDisableEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onHoverEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onLeaveEvent:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &1436650455418109987
+  m_EditorClassIdentifier: Assembly-CSharp::ReactionUITweener
+  duration: 0.5
+  hoverScale: 0.1
+  rotateStrength: 10
+  punchStrength: {x: 0.1, y: 0.1, z: 0.1}
+  easeType: 6
+--- !u!114 &3720112211885002443
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -346,69 +301,66 @@ MonoBehaviour:
   m_GameObject: {fileID: 202359893294376239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ffd0c9588e9df542a09998879ea4c3e, type: 3}
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIInteractionHandler
-  OnPointerEnterEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2184562079113714618}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: ScaleUp
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 2184562079113714618}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: RotateUp
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  OnPointerExitEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2184562079113714618}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: ScaleUp
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2184562079113714618}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: RotateUp
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPointerDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4839705400741579658}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: ScaleTo
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0.1
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 4839705400741579658}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: RotateTo
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 5
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4839705400741579658}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: ScaleTo
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 4839705400741579658}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: RotateTo
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &251962450631151828
 GameObject:
   m_ObjectHideFlags: 0
@@ -3621,7 +3573,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3335398474657735472
 Transform:
   m_ObjectHideFlags: 0
@@ -3729,9 +3681,9 @@ GameObject:
   - component: {fileID: 459959430816310813}
   - component: {fileID: 580480660296741351}
   - component: {fileID: 6186068438288811408}
-  - component: {fileID: 5693535777705204749}
   - component: {fileID: 5793882614582445618}
-  - component: {fileID: 4772022572758634425}
+  - component: {fileID: 7577531938958017455}
+  - component: {fileID: 8340392870819255992}
   m_Layer: 0
   m_Name: NextPageButton
   m_TagString: Untagged
@@ -3853,54 +3805,6 @@ MonoBehaviour:
           m_StringArgument: intro-2
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5693535777705204749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831551918688299394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ffd0c9588e9df542a09998879ea4c3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIInteractionHandler
-  OnPointerEnterEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4772022572758634425}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: ScaleUp
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  OnPointerExitEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4772022572758634425}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: ScaleUp
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPointerDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!225 &5793882614582445618
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3913,7 +3817,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &4772022572758634425
+--- !u!114 &7577531938958017455
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3922,59 +3826,75 @@ MonoBehaviour:
   m_GameObject: {fileID: 1831551918688299394}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c810a09d16b91004bacac0644e979ba2, type: 3}
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UITweener
-  objectToAnimate: {fileID: 0}
-  fadeSettings:
-    duration: 0.3
-    delay: 0
-  scaleSettings:
-    duration: 0.3
-    delay: 0
-    scaleUpSize: 0.1
-  punchSettings:
-    Punch: {x: 0.15, y: 0.15, z: 0.15}
-    duration: 0.3
-    vibrato: 10
-    elasticity: 1
-    delay: 0
-  shakeSettings:
-    shake: {x: 0.15, y: 0.15, z: 0.15}
-    duration: 0.3
-    vibrato: 10
-    randomness: 90
-    fadeOut: 1
-    randomnessMode: 0
-    delay: 0
-  slideSettings:
-    distance: {x: 0, y: -15, z: 0}
-    duration: 0.3
-    delay: 0
-  colorSettings:
-    targetColor: {r: 1, g: 1, b: 1, a: 0}
-    duration: 0.3
-    delay: 0
-  textSettings:
-    text: {fileID: 0}
-    duration: 0
-    delay: 0
-  rotateSettings:
-    rotateAmount: 5
-    duration: 0.3
-    delay: 0
-  onVisibleEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onDisableEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onHoverEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onLeaveEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8340392870819255992}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: OnScale
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8340392870819255992}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: OnScale
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8340392870819255992}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: Punch
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &8340392870819255992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831551918688299394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82558c8760a5edf4fa8f609ce8e44714, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReactionUITweener
+  duration: 0.5
+  hoverScale: 0.1
+  rotateStrength: 10
+  punchStrength: {x: 0.1, y: 0.1, z: 0.1}
+  easeType: 6
 --- !u!1 &1836516001227251991
 GameObject:
   m_ObjectHideFlags: 0
@@ -3988,8 +3908,8 @@ GameObject:
   - component: {fileID: 6158453729561773368}
   - component: {fileID: 4950416096724772872}
   - component: {fileID: 41257435309598490}
-  - component: {fileID: 3202935895665321399}
-  - component: {fileID: 553938841590328621}
+  - component: {fileID: 7428645604442385317}
+  - component: {fileID: 5645711537773743527}
   m_Layer: 0
   m_Name: StartButton
   m_TagString: Untagged
@@ -4135,7 +4055,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &3202935895665321399
+--- !u!114 &7428645604442385317
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4144,60 +4064,59 @@ MonoBehaviour:
   m_GameObject: {fileID: 1836516001227251991}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c810a09d16b91004bacac0644e979ba2, type: 3}
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UITweener
-  objectToAnimate: {fileID: 0}
-  fadeSettings:
-    duration: 0.3
-    delay: 0
-  scaleSettings:
-    duration: 0.3
-    delay: 0
-    scaleUpSize: 0.1
-  punchSettings:
-    Punch: {x: 0.15, y: 0.15, z: 0.15}
-    duration: 0.3
-    vibrato: 10
-    elasticity: 1
-    delay: 0
-  shakeSettings:
-    shake: {x: 0.15, y: 0.15, z: 0.15}
-    duration: 0.3
-    vibrato: 10
-    randomness: 90
-    fadeOut: 1
-    randomnessMode: 0
-    delay: 0
-  slideSettings:
-    distance: {x: 0, y: -15, z: 0}
-    duration: 0.3
-    delay: 0
-  colorSettings:
-    targetColor: {r: 1, g: 1, b: 1, a: 0}
-    duration: 0.3
-    delay: 0
-  textSettings:
-    text: {fileID: 0}
-    duration: 0
-    delay: 0
-  rotateSettings:
-    rotateAmount: 5
-    duration: 0.3
-    delay: 0
-  onVisibleEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onDisableEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onHoverEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onLeaveEvent:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &553938841590328621
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5645711537773743527}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: OnScale
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5645711537773743527}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: OnScale
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5645711537773743527}
+          m_TargetAssemblyTypeName: ReactionUITweener, Assembly-CSharp
+          m_MethodName: Punch
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &5645711537773743527
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4206,45 +4125,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1836516001227251991}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ffd0c9588e9df542a09998879ea4c3e, type: 3}
+  m_Script: {fileID: 11500000, guid: 82558c8760a5edf4fa8f609ce8e44714, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIInteractionHandler
-  OnPointerEnterEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3202935895665321399}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: ScaleUp
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  OnPointerExitEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3202935895665321399}
-        m_TargetAssemblyTypeName: UITweener, Assembly-CSharp
-        m_MethodName: ScaleUp
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPointerDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: Assembly-CSharp::ReactionUITweener
+  duration: 0.5
+  hoverScale: 0.1
+  rotateStrength: 10
+  punchStrength: {x: 0.1, y: 0.1, z: 0.1}
+  easeType: 6
 --- !u!1 &1935303462364231783
 GameObject:
   m_ObjectHideFlags: 0
@@ -4371,7 +4259,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8139515464072754075
 Transform:
   m_ObjectHideFlags: 0
@@ -11397,7 +11285,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2107627125733815827
 Transform:
   m_ObjectHideFlags: 0

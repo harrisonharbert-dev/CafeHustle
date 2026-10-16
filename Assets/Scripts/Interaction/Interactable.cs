@@ -87,7 +87,6 @@ public class Interactable : MonoBehaviour
 
     [SerializeField] private InteractPrompt3D prompt;
     [Space(10)]
-    [SerializeField] private bool autoGeneratePrompt = false;
     [SerializeField] private float promptHeight = 0.5f;
     [SerializeField] private InteractPrompt3D.iconType iconType;
     [Space(10)]
@@ -98,51 +97,8 @@ public class Interactable : MonoBehaviour
 
     private GameObject promptPrefab;
 
-#if UNITY_EDITOR
-    void OnValidate()
-    {
-        if (autoGeneratePrompt)
-        {
-            promptPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Interactables/InteractPrompt3D.prefab");
-            InitializePrompt();
-        }
-        else
-        {
-            if (prompt != null)
-            {
-                GameObject promptToDestroy = prompt.gameObject;
-                prompt = null;
 
-                EditorApplication.delayCall += () =>
-                {
-                    if (promptToDestroy != null)
-                    {
-                        DestroyImmediate(promptToDestroy);
-                    }
-                };
-            }
-        }
-    }
-#endif
 
-    [ContextMenu("Quick Setup")]
-    void AddTrigger()
-    {
-        if(prompt == null)
-        {
-            autoGeneratePrompt = true;
-            OnValidate();
-        }
-
-        TryGetComponent<SphereCollider>(out SphereCollider sphere);
-        TryGetComponent<BoxCollider>(out BoxCollider box);
-        if(sphere != null && sphere.isTrigger == true || box != null && box.isTrigger == true) return;
-
-        SphereCollider newCollider = this.AddComponent<SphereCollider>();
-        newCollider.isTrigger = true;
-        newCollider.radius = 2f;
-        newCollider.center = Vector3.zero;
-    }
     public void Start()
     {
         dialogueRunner = GameObject.FindGameObjectWithTag("DialogueRunner").GetComponent<DialogueRunner>();
@@ -199,11 +155,35 @@ public class Interactable : MonoBehaviour
 
     }
 
+    
+    #if UNITY_EDITOR
+
+        [ContextMenu("Add Collider")]
+    void AddTrigger()
+    {
+        TryGetComponent<SphereCollider>(out SphereCollider sphere);
+        TryGetComponent<BoxCollider>(out BoxCollider box);
+        if(sphere != null && sphere.isTrigger == true || box != null && box.isTrigger == true) return;
+
+        SphereCollider newCollider = this.AddComponent<SphereCollider>();
+        newCollider.isTrigger = true;
+        newCollider.radius = 2f;
+        newCollider.center = Vector3.zero;
+    }
+    [ContextMenu("Add Prompt")]
     void InitializePrompt()
     {
+        promptPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Interactables/InteractPrompt3D.prefab");
+            
         if (prompt != null) return;
 
-        Bounds bounds = gameObject.GetComponent<Renderer>().bounds;
+        TryGetComponent<Renderer>(out Renderer renderer);
+        if(TryGetComponent<SkinnedMeshRenderer>(out SkinnedMeshRenderer skinRender))
+        {
+            renderer = skinRender;
+        }
+        Bounds bounds = renderer.bounds;
+        
 
         float topY = bounds.max.y + promptHeight;
 
@@ -213,7 +193,7 @@ public class Interactable : MonoBehaviour
         prompt.SetIcon(iconType);
         prompt.onUI(false);
     }
-
+#endif
     public void setInteractable(bool option)
     {
         Debug.Log($"[{this}] interactable set to: {option}");
@@ -356,7 +336,6 @@ public class Interactable : MonoBehaviour
                 //Enable prompt and set as current if input is needed
                 InteractPrompt.instance.UpdateUIInfo(promptText, promptKey);
                 PlayerInputController.instance.SetCurrentInteractable(this);
-                InteractPrompt.instance.Refresh();
                 if (prompt != null)
                 {
                     prompt.onUI(true);
@@ -368,7 +347,6 @@ public class Interactable : MonoBehaviour
     void setExit()
     {
         PlayerInputController.instance.SetCurrentInteractable(null);
-        InteractPrompt.instance.Refresh();
         if (prompt != null)
         {
             prompt.onUI(false);

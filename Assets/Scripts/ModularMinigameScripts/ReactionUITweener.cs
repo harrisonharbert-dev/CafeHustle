@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(RectTransform))]
 public class ReactionUITweener : MonoBehaviour
@@ -10,18 +11,31 @@ public class ReactionUITweener : MonoBehaviour
     [SerializeField] private Vector3 punchStrength = Vector3.one * 0.1f;
     [SerializeField] private Ease easeType;
     private RectTransform rect;
+    private Button button;
 
     private Vector3 initialScale;
+    private Quaternion initialRotation;
     private readonly object scaleTweenId = new object();
     private readonly object punchTweenId = new object();
     private readonly object scaleToTweenId = new object();
+    private readonly object rotateToTweenId = new object();
 
     private void Awake()
     {
         rect = GetComponent<RectTransform>();
+        if(TryGetComponent<Button>(out Button btn)) {
+            button = btn;
+        }
         initialScale = rect.localScale;
+        initialRotation = rect.localRotation;
     }
-
+    void Start()
+    {
+        if(button != null)
+        {
+            button.Select();
+        }
+    }
     public void OnScale(bool option)
     {
         //Kill any existing OnScale tweens
@@ -59,6 +73,17 @@ public class ReactionUITweener : MonoBehaviour
         scaleToSequence.SetId(scaleToTweenId);
         scaleToSequence.Join(rect.DOScale(targetScale,duration).SetEase(easeType));
         
+    }
+
+    public void RotateTo(float target)
+    {
+        DOTween.Kill(rotateToTweenId);
+
+        Quaternion targetRotation = initialRotation * Quaternion.Euler(0f, 0f, target);
+
+        Sequence rotateToSequence = DOTween.Sequence();
+        rotateToSequence.SetId(rotateToTweenId);
+        rotateToSequence.Join(rect.DOLocalRotateQuaternion(targetRotation, duration).SetEase(easeType));
     }
 
 }
