@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Flipping Stage", menuName = "Modular Minigame/Flipping Stage")]
-public class FlipStage : ScriptableObject
+public class FlippingConfig : MinigameConfig
 {
     public string stageName;
     public string stageID;

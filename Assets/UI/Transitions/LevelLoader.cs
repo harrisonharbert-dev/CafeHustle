@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
-using Antlr4.Runtime.Atn;
 using Yarn.Unity;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class LevelLoader : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class LevelLoader : MonoBehaviour
     [Header("Scene Root")]
     [Tooltip("Name of the parent object containing everything in each scene.")]
     public string sceneRootName = "SceneRoot";
+
+    [SerializeField] private List<MinigameRecipe> recipeList;
 
     public enum TransitionType
     {
@@ -63,7 +66,7 @@ public class LevelLoader : MonoBehaviour
         }
     }
 
-    
+
     public void LoadSceneQuick(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
@@ -72,7 +75,7 @@ public class LevelLoader : MonoBehaviour
     // =========================================================
     // LOAD A MINIGAME ADDITIVELY
     // =========================================================
-    
+
     public void LoadNamedScene(string sceneName)
     {
         if (isLoading)
@@ -129,6 +132,65 @@ public class LevelLoader : MonoBehaviour
         Debug.Log("Loaded scene: " + sceneName);
     }
 
+    public void LoadNamedMinigame(string name)
+    {
+        var match = recipeList.Find(p => p != null && p.id == name);
+        if (match == null) return;
+        StartCoroutine(LoadMinigame(match));
+    }
+    private IEnumerator LoadMinigame(MinigameRecipe recipe)
+    {
+        isLoading = true;
+        string sceneName = "ModularMinigameHub";
+
+        if (animator != null &&
+            (transitionType == TransitionType.OutOnly ||
+             transitionType == TransitionType.InAndOut))
+        {
+            animator.ResetTrigger("playStart");
+            animator.SetTrigger("playEnd");
+
+            yield return new WaitForSeconds(transitionTime);
+        }
+
+        Scene previousScene = SceneManager.GetActiveScene();
+
+        // Load new scene
+        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(
+            sceneName,
+            LoadSceneMode.Additive
+        );
+
+        yield return loadOperation;
+
+        Scene newScene = GetNewestScene(sceneName);
+
+        if (!newScene.IsValid())
+        {
+            Debug.LogError("Could not find loaded scene: " + sceneName);
+            isLoading = false;
+            yield break;
+        }
+
+        // Disable ONLY the parent of the previous scene
+        SetSceneRootActive(previousScene, false);
+
+        // Enable ONLY the parent of the new scene
+        SetSceneRootActive(newScene, true);
+
+        //
+        
+
+        SceneManager.SetActiveScene(newScene);
+        ModularMinigameHub hub = ModularMinigameHub.instance;
+        hub.SetUpTable(recipe);
+
+        ResetTransition();
+
+        isLoading = false;
+
+        Debug.Log("Loaded scene: " + sceneName);
+    }
     // =========================================================
     // RETURN TO STARTING SCENE
     // =========================================================

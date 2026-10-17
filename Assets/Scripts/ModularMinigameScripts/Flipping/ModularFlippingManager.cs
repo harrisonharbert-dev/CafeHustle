@@ -1,17 +1,19 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using DG.Tweening;
+using System;
 
-
-public class ModularFlippingManager : MonoBehaviour
+public class ModularFlippingManager : MonoBehaviour, IMinigame
 {
+    private FlippingConfig loadedFlipStage;
 
-    [SerializeField] private List<FlipStage> flipStages;
-    public FlipStage loadedFlipStage;
+    private Action onComplete;
+
+
+
 
     private GameObject panPrefab;
     private GameObject foodInPanPrefab;
@@ -37,33 +39,21 @@ public class ModularFlippingManager : MonoBehaviour
     public UnityEvent onPopUpStart;
     public UnityEvent onPopUpEnd;
 
-    void Awake()
+    public void Initialize(MinigameConfig baseConfig, Action completionCallback)
     {
-        if (loadedFlipStage != null)
-        {
-            InitializeFlipStage();
-        }
-        else if (loadedFlipStage == null)
-        {
-            Debug.LogWarning($"{this} No flipping stage loaded, loading default.");
+        loadedFlipStage = baseConfig as FlippingConfig;
 
-            LoadFlipStage("default");
-            InitializeFlipStage();
+        if (loadedFlipStage == null)
+        {   
+            return;
         }
-    }
 
-    void Start()
-    {
+        onComplete = completionCallback;
+
+        InitializeFlipStage();
         StartStage();
     }
 
-
-    void LoadFlipStage(string name)
-    {
-        //Find stage name by id string
-        var match = flipStages?.Find(p => p != null && p.stageID == name);
-        loadedFlipStage = match;
-    }
 
     void InitializeFlipStage()
     {
@@ -84,9 +74,10 @@ public class ModularFlippingManager : MonoBehaviour
 
     void ClearStage()
     {
-        if(panPrefab != null && foodInPanPrefab != null){
-        Destroy(panPrefab);
-        Destroy(foodInPanPrefab);
+        if (panPrefab != null && foodInPanPrefab != null)
+        {
+            Destroy(panPrefab);
+            Destroy(foodInPanPrefab);
         }
     }
 
@@ -107,7 +98,7 @@ public class ModularFlippingManager : MonoBehaviour
         while (isMinigameRunning && Time.time < endTime)
         {
             float remainingTime = endTime - Time.time;
-            float interval = Random.Range(minInterval, maxInterval);
+            float interval = UnityEngine.Random.Range(minInterval, maxInterval);
             yield return new WaitForSeconds(Mathf.Min(interval, remainingTime));
 
             if (!isMinigameRunning || Time.time + endBuffer >= endTime)
@@ -144,7 +135,7 @@ public class ModularFlippingManager : MonoBehaviour
             DOTween.Clear();
             popUpState(false);
 
-            if(isWithinTargetLimit())
+            if (isWithinTargetLimit())
             {
                 onFlipFood(foodInPanPrefab);
                 onWinEvent?.Invoke();
@@ -155,7 +146,7 @@ public class ModularFlippingManager : MonoBehaviour
                 onFailEvent?.Invoke();
             }
 
-            
+
         }
     }
 
@@ -172,7 +163,7 @@ public class ModularFlippingManager : MonoBehaviour
     void setTarget()
     {
         //Set position from random
-        float randomPositionLocal = Random.Range(loadedFlipStage.targetPositionRange.x, loadedFlipStage.targetPositionRange.y);
+        float randomPositionLocal = UnityEngine.Random.Range(loadedFlipStage.targetPositionRange.x, loadedFlipStage.targetPositionRange.y);
         float targetPosX = Remap(randomPositionLocal, 0f, 1f, -50f, 50f);
 
         RectTransform rect = target.GetComponent<RectTransform>();
@@ -191,7 +182,7 @@ public class ModularFlippingManager : MonoBehaviour
     public void onFlipFood(GameObject food)
     {
         Vector3 initialPos = food.transform.position;
-        
+
         food.transform.DOLocalJump(initialPos, flipHeight, flipNums, flipDuration);
         food.transform.DOLocalRotate(flipRotation, flipDuration, RotateMode.FastBeyond360).SetRelative();
     }
@@ -205,6 +196,7 @@ public class ModularFlippingManager : MonoBehaviour
     void EndStage()
     {
         isMinigameRunning = false;
+        onComplete?.Invoke();
         Debug.Log("Minigame Ended");
     }
 

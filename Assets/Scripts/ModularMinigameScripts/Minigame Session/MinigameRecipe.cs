@@ -2,6 +2,10 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Minigame Recipe", menuName = "Modular Minigame/Minigame Recipe")]
 public class MinigameRecipe : ScriptableObject {
+    public string id;
+
+    public MinigameSession session;
+
     [Header("Table Items")]
     public GameObject centerItem;
     public Vector3 centerItemScale = Vector3.one;

@@ -285,6 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6204e290de6ae1e4abc0534ea1d0e656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  hubSceneName: ModularMinigameHub
   centerPoint: {fileID: 689913976}
   leftPoint: {fileID: 240543741}
   rightPoint: {fileID: 904700779}
@@ -858,9 +859,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02289af17cdfe07419eb4360ee4c8c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  scaleIn: 0
+  rotateIn: 0
+  slideIn: 0
+  scaleOut: 0
+  rotateOut: 0
+  slideOut: 0
+  animateWithActive: 0
   duration: 1
   slideDirection: {x: 0, y: 25}
+  rotationAmount: 0
   easeType: 19
+  delay: 0
 --- !u!225 &2093780864
 CanvasGroup:
   m_ObjectHideFlags: 0
